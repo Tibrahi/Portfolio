@@ -1,0 +1,260 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar Styles with Grenade and Fireworks Effects */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb::before {
+  content: '💥';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover::before {
+  opacity: 1;
+}
+
+/* Grenade explosion effect for scrolling down */
+@keyframes grenadeExplosion {
+  0% {
+    background: linear-gradient(to bottom, #2c3e50, #e74c3c);
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
+  }
+  50% {
+    background: linear-gradient(to bottom, #e74c3c, #f39c12);
+    transform: scale(1.5);
+    box-shadow: 0 0 20px 10px rgba(231, 76, 60, 0.6);
+  }
+  100% {
+    background: linear-gradient(to bottom, #f39c12, #2c3e50);
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+  }
+}
+
+/* Fireworks effect for scrolling up */
+@keyframes fireworks {
+  0% {
+    background: linear-gradient(45deg, #ff0, #f0f, #0ff, #ff0);
+    background-size: 200% 200%;
+    box-shadow: 0 0 10px 5px rgba(255, 255, 0, 0.3);
+  }
+  25% {
+    background: linear-gradient(45deg, #f0f, #0ff, #ff0, #f0f);
+    background-size: 200% 200%;
+    box-shadow: 0 0 15px 8px rgba(255, 0, 255, 0.3);
+  }
+  50% {
+    background: linear-gradient(45deg, #0ff, #ff0, #f0f, #0ff);
+    background-size: 200% 200%;
+    box-shadow: 0 0 20px 10px rgba(0, 255, 255, 0.3);
+  }
+  75% {
+    background: linear-gradient(45deg, #ff0, #f0f, #0ff, #ff0);
+    background-size: 200% 200%;
+    box-shadow: 0 0 15px 8px rgba(255, 255, 0, 0.3);
+  }
+  100% {
+    background: linear-gradient(45deg, #f0f, #0ff, #ff0, #f0f);
+    background-size: 200% 200%;
+    box-shadow: 0 0 10px 5px rgba(255, 0, 255, 0.3);
+  }
+}
+
+/* Apply effects based on scroll direction */
+.scrolling-down ::-webkit-scrollbar-thumb {
+  animation: grenadeExplosion 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  content: '💥';
+}
+
+.scrolling-up ::-webkit-scrollbar-thumb {
+  animation: fireworks 1.2s linear infinite;
+  content: '✨';
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2c3e50 transparent;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #34495e, #2c3e50);
+}
+
+.dark * {
+  scrollbar-color: #2c3e50 transparent;
+}
+
+/* Smooth scrolling for the entire page */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Custom scrollbar for specific elements */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #2c3e50 transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  transition: all 0.3s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #34495e, #2c3e50);
+  transform: scale(1.1);
+}
+
+/* Dark mode custom scrollbar */
+.dark .custom-scrollbar {
+  scrollbar-color: #2c3e50 transparent;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #2c3e50, #34495e);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #34495e, #2c3e50);
+}
+
+/* Add JavaScript to detect scroll direction */
+.scroll-container {
+  position: relative;
+  overflow: auto;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.animate-blink {
+  animation: blink 1s step-end infinite;
+  display: inline-block;
+  margin-left: 2px;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
