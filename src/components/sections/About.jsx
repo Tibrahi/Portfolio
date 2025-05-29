@@ -48,35 +48,37 @@ const About = ({ isDarkMode, setActiveSection }) => {
       {/* Hero Section with Profile Picture */}
       <div className="text-center mb-12 relative">
         {/* Decorative Ellipse */}
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64">
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-72">
           <div className={`absolute inset-0 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-blue-400 to-purple-400'} opacity-20 blur-2xl`}></div>
           <div className={`absolute inset-2 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gradient-to-r from-blue-300 to-purple-300'} opacity-30 blur-xl`}></div>
           <div className={`absolute inset-4 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-400 to-purple-400' : 'bg-gradient-to-r from-blue-200 to-purple-200'} opacity-40 blur-lg`}></div>
         </div>
 
         {/* Profile Picture */}
-        <div className="relative mx-auto w-48 h-48 mb-8">
+        <div className="relative mx-auto w-56 h-56 mb-8">
           <div className={`absolute inset-0 rounded-full border-4 ${
             isDarkMode ? 'border-blue-500' : 'border-blue-400'
-          } overflow-hidden`}>
+          } overflow-hidden transform hover:scale-105 transition-transform duration-300`}>
             <img 
               src={ProfileImage} 
               alt="Tuyizere Ibrahim" 
               className="w-full h-full object-cover"
               style={{ 
-                objectPosition: 'center 25%',
-                transform: 'scale(1.2)',
-                width: '90%',
-                height: '95%',
-                marginLeft: '9%',
-                marginTop: '11%'
+                objectPosition: 'center -10%',
+                transform: 'scale(1.1)',
+                width: '100%',
+                marginLeft: '5%',
+                height: '100%'
               }}
             />
           </div>
-          {/* Decorative Ring */}
+          {/* Decorative Rings */}
           <div className={`absolute -inset-2 rounded-full border-2 ${
             isDarkMode ? 'border-blue-400/30' : 'border-blue-300/30'
           } animate-pulse`}></div>
+          <div className={`absolute -inset-4 rounded-full border-2 ${
+            isDarkMode ? 'border-purple-400/20' : 'border-purple-300/20'
+          } animate-pulse delay-100`}></div>
         </div>
 
         <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'} relative z-10`}>
