@@ -11,7 +11,7 @@ const Projects = ({ isDarkMode }) => {
       id: 1,
       title: 'XEBtrade Platform',
       description: 'XEBTrade is a user-friendly cryptocurrency trading platform designed for ease, speed, and clarity. ',
-      technologies: ['React', 'Node.js','Mysql','Emailjs'],
+      technologies: ['React', 'Node.js','Firebase','Emailjs'],
       image: XEBtrade,
       link: 'https://xebtrade.com',
       status: 'under-construction'

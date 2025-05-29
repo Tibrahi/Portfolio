@@ -10,13 +10,13 @@ const Skills = ({ isDarkMode }) => {
 
   const skills = {
     frontend: [
-      { name: 'React', level: 80 },
+      { name: 'React/Emailjs', level: 80 },
       { name: 'JavaScript', level: 89 },
       { name: 'HTML/CSS', level: 100 },
       { name: 'TypeScript', level: 90 }
     ],
     backend: [
-      { name: 'Node.js/Mysql/MongoDB', level: 90 },
+      { name: 'Node.js/Mysql/MongoDB/Firebase', level: 95 },
       { name: 'Python/Mysql', level: 89 },
       { name: 'PHP/Mysql', level: 92 },
       { name: 'Laravel/Mysql', level: 85 }
