@@ -3,6 +3,7 @@ import About from './sections/About'
 import Projects from './sections/Projects'
 import Skills from './sections/Skills'
 import Contact from './sections/Contact'
+import Dashboard from './sections/Dashboard'
 
 const MainContent = ({ activeSection, isDarkMode, setActiveSection }) => {
   return (
@@ -12,6 +13,7 @@ const MainContent = ({ activeSection, isDarkMode, setActiveSection }) => {
         {activeSection === 'projects' && <Projects isDarkMode={isDarkMode} />}
         {activeSection === 'skills' && <Skills isDarkMode={isDarkMode} />}
         {activeSection === 'contact' && <Contact isDarkMode={isDarkMode} />}
+        {activeSection === 'dashboard' && <Dashboard isDarkMode={isDarkMode} />}
       </div>
     </main>
   )

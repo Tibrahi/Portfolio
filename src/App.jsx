@@ -5,10 +5,10 @@ import MainContent from './components/MainContent'
 import Loading from './components/Loading'
 
 const App = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false)
   const [activeSection, setActiveSection] = useState('about')
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   useEffect(() => {
     // Check for saved theme preference or system preference
@@ -23,7 +23,7 @@ const App = () => {
       document.documentElement.classList.remove('dark')
     }
 
-    // Simulate loading time (you can remove this in production)
+    // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 2000)
@@ -31,7 +31,7 @@ const App = () => {
     return () => clearTimeout(timer)
   }, [])
 
-  const toggleTheme = () => {
+  const toggleDarkMode = () => {
     const newTheme = !isDarkMode
     setIsDarkMode(newTheme)
     
@@ -49,19 +49,25 @@ const App = () => {
   }
 
   return (
-    <div className={`h-screen w-screen flex flex-col overflow-hidden ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
-      <ShellBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} />
-      <div className="flex-1 flex overflow-hidden">
-        <SideNavigation 
-          isCollapsed={isCollapsed}
-          setIsCollapsed={setIsCollapsed}
+    <div className={`flex h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      {/* Side Navigation */}
+      <SideNavigation
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+        isDarkMode={isDarkMode}
+      />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col">
+        {/* Shell Bar */}
+        <ShellBar isDarkMode={isDarkMode} toggleTheme={toggleDarkMode} />
+
+        {/* Main Content */}
+        <MainContent
           activeSection={activeSection}
-          setActiveSection={setActiveSection}
           isDarkMode={isDarkMode}
-        />
-        <MainContent 
-          activeSection={activeSection} 
-          isDarkMode={isDarkMode} 
           setActiveSection={setActiveSection}
         />
       </div>

@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/ti-favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tibrahim</title>
+    <title>Tuyizere Ibrahim - Portfolio</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -12,29 +13,14 @@
         theme: {
           extend: {
             colors: {
-              dark: {
-                bg: '#1a1a1a',
-                text: '#ffffff',
-                border: '#333333'
-              }
-            }
-          }
-        }
+              'gray-750': '#2d3748',
+            },
+          },
+        },
       }
     </script>
-    <style>
-      :root {
-        color-scheme: light dark;
-      }
-      body {
-        @apply bg-gray-50 dark:bg-gray-900;
-      }
-      #root {
-        @apply h-full;
-      }
-    </style>
   </head>
-  <body class="h-screen">
+  <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

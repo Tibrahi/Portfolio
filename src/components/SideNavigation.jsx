@@ -5,6 +5,7 @@ const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveS
 
   const navItems = [
     { id: 'about', label: 'About', icon: '👤', title: 'About Me' },
+    { id: 'dashboard', label: 'Dashboard', icon: '📊', title: 'Project Dashboard' },
     { id: 'projects', label: 'Projects', icon: '💼', title: 'My Projects' },
     { id: 'skills', label: 'Skills', icon: '⚡', title: 'Technical Skills' },
     { id: 'contact', label: 'Contact', icon: '📧', title: 'Get in Touch' }
@@ -49,19 +50,17 @@ const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveS
             key={item.id}
             onClick={() => setActiveSection(item.id)}
             className={`w-full flex items-center px-4 py-3 transition-colors ${
-              isDarkMode
-                ? activeSection === item.id
-                  ? 'bg-emerald-900/50 text-emerald-400 border-l-4 border-emerald-500'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-emerald-400 bg-gray-900'
-                : activeSection === item.id
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'text-gray-600 hover:bg-emerald-50 hover:text-emerald-700'
+              activeSection === item.id
+                ? isDarkMode
+                  ? 'bg-gray-800 text-emerald-400'
+                  : 'bg-emerald-50 text-emerald-700'
+                : isDarkMode
+                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
             }`}
           >
             <span className="text-xl mr-3">{item.icon}</span>
-            {!isCollapsed && (
-              <span className="font-medium">{item.label}</span>
-            )}
+            {!isCollapsed && <span>{item.label}</span>}
           </button>
         ))}
       </div>
