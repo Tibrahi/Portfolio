@@ -1,5 +1,6 @@
 import React from 'react'
 import IBRAResume from '../../Resume/IBRAResume.pdf'
+import ProfileImage from '../../images/Profile.jpg'
 
 const About = ({ isDarkMode, setActiveSection }) => {
   const achievements = [
@@ -44,12 +45,44 @@ const About = ({ isDarkMode, setActiveSection }) => {
 
   return (
     <div className={`p-6 space-y-8 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
-      {/* Hero Section */}
-      <div className="text-center mb-12">
-        <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+      {/* Hero Section with Profile Picture */}
+      <div className="text-center mb-12 relative">
+        {/* Decorative Ellipse */}
+        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64">
+          <div className={`absolute inset-0 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-blue-400 to-purple-400'} opacity-20 blur-2xl`}></div>
+          <div className={`absolute inset-2 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gradient-to-r from-blue-300 to-purple-300'} opacity-30 blur-xl`}></div>
+          <div className={`absolute inset-4 rounded-full ${isDarkMode ? 'bg-gradient-to-r from-blue-400 to-purple-400' : 'bg-gradient-to-r from-blue-200 to-purple-200'} opacity-40 blur-lg`}></div>
+        </div>
+
+        {/* Profile Picture */}
+        <div className="relative mx-auto w-48 h-48 mb-8">
+          <div className={`absolute inset-0 rounded-full border-4 ${
+            isDarkMode ? 'border-blue-500' : 'border-blue-400'
+          } overflow-hidden`}>
+            <img 
+              src={ProfileImage} 
+              alt="Tuyizere Ibrahim" 
+              className="w-full h-full object-cover"
+              style={{ 
+                objectPosition: 'center 25%',
+                transform: 'scale(1.2)',
+                width: '90%',
+                height: '95%',
+                marginLeft: '9%',
+                marginTop: '11%'
+              }}
+            />
+          </div>
+          {/* Decorative Ring */}
+          <div className={`absolute -inset-2 rounded-full border-2 ${
+            isDarkMode ? 'border-blue-400/30' : 'border-blue-300/30'
+          } animate-pulse`}></div>
+        </div>
+
+        <h1 className={`text-4xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'} relative z-10`}>
           Hello I'M TUYIZERE IBRAHIM
         </h1>
-        <p className="text-xl max-w-2xl mx-auto">
+        <p className="text-xl max-w-2xl mx-auto relative z-10">
           I'm a passionate full-stack developer dedicated to creating impactful solutions through technology.
         </p>
       </div>
