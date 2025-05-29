@@ -13,7 +13,7 @@ const Projects = ({ isDarkMode }) => {
       description: 'XEBTrade is a user-friendly cryptocurrency trading platform designed for ease, speed, and clarity. ',
       technologies: ['React', 'Node.js','Firebase','Emailjs'],
       image: XEBtrade,
-      link: 'https://xebtrade.com',
+      link: 'https://xeb-trade.vercel.app/',
       status: 'under-construction'
     },
     {
