@@ -317,8 +317,11 @@ const Dashboard = ({ isDarkMode }) => {
             .filter(repo => !repo.fork)
             .slice(0, 6)
             .map((repo) => (
-              <div
-                key={repo.id}
+              <a 
+                key={repo.id} 
+                href={repo.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className={`rounded-lg p-4 xs:p-6 shadow-lg transform transition-all hover:scale-105 ${
                   isDarkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
                 }`}
@@ -367,7 +370,7 @@ const Dashboard = ({ isDarkMode }) => {
                     <span>{repo.watchers_count}</span>
                   </div>
                 </div>
-              </div>
+              </a>
             ))}
         </div>
       </div>
