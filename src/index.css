@@ -11,11 +11,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -24,7 +25,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: #888;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -71,10 +72,18 @@ html {
 }
 
 /* Base element styles */
-body {
+html, body {
   margin: 0;
-  min-width: 320px;
+  padding: 0;
+  min-width: 280px;
   min-height: 100vh;
+  font-size: 14px;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body {
+  position: relative;
 }
 
 /* Link styles */
@@ -90,12 +99,14 @@ button {
   border: none;
   background: none;
   font-family: inherit;
+  font-size: inherit;
 }
 
 /* Image styles */
 img {
   max-width: 100%;
   height: auto;
+  display: block;
 }
 
 /* Container styles */
@@ -104,6 +115,7 @@ img {
   max-width: 1280px;
   margin: 0 auto;
   padding: 0 1rem;
+  overflow-x: hidden;
 }
 
 /* Utility classes */
@@ -126,15 +138,50 @@ img {
 }
 
 /* Responsive typography */
-@media (max-width: 768px) {
-  :root {
-    font-size: 14px;
+@media (min-width: 640px) {
+  html, body {
+    font-size: 16px;
+  }
+}
+
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  .container {
+    padding: 0 0.75rem;
+  }
+}
+
+/* Tablet responsive design */
+@media (min-width: 768px) {
+  .container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Desktop responsive design */
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+/* Large desktop responsive design */
+@media (min-width: 1280px) {
+  .container {
+    padding: 0 2.5rem;
   }
 }
 
 /* Print styles */
 @media print {
-  .no-print {
-    display: none;
+  html, body {
+    font-size: 12pt;
+    overflow: visible;
+  }
+  
+  .container {
+    max-width: none;
+    padding: 0;
+    overflow: visible;
   }
 } 

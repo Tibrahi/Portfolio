@@ -1,70 +1,81 @@
 import React, { useState, useEffect } from 'react'
 
-const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveSection, isDarkMode }) => {
-  const [title, setTitle] = useState('Portfolio')
+const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveSection, isDarkMode, isMobile }) => {
+  const [title, setTitle] = useState('About Me')
 
   const navItems = [
-    { id: 'about', label: 'About', icon: '👤', title: 'About Me' },
-    { id: 'dashboard', label: 'Dashboard', icon: '📊', title: 'Project Dashboard' },
-    { id: 'projects', label: 'Projects', icon: '💼', title: 'My Projects' },
-    { id: 'skills', label: 'Skills', icon: '⚡', title: 'Technical Skills' },
-    { id: 'contact', label: 'Contact', icon: '📧', title: 'Get in Touch' }
+    { id: 'about', label: 'About', icon: '👨‍💻', title: 'About Me' },
+    { id: 'skills', label: 'Skills', icon: '⚡', title: 'My Skills' },
+    { id: 'projects', label: 'Projects', icon: '🚀', title: 'My Projects' },
+    { id: 'dashboard', label: 'Dashboard', icon: '📊', title: 'Project Stats' },
+    { id: 'contact', label: 'Contact', icon: '📧', title: 'Contact Me' }
   ]
 
   useEffect(() => {
-    const currentItem = navItems.find(item => item.id === activeSection)
-    if (currentItem) {
-      setTitle(currentItem.title)
-    } else {
-      setTitle('Portfolio')
+    const activeItem = navItems.find(item => item.id === activeSection)
+    if (activeItem) {
+      setTitle(activeItem.title)
     }
   }, [activeSection])
 
   return (
-    <nav className={`flex flex-col h-full transition-all duration-300 ${
-      isCollapsed ? 'w-16' : 'w-64'
-    } ${isDarkMode ? 'bg-gray-900' : 'bg-white'} border-r ${
-      isDarkMode ? 'border-gray-800' : 'border-gray-200'
-    }`}>
-      <div className="flex items-center justify-between p-4">
-        {!isCollapsed && (
-          <h2 className={`text-xl font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-800'} transition-all duration-300`}>
+    <>
+      {isMobile && !isCollapsed && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-20"
+          onClick={() => setIsCollapsed(true)}
+        />
+      )}
+      <nav 
+        className={`fixed md:relative z-30 transition-all duration-300 ${
+          isDarkMode ? 'bg-gray-800' : 'bg-white'
+        } ${
+          isCollapsed 
+            ? 'w-16 md:w-20' 
+            : 'w-64'
+        } ${
+          isMobile 
+            ? (isCollapsed ? '-translate-x-full' : 'translate-x-0')
+            : ''
+        } h-full border-r ${
+          isDarkMode ? 'border-gray-700' : 'border-gray-200'
+        }`}
+      >
+        <div className="p-4">
+          <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'} ${isCollapsed ? 'hidden' : 'block'}`}>
             {title}
           </h2>
-        )}
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className={`p-2 rounded-lg transition-colors ${
-            isDarkMode 
-              ? 'text-gray-400 hover:bg-gray-800 hover:text-emerald-400' 
-              : 'text-gray-600 hover:bg-emerald-100 hover:text-emerald-700'
-          }`}
-        >
-          {isCollapsed ? '→' : '←'}
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto py-4">
-        {navItems.map((item) => (
-          <button
-            key={item.id}
-            onClick={() => setActiveSection(item.id)}
-            className={`w-full flex items-center px-4 py-3 transition-colors ${
-              activeSection === item.id
-                ? isDarkMode
-                  ? 'bg-gray-800 text-emerald-400'
-                  : 'bg-emerald-50 text-emerald-700'
-                : isDarkMode
-                ? 'text-gray-400 hover:bg-gray-800 hover:text-gray-300'
-                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-            }`}
-          >
-            <span className="text-xl mr-3">{item.icon}</span>
-            {!isCollapsed && <span>{item.label}</span>}
-          </button>
-        ))}
-      </div>
-    </nav>
+          <ul className="space-y-2">
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => {
+                    setActiveSection(item.id)
+                    if (isMobile) {
+                      setIsCollapsed(true)
+                    }
+                  }}
+                  className={`w-full flex items-center p-2 rounded-lg transition-colors ${
+                    activeSection === item.id
+                      ? isDarkMode
+                        ? 'bg-gray-700 text-white'
+                        : 'bg-gray-100 text-gray-900'
+                      : isDarkMode
+                        ? 'text-gray-300 hover:bg-gray-700'
+                        : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <span className="text-xl">{item.icon}</span>
+                  {!isCollapsed && (
+                    <span className="ml-3">{item.label}</span>
+                  )}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </nav>
+    </>
   )
 }
 

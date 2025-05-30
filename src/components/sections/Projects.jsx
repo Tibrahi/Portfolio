@@ -104,9 +104,9 @@ const Projects = ({ isDarkMode }) => {
   }
 
   return (
-    <div className="p-6">
-      <h1 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>My Projects</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+    <div className="p-2 xs:p-4 sm:p-6">
+      <h1 className={`text-xl xs:text-2xl sm:text-3xl font-bold mb-4 xs:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>My Projects</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 sm:gap-8 mb-8 xs:mb-10 sm:mb-12">
         {projects.map((project) => (
           <a 
             key={project.id}
@@ -118,13 +118,13 @@ const Projects = ({ isDarkMode }) => {
             hover:shadow-lg transition-shadow duration-300`}>
             {/* Status Badge */}
             <div className="absolute top-2 right-2 z-10">
-              <span className={`${getStatusColor(project.status)} text-white px-3 py-1 rounded-full text-xs font-medium`}>
+              <span className={`${getStatusColor(project.status)} text-white px-2 xs:px-3 py-1 rounded-full text-xs font-medium`}>
                 {getStatusText(project.status)}
               </span>
             </div>
             {/* Project Image Container */}
             {project.image && (
-              <div className="w-full h-48 overflow-hidden">
+              <div className="w-full h-32 xs:h-40 sm:h-48 overflow-hidden">
                 <img 
                   src={project.image}
                   alt={`Image for ${project.title}`}
@@ -133,33 +133,21 @@ const Projects = ({ isDarkMode }) => {
               </div>
             )}
             {/* Project Content Container */}
-            <div className="p-6">
-              <h2 className={`text-xl font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+            <div className="p-3 xs:p-4 sm:p-6">
+              <h3 className={`text-lg xs:text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {project.title}
-              </h2>
-              <p className={`${isDarkMode ? 'text-gray-300' : 'text-gray-600'} mb-4`}>
+              </h3>
+              <p className={`text-sm xs:text-base mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 {project.description}
               </p>
               <div className="flex flex-wrap gap-2">
-                {project.technologies.map((tech) => (
-                  <span
-                    key={tech}
-                    className={`px-3 py-1 rounded-full text-sm font-medium
-                    ${isDarkMode 
-                      ? (tech === 'React' 
-                          ? 'bg-blue-900/80 text-blue-200' 
-                          : tech === 'Node.js'
-                            ? 'bg-green-900/80 text-green-200'
-                            : tech === 'Mysql'
-                              ? 'bg-orange-900/80 text-orange-200'
-                              : 'bg-purple-900/80 text-purple-200')
-                      : (tech === 'React'
-                          ? 'bg-blue-100 text-blue-800'
-                          : tech === 'Node.js'
-                            ? 'bg-green-100 text-green-800'
-                            : tech === 'Mysql'
-                              ? 'bg-orange-100 text-orange-800'
-                              : 'bg-purple-100 text-purple-800')
+                {project.technologies.map((tech, index) => (
+                  <span 
+                    key={index}
+                    className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm ${
+                      isDarkMode 
+                        ? 'bg-gray-700 text-gray-300' 
+                        : 'bg-gray-100 text-gray-700'
                     }`}>
                     {tech}
                   </span>

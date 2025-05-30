@@ -1,46 +1,69 @@
 import React, { useState, useEffect } from 'react'
-import ShellBar from './components/ShellBar'
 import SideNavigation from './components/SideNavigation'
+import ShellBar from './components/ShellBar'
 import MainContent from './components/MainContent'
+import About from './components/sections/About'
+import Projects from './components/sections/Projects'
+import Skills from './components/sections/Skills'
+import Contact from './components/sections/Contact'
+import Dashboard from './components/sections/Dashboard'
 import Loading from './components/Loading'
+import './App.css'
 
-const App = () => {
-  const [activeSection, setActiveSection] = useState('about')
+function App() {
   const [isDarkMode, setIsDarkMode] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
   const [isCollapsed, setIsCollapsed] = useState(false)
+  const [activeSection, setActiveSection] = useState('dashboard')
+  const [isLoading, setIsLoading] = useState(true)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
 
   useEffect(() => {
-    // Check for saved theme preference or system preference
-    const savedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setIsDarkMode(true)
-      document.documentElement.classList.add('dark')
-    } else {
-      setIsDarkMode(false)
-      document.documentElement.classList.remove('dark')
+    const darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    setIsDarkMode(darkModeMediaQuery.matches)
+
+    const handleChange = (e) => setIsDarkMode(e.matches)
+    darkModeMediaQuery.addEventListener('change', handleChange)
+
+    // Handle responsive layout
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768)
+      if (window.innerWidth < 768) {
+        setIsCollapsed(true)
+      }
     }
+
+    window.addEventListener('resize', handleResize)
 
     // Simulate loading time
     const timer = setTimeout(() => {
       setIsLoading(false)
     }, 2000)
 
-    return () => clearTimeout(timer)
+    return () => {
+      darkModeMediaQuery.removeEventListener('change', handleChange)
+      window.removeEventListener('resize', handleResize)
+      clearTimeout(timer)
+    }
   }, [])
 
-  const toggleDarkMode = () => {
-    const newTheme = !isDarkMode
-    setIsDarkMode(newTheme)
-    
-    if (newTheme) {
-      document.documentElement.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode)
+  }
+
+  const renderSection = () => {
+    switch (activeSection) {
+      case 'dashboard':
+        return <Dashboard isDarkMode={isDarkMode} />
+      case 'about':
+        return <About isDarkMode={isDarkMode} />
+      case 'projects':
+        return <Projects isDarkMode={isDarkMode} />
+      case 'skills':
+        return <Skills isDarkMode={isDarkMode} />
+      case 'contact':
+        return <Contact isDarkMode={isDarkMode} />
+      default:
+        return <Dashboard isDarkMode={isDarkMode} />
     }
   }
 
@@ -49,27 +72,25 @@ const App = () => {
   }
 
   return (
-    <div className={`flex h-screen ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      {/* Side Navigation */}
-      <SideNavigation
-        isCollapsed={isCollapsed}
-        setIsCollapsed={setIsCollapsed}
-        activeSection={activeSection}
-        setActiveSection={setActiveSection}
-        isDarkMode={isDarkMode}
+    <div className={`min-h-screen flex flex-col ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-50'}`}>
+      <ShellBar 
+        isDarkMode={isDarkMode} 
+        toggleTheme={toggleTheme} 
+        isMobile={isMobile}
+        toggleSideNav={() => setIsCollapsed(!isCollapsed)}
       />
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Shell Bar */}
-        <ShellBar isDarkMode={isDarkMode} toggleTheme={toggleDarkMode} />
-
-        {/* Main Content */}
-        <MainContent
+      <div className="flex flex-1 relative">
+        <SideNavigation 
+          isCollapsed={isCollapsed} 
+          setIsCollapsed={setIsCollapsed}
           activeSection={activeSection}
-          isDarkMode={isDarkMode}
           setActiveSection={setActiveSection}
+          isDarkMode={isDarkMode}
+          isMobile={isMobile}
         />
+        <MainContent isDarkMode={isDarkMode} isMobile={isMobile}>
+          {renderSection()}
+        </MainContent>
       </div>
     </div>
   )
