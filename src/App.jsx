@@ -80,14 +80,14 @@ function App() {
         toggleSideNav={() => setIsCollapsed(!isCollapsed)}
       />
       <div className="flex flex-1 relative">
-        <SideNavigation 
-          isCollapsed={isCollapsed} 
-          setIsCollapsed={setIsCollapsed}
-          activeSection={activeSection}
-          setActiveSection={setActiveSection}
-          isDarkMode={isDarkMode}
+      <SideNavigation
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+        activeSection={activeSection}
+        setActiveSection={setActiveSection}
+        isDarkMode={isDarkMode}
           isMobile={isMobile}
-        />
+      />
         <MainContent isDarkMode={isDarkMode} isMobile={isMobile}>
           {renderSection()}
         </MainContent>

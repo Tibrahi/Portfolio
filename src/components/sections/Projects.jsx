@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { FaGithub, FaExternalLinkAlt, FaEye } from 'react-icons/fa'
 
 // images 
 import Elearning from '../../images/Elearning.png'
@@ -9,11 +10,13 @@ const Projects = ({ isDarkMode }) => {
   const projects = [
     {
       id: 1,
-      title: 'XEBtrade Platform',
-      description: 'XEBTrade is a user-friendly cryptocurrency trading platform designed for ease, speed, and clarity. ',
-      technologies: ['React', 'Node.js','Firebase','Emailjs'],
-      image: XEBtrade,
-      link: 'https://xeb-trade.vercel.app/',
+      title: 'CineVault',
+      description: 'web-based movie discovery and streaming info platform that lets users explore popular, trending, and top-rated movies and TV shows.',
+      technologies: ['React','TailwindCSS','VanillaJs'],
+      // image: XEBtrade,
+      link: 'https://cine-vault-two.vercel.app/',
+      github: 'https://github.com/Tibrahi/CineVault',
+      screenshot: 'https://cine-vault-two.vercel.app/',
       status: 'under-construction'
     },
     {
@@ -23,15 +26,19 @@ const Projects = ({ isDarkMode }) => {
       technologies: ['React', 'Emailjs'],
       image: Elearning,
       link: 'https://elearning-taupe.vercel.app/',
+      github: 'https://github.com/Tibrahi/Elearning',
+      screenshot: 'https://elearning-taupe.vercel.app/api/og',
       status: 'completed'
     },
     {
       id: 3,
-      title: 'CommunityConnect Platform',
-      description: "CommunityConnect is a vibrant platform designed to bring people together through shared interests, discussions, and collaboration.",
-      technologies: ['Preact', 'Node.js','Mysql','Emailjs'],
+      title: 'Txlogic',
+      description: " txlogic is a web-based cargo tracking system that logs, monitors, and updates cargo movement across logistics channels in real time.",
+      technologies: ['React','Typescript', 'Node.js','Firebase','Emailjs'],
       image: CommunityConnect,
-      link: 'https://communityconnect.com',
+      link: 'https://txlogic.vercel.app/',
+      github: 'https://github.com/Tibrahi/Txlogic',
+      screenshot: 'https://txlogic.vercel.app/',
       status: 'under-construction'
     }
   ]
@@ -108,11 +115,8 @@ const Projects = ({ isDarkMode }) => {
       <h1 className={`text-xl xs:text-2xl sm:text-3xl font-bold mb-4 xs:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>My Projects</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 sm:gap-8 mb-8 xs:mb-10 sm:mb-12">
         {projects.map((project) => (
-          <a 
+          <div 
             key={project.id}
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
             className={`rounded-lg shadow-md overflow-hidden block relative
             ${isDarkMode ? 'bg-gray-800' : 'bg-white'}
             hover:shadow-lg transition-shadow duration-300`}>
@@ -123,15 +127,37 @@ const Projects = ({ isDarkMode }) => {
               </span>
             </div>
             {/* Project Image Container */}
-            {project.image && (
-              <div className="w-full h-32 xs:h-40 sm:h-48 overflow-hidden">
-                <img 
-                  src={project.image}
-                  alt={`Image for ${project.title}`}
-                  className="w-full h-full object-cover"
-                />
+            <div className="w-full h-48 xs:h-56 sm:h-64 overflow-hidden relative group">
+              <img 
+                src={project.screenshot}
+                alt={`Screenshot of ${project.title}`}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                onError={(e) => {
+                  // Fallback to a default image if the OG image fails to load
+                  e.target.src = `https://api.microlink.io/?url=${project.link}&screenshot=true&meta=false&embed=screenshot.url`
+                }}
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                <a 
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white text-gray-800 hover:bg-gray-100 transition-colors"
+                  title="View Live Demo"
+                >
+                  <FaExternalLinkAlt />
+                </a>
+                <a 
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-full bg-white text-gray-800 hover:bg-gray-100 transition-colors"
+                  title="View Source Code"
+                >
+                  <FaGithub />
+                </a>
               </div>
-            )}
+            </div>
             {/* Project Content Container */}
             <div className="p-3 xs:p-4 sm:p-6">
               <h3 className={`text-lg xs:text-xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -140,7 +166,7 @@ const Projects = ({ isDarkMode }) => {
               <p className={`text-sm xs:text-base mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                 {project.description}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 mb-4">
                 {project.technologies.map((tech, index) => (
                   <span 
                     key={index}
@@ -153,8 +179,32 @@ const Projects = ({ isDarkMode }) => {
                   </span>
                 ))}
               </div>
+              <div className="flex items-center justify-between pt-2 border-t border-gray-200 dark:border-gray-700">
+                <a 
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-2 text-sm ${
+                    isDarkMode ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'
+                  }`}
+                >
+                  <FaExternalLinkAlt className="text-xs" />
+                  Live Demo
+                </a>
+                <a 
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center gap-2 text-sm ${
+                    isDarkMode ? 'text-gray-400 hover:text-gray-300' : 'text-gray-600 hover:text-gray-500'
+                  }`}
+                >
+                  <FaGithub className="text-xs" />
+                  Source Code
+                </a>
+              </div>
             </div>
-          </a>
+          </div>
         ))}
       </div>
 

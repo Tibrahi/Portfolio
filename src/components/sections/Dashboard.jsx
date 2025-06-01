@@ -18,7 +18,9 @@ import {
   FaFigma,
   FaLaravel,
   FaBootstrap,
-  FaEye
+  FaEye,
+  FaChevronLeft,
+  FaChevronRight
 } from 'react-icons/fa'
 import { 
   SiTypescript, 
@@ -33,10 +35,14 @@ import {
 } from 'react-icons/si'
 
 const Dashboard = ({ isDarkMode }) => {
-  const [githubData, setGithubData] = useState(null)
+  const [githubData, setGithubData] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [lastUpdated, setLastUpdated] = useState(null)
+  const [page, setPage] = useState(1)
+  const [hasMore, setHasMore] = useState(true)
+  const [totalRepos, setTotalRepos] = useState(0)
+  const reposPerPage = 12
 
   const technologies = [
     { name: "JavaScript", icon: <FaJs className="text-yellow-400" /> },
@@ -73,16 +79,37 @@ const Dashboard = ({ isDarkMode }) => {
     skills: technologies
   }
 
-  const fetchGithubData = async () => {
+  const fetchGithubData = async (pageNum = 1) => {
     try {
       setLoading(true)
       setError(null)
-      const response = await fetch(`https://api.github.com/users/${personalInfo.github}/repos`)
+      const response = await fetch(
+        `https://api.github.com/users/${personalInfo.github}/repos?page=${pageNum}&per_page=${reposPerPage}&sort=updated`
+      )
+      
       if (!response.ok) {
         throw new Error(`GitHub API error: ${response.status}`)
       }
+
       const data = await response.json()
-      setGithubData(data)
+      
+      // Check if we have more repos to fetch
+      const linkHeader = response.headers.get('Link')
+      const hasMorePages = linkHeader && linkHeader.includes('rel="next"')
+      setHasMore(hasMorePages)
+
+      // Get total count from headers if available
+      const totalCount = response.headers.get('X-Total-Count')
+      if (totalCount) {
+        setTotalRepos(parseInt(totalCount))
+      }
+
+      if (pageNum === 1) {
+        setGithubData(data)
+      } else {
+        setGithubData(prev => [...prev, ...data])
+      }
+      
       setLastUpdated(new Date())
     } catch (error) {
       console.error('Error fetching GitHub data:', error)
@@ -93,15 +120,14 @@ const Dashboard = ({ isDarkMode }) => {
   }
 
   useEffect(() => {
-    // Initial fetch
-    fetchGithubData()
+    fetchGithubData(page)
+  }, [page])
 
-    // Set up polling every 5 minutes
-    const pollInterval = setInterval(fetchGithubData, 5 * 60 * 1000)
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(pollInterval)
-  }, [])
+  const loadMore = () => {
+    if (!loading && hasMore) {
+      setPage(prev => prev + 1)
+    }
+  }
 
   const getStatusColor = (status) => {
     switch (status.toLowerCase()) {
@@ -151,7 +177,7 @@ const Dashboard = ({ isDarkMode }) => {
           <div className="flex-1 text-center md:text-left">
             <h1 className={`text-2xl xs:text-3xl sm:text-4xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {personalInfo.name}
-            </h1>
+        </h1>
             <p className={`text-lg xs:text-xl mb-3 xs:mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
               {personalInfo.role}
             </p>
@@ -188,22 +214,22 @@ const Dashboard = ({ isDarkMode }) => {
                 <FaEnvelope /> Email
               </a>
             </div>
-            <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2">
               {personalInfo.skills.map((skill, index) => (
-                <span
-                  key={index}
+                  <span
+                    key={index}
                   className={`px-3 py-1 rounded-full text-sm flex items-center gap-2 ${
-                    isDarkMode
-                      ? 'bg-gray-700 text-gray-200'
-                      : 'bg-gray-100 text-gray-700'
-                  }`}
-                >
+                      isDarkMode
+                        ? 'bg-gray-700 text-gray-200'
+                        : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
                   {skill.icon}
                   {skill.name}
-                </span>
-              ))}
+                  </span>
+                ))}
+              </div>
             </div>
-          </div>
         </div>
       </div>
 
@@ -229,150 +255,121 @@ const Dashboard = ({ isDarkMode }) => {
         </div>
       )}
 
-      {/* GitHub Statistics */}
-      {!loading && !error && githubData && (
-        <div className={`max-w-7xl mx-auto rounded-lg p-4 xs:p-6 ${
-          isDarkMode ? 'bg-gray-800' : 'bg-white'
-        } shadow-lg`}>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 xs:gap-6">
-            <div className={`p-4 xs:p-6 rounded-lg ${
-              isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
-            }`}>
-              <div className="flex items-center gap-2 mb-2">
-                <FaCode className="text-blue-500" />
-                <span className={`text-sm xs:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Total Repos
-                </span>
-              </div>
-              <p className="text-xl xs:text-2xl font-bold">
-                {githubData.length}
-              </p>
-            </div>
-
-            <div className={`p-4 xs:p-6 rounded-lg ${
-              isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
-            }`}>
-              <div className="flex items-center gap-2 mb-2">
-                <FaStar className="text-yellow-500" />
-                <span className={`text-sm xs:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Total Stars
-                </span>
-              </div>
-              <p className="text-xl xs:text-2xl font-bold">
-                {githubData.reduce((acc, repo) => acc + repo.stargazers_count, 0)}
-              </p>
-            </div>
-
-            <div className={`p-4 xs:p-6 rounded-lg ${
-              isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
-            }`}>
-              <div className="flex items-center gap-2 mb-2">
-                <FaEye className="text-purple-500" />
-                <span className={`text-sm xs:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Total Views
-                </span>
-              </div>
-              <p className="text-xl xs:text-2xl font-bold">
-                {githubData.reduce((acc, repo) => acc + repo.watchers_count, 0)}
-              </p>
-            </div>
-
-            <div className={`p-4 xs:p-6 rounded-lg ${
-              isDarkMode ? 'bg-gray-700' : 'bg-gray-50'
-            }`}>
-              <div className="flex items-center gap-2 mb-2">
-                <FaCodeBranch className="text-green-500" />
-                <span className={`text-sm xs:text-base ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Total Forks
-                </span>
-              </div>
-              <p className="text-xl xs:text-2xl font-bold">
-                {githubData.reduce((acc, repo) => acc + repo.forks_count, 0)}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Projects Grid */}
+      {/* Projects Grid with Infinite Scroll */}
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 xs:gap-6 mb-4 xs:mb-6">
           <h2 className={`text-xl xs:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Featured Projects
+            All Projects ({totalRepos})
           </h2>
-          <button
-            onClick={fetchGithubData}
-            className={`px-3 xs:px-4 py-2 rounded-lg flex items-center gap-2 ${
-              isDarkMode
-                ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
-                : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-            }`}
-          >
-            <FaGithub className="text-base xs:text-lg" />
-            Refresh Projects
-          </button>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => fetchGithubData(1)}
+              className={`px-3 xs:px-4 py-2 rounded-lg flex items-center gap-2 ${
+                isDarkMode
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+              }`}
+            >
+              <FaGithub className="text-base xs:text-lg" />
+              Refresh Projects
+            </button>
+            {lastUpdated && (
+              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Last updated: {lastUpdated.toLocaleTimeString()}
+              </span>
+            )}
+          </div>
         </div>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6">
-          {!loading && !error && githubData && githubData
-            .filter(repo => !repo.fork)
-            .slice(0, 6)
-            .map((repo) => (
-              <a 
-                key={repo.id} 
-                href={repo.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`rounded-lg p-4 xs:p-6 shadow-lg transform transition-all hover:scale-105 ${
-                  isDarkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
-                }`}
-              >
-                <div className="flex justify-between items-start mb-3 xs:mb-4">
-                  <h3 className={`text-lg xs:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {repo.name}
-                  </h3>
-                  <span className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm text-white ${
-                    repo.archived ? 'bg-red-500' : 'bg-green-500'
-                  }`}>
-                    {repo.archived ? 'Archived' : 'Active'}
+          {githubData.map((repo) => (
+            <a 
+              key={repo.id} 
+              href={repo.html_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`rounded-lg p-4 xs:p-6 shadow-lg transform transition-all hover:scale-105 ${
+                isDarkMode ? 'bg-gray-800 hover:bg-gray-750' : 'bg-white hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex justify-between items-start mb-3 xs:mb-4">
+                <h3 className={`text-lg xs:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  {repo.name}
+                </h3>
+                <span className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm text-white ${
+                  repo.archived ? 'bg-red-500' : 'bg-green-500'
+                }`}>
+                  {repo.archived ? 'Archived' : 'Active'}
+                </span>
+              </div>
+
+              <p className={`text-sm xs:text-base mb-3 xs:mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                {repo.description || 'No description available'}
+              </p>
+
+              <div className="flex flex-wrap gap-2">
+                {repo.topics?.map((topic) => (
+                  <span
+                    key={topic}
+                    className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm ${
+                      isDarkMode
+                        ? 'bg-gray-700 text-gray-300'
+                        : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {topic}
                   </span>
-                </div>
+                ))}
+              </div>
 
-                <p className={`text-sm xs:text-base mb-3 xs:mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {repo.description || 'No description available'}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {repo.topics?.map((topic) => (
-                    <span
-                      key={topic}
-                      className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm ${
-                        isDarkMode
-                          ? 'bg-gray-700 text-gray-300'
-                          : 'bg-gray-100 text-gray-700'
-                      }`}
-                    >
-                      {topic}
-                    </span>
-                  ))}
+              <div className="mt-3 xs:mt-4 flex items-center justify-between text-sm xs:text-base">
+                <div className="flex items-center gap-2">
+                  <FaStar className="text-yellow-500" />
+                  <span>{repo.stargazers_count}</span>
                 </div>
-
-                <div className="mt-3 xs:mt-4 flex items-center justify-between text-sm xs:text-base">
-                  <div className="flex items-center gap-2">
-                    <FaStar className="text-yellow-500" />
-                    <span>{repo.stargazers_count}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FaCodeBranch className="text-green-500" />
-                    <span>{repo.forks_count}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <FaEye className="text-purple-500" />
-                    <span>{repo.watchers_count}</span>
-                  </div>
+                <div className="flex items-center gap-2">
+                  <FaCodeBranch className="text-green-500" />
+                  <span>{repo.forks_count}</span>
                 </div>
-              </a>
-            ))}
+                <div className="flex items-center gap-2">
+                  <FaEye className="text-purple-500" />
+                  <span>{repo.watchers_count}</span>
+                </div>
+              </div>
+            </a>
+          ))}
         </div>
+
+        {/* Load More Button */}
+        {hasMore && (
+          <div className="mt-8 flex justify-center">
+            <button
+              onClick={loadMore}
+              disabled={loading}
+              className={`px-6 py-3 rounded-lg flex items-center gap-2 ${
+                isDarkMode
+                  ? 'bg-gray-700 hover:bg-gray-600 text-gray-200 disabled:bg-gray-800'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700 disabled:bg-gray-300'
+              }`}
+            >
+              {loading ? (
+                <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-current"></div>
+              ) : (
+                <>
+                  Load More
+                  <FaChevronRight />
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Loading Indicator */}
+        {loading && (
+          <div className="mt-8 flex justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        )}
       </div>
     </div>
   )
