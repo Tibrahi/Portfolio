@@ -43,9 +43,10 @@ const Projects = ({ isDarkMode }) => {
     }
   ]
 
-  const finalProjectCount = 15 // Set your final project count here
-  const finalCollaboratorCount = 50 // Set your final collaborator count here
-  const finalFeaturedCount = 10 // Set your final featured project related count here
+  // Calculate actual counts based on projects array
+  const finalProjectCount = projects.length // Total number of projects
+  const finalCollaboratorCount = projects.filter(p => p.status === 'completed').length // Number of completed projects
+  const finalFeaturedCount = projects.filter(p => p.status === 'under-construction').length // Number of projects under construction
 
   const [projectCount, setProjectCount] = useState(0)
   const [collaboratorCount, setCollaboratorCount] = useState(0)

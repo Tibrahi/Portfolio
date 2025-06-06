@@ -41,6 +41,7 @@ const Dashboard = ({ isDarkMode }) => {
   const [lastUpdated, setLastUpdated] = useState(null)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
+  const [projectCount, setProjectCount] = useState(0)
   const [totalRepos, setTotalRepos] = useState(0)
   const reposPerPage = 12
 
@@ -122,6 +123,23 @@ const Dashboard = ({ isDarkMode }) => {
   useEffect(() => {
     fetchGithubData(page)
   }, [page])
+
+  // Animated project count
+  useEffect(() => {
+    let interval
+    if (projectCount < githubData.length) {
+      interval = setInterval(() => {
+        setProjectCount(prev => {
+          if (prev < githubData.length) return prev + 1
+          clearInterval(interval)
+          return prev
+        })
+      }, 20)
+    } else if (projectCount > githubData.length) {
+      setProjectCount(githubData.length)
+    }
+    return () => clearInterval(interval)
+  }, [githubData.length])
 
   const loadMore = () => {
     if (!loading && hasMore) {
@@ -258,9 +276,7 @@ const Dashboard = ({ isDarkMode }) => {
       {/* Projects Grid with Infinite Scroll */}
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 xs:gap-6 mb-4 xs:mb-6">
-          <h2 className={`text-xl xs:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            All Projects ({totalRepos})
-          </h2>
+          <h2 className={`text-xl xs:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>All Projects ({githubData.length})</h2>
           <div className="flex items-center gap-4">
             <button
               onClick={() => fetchGithubData(1)}
@@ -293,21 +309,14 @@ const Dashboard = ({ isDarkMode }) => {
               }`}
             >
               <div className="flex justify-between items-start mb-3 xs:mb-4">
-                <h3 className={`text-lg xs:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {repo.name}
-                </h3>
-                <span className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm text-white ${
-                  repo.archived ? 'bg-red-500' : 'bg-green-500'
-                }`}>
-                  {repo.archived ? 'Archived' : 'Active'}
-                </span>
+                <h3 className={`text-lg xs:text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{repo.name}</h3>
+                <div className="flex flex-col items-end gap-1">
+                  <span className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm text-white ${repo.private ? 'bg-gray-500' : 'bg-green-500'}`}>{repo.private ? 'Private' : 'Public'}</span>
+                  <span className={`px-2 xs:px-3 py-1 rounded-full text-xs xs:text-sm text-white ${repo.archived ? 'bg-red-500' : 'bg-blue-500'}`}>{repo.archived ? 'Archived' : 'Active'}</span>
+                </div>
               </div>
-
-              <p className={`text-sm xs:text-base mb-3 xs:mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                {repo.description || 'No description available'}
-              </p>
-
-              <div className="flex flex-wrap gap-2">
+              <p className={`text-sm xs:text-base mb-3 xs:mb-4 ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>{repo.description || 'No description available'}</p>
+              <div className="flex flex-wrap gap-2 mb-3 xs:mb-4">
                 {repo.topics?.map((topic) => (
                   <span
                     key={topic}
@@ -321,7 +330,6 @@ const Dashboard = ({ isDarkMode }) => {
                   </span>
                 ))}
               </div>
-
               <div className="mt-3 xs:mt-4 flex items-center justify-between text-sm xs:text-base">
                 <div className="flex items-center gap-2">
                   <FaStar className="text-yellow-500" />
