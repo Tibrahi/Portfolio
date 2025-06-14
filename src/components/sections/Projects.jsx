@@ -21,6 +21,16 @@ const Projects = ({ isDarkMode }) => {
     },
     {
       id: 2,
+      title: 'RocketGame',
+      description: 'An interactive space-themed game where players control a rocket through various challenges and obstacles in space.',
+      technologies: ['JavaScript', 'HTML5', 'CSS3'],
+      link: 'https://rocket-game-opal.vercel.app/',
+      github: 'https://github.com/Tibrahi/RocketGame',
+      screenshot: 'https://rocket-game-opal.vercel.app/',
+      status: 'completed'
+    },
+    {
+      id: 3,
       title: 'Elearning Platform Based Memorize',
       description: 'Memorize is a minimalist e-learning platform where users strengthen their coding memory by writing code from scratch.',
       technologies: ['React', 'Emailjs'],
@@ -31,7 +41,7 @@ const Projects = ({ isDarkMode }) => {
       status: 'completed'
     },
     {
-      id: 3,
+      id: 4,
       title: 'Txlogic',
       description: " txlogic is a web-based cargo tracking system that logs, monitors, and updates cargo movement across logistics channels in real time.",
       technologies: ['React','Typescript', 'Node.js','Firebase','Emailjs'],
