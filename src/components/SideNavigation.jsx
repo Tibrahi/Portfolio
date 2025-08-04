@@ -7,6 +7,7 @@ const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveS
     { id: 'about', label: 'About', icon: '👨‍💻', title: 'About Me' },
     { id: 'skills', label: 'Skills', icon: '⚡', title: 'My Skills' },
     { id: 'projects', label: 'Projects', icon: '🚀', title: 'My Projects' },
+    { id: 'design', label: 'Design', icon: '🎨', title: 'My Designs' },
     { id: 'dashboard', label: 'Dashboard', icon: '📊', title: 'Project Stats' },
     { id: 'contact', label: 'Contact', icon: '📧', title: 'Contact Me' }
   ]

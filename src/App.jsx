@@ -7,6 +7,7 @@ import Projects from './components/sections/Projects'
 import Skills from './components/sections/Skills'
 import Contact from './components/sections/Contact'
 import Dashboard from './components/sections/Dashboard'
+import Design from './components/sections/Design'
 import Loading from './components/Loading'
 import './App.css'
 
@@ -60,6 +61,8 @@ function App() {
         return <Projects isDarkMode={isDarkMode} />
       case 'skills':
         return <Skills isDarkMode={isDarkMode} />
+      case 'design':
+        return <Design isDarkMode={isDarkMode} />
       case 'contact':
         return <Contact isDarkMode={isDarkMode} />
       default:
