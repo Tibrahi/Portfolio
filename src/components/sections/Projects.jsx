@@ -1,19 +1,21 @@
-import React, { useState, useEffect } from 'react'
-import { FaGithub, FaExternalLinkAlt, FaEye } from 'react-icons/fa'
+import React from 'react'
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa'
 
+// Note: Removed unused FaEye import
 // images 
-import Elearning from '../../images/Elearning.png'
-import XEBtrade from '../../images/XEBtrade.png'
-import CommunityConnect from '../../images/CommunityConnect.png'
+// You should confirm if these images are still needed and properly imported in your actual setup.
+// import Elearning from '../../images/Elearning.png'
+// import XEBtrade from '../../images/XEBtrade.png'
+// import CommunityConnect from '../../images/CommunityConnect.png'
 
 const Projects = ({ isDarkMode }) => {
   const projects = [
     {
       id: 1,
       title: 'CineVault',
-      description: 'web-based movie discovery and streaming info platform that lets users explore popular, trending, and top-rated movies and TV shows.',
-      technologies: ['React','TailwindCSS','VanillaJs'],
-      // image: XEBtrade,
+      description: 'A web-based movie discovery and streaming info platform that lets users explore popular, trending, and top-rated movies and TV shows.',
+      technologies: ['React', 'TailwindCSS', 'VanillaJs'],
+      // image: XEBtrade, // Using screenshot for display
       link: 'https://cine-vault-two.vercel.app/',
       github: 'https://github.com/Tibrahi/CineVault',
       screenshot: 'https://cine-vault-two.vercel.app/',
@@ -34,7 +36,7 @@ const Projects = ({ isDarkMode }) => {
       title: 'Elearning Platform Based Memorize',
       description: 'Memorize is a minimalist e-learning platform where users strengthen their coding memory by writing code from scratch.',
       technologies: ['React', 'Emailjs'],
-      image: Elearning,
+      // image: Elearning, // Using screenshot for display
       link: 'https://elearning-taupe.vercel.app/',
       github: 'https://github.com/Tibrahi/Elearning',
       screenshot: 'https://elearning-taupe.vercel.app/api/og',
@@ -43,9 +45,9 @@ const Projects = ({ isDarkMode }) => {
     {
       id: 4,
       title: 'Txlogic',
-      description: " txlogic is a web-based cargo tracking system that logs, monitors, and updates cargo movement across logistics channels in real time.",
-      technologies: ['React','Typescript', 'Node.js','Firebase','Emailjs'],
-      image: CommunityConnect,
+      description: "Txlogic is a web-based cargo tracking system that logs, monitors, and updates cargo movement across logistics channels in real time.",
+      technologies: ['React', 'Typescript', 'Node.js', 'Firebase', 'Emailjs'],
+      // image: CommunityConnect, // Using screenshot for display
       link: 'https://txlogic.vercel.app/',
       github: 'https://github.com/Tibrahi/Txlogic',
       screenshot: 'https://txlogic.vercel.app/',
@@ -53,47 +55,12 @@ const Projects = ({ isDarkMode }) => {
     }
   ]
 
-  // Calculate actual counts based on projects array
-  const finalProjectCount = projects.length // Total number of projects
-  const finalCollaboratorCount = projects.filter(p => p.status === 'completed').length // Number of completed projects
-  const finalFeaturedCount = projects.filter(p => p.status === 'under-construction').length // Number of projects under construction
-
-  const [projectCount, setProjectCount] = useState(0)
-  const [collaboratorCount, setCollaboratorCount] = useState(0)
-  const [featuredCount, setFeaturedCount] = useState(0)
-
-  useEffect(() => {
-    // Project count animation
-    let projectInterval
-    if (projectCount < finalProjectCount) {
-      projectInterval = setInterval(() => {
-        setProjectCount(prevCount => prevCount + 1)
-      }, 10) // Adjust interval for speed
-    }
-    return () => clearInterval(projectInterval)
-  }, [projectCount, finalProjectCount])
-
-  useEffect(() => {
-    // Collaborator count animation
-    let collaboratorInterval
-    if (collaboratorCount < finalCollaboratorCount) {
-      collaboratorInterval = setInterval(() => {
-        setCollaboratorCount(prevCount => prevCount + 1)
-      }, 50) // Adjust interval for speed
-    }
-    return () => clearInterval(collaboratorInterval)
-  }, [collaboratorCount, finalCollaboratorCount])
-
-  useEffect(() => {
-    // Featured count animation
-    let featuredInterval
-    if (featuredCount < finalFeaturedCount) {
-      featuredInterval = setInterval(() => {
-        setFeaturedCount(prevCount => prevCount + 1)
-      }, 30) // Adjust interval for speed
-    }
-    return () => clearInterval(featuredInterval)
-  }, [featuredCount, finalFeaturedCount])
+  // --- REFINEMENT START ---
+  // No need for useState/useEffect for simple, fixed counts.
+  // Calculate counts directly from the array.
+  const totalProjects = projects.length 
+  const completedProjects = projects.filter(p => p.status === 'completed').length 
+  const inProgressProjects = projects.filter(p => p.status === 'under-construction' || p.status === 'in-progress').length 
 
   const getStatusColor = (status) => {
     switch(status) {
@@ -124,6 +91,8 @@ const Projects = ({ isDarkMode }) => {
   return (
     <div className="p-2 xs:p-4 sm:p-6">
       <h1 className={`text-xl xs:text-2xl sm:text-3xl font-bold mb-4 xs:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>My Projects</h1>
+      
+      {/* Project Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 xs:gap-6 sm:gap-8 mb-8 xs:mb-10 sm:mb-12">
         {projects.map((project) => (
           <div 
@@ -142,6 +111,7 @@ const Projects = ({ isDarkMode }) => {
               <img 
                 src={project.screenshot}
                 alt={`Screenshot of ${project.title}`}
+                // Using a standard width/height to make the image fit consistently
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 onError={(e) => {
                   // Fallback to a default image if the OG image fails to load
@@ -218,30 +188,31 @@ const Projects = ({ isDarkMode }) => {
           </div>
         ))}
       </div>
-
-      {/* Additional Sections */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {/* Project Count Card */}
+      
+      {/* Stats Section - Updated for Solo Developer */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        {/* Total Projects Card */}
         <div className={`rounded-lg shadow-md p-6 flex flex-col items-center justify-center text-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
           <h2 className={`text-2xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Total Projects</h2>
           <p className={`text-5xl font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
-            {projectCount}
+            {totalProjects}
           </p>
         </div>
 
-        {/* Featured Count Card */}
+        {/* Completed Projects Card */}
         <div className={`rounded-lg shadow-md p-6 flex flex-col items-center justify-center text-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h2 className={`text-2xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Featured Count</h2>
+          <h2 className={`text-2xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Completed</h2>
           <p className={`text-5xl font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
-            {featuredCount}
+            {completedProjects}
           </p>
         </div>
 
-        {/* Collaborator Appreciation Card */}
+        {/* In Progress Card (Replaces Collaborators) */}
         <div className={`rounded-lg shadow-md p-6 flex flex-col items-center justify-center text-center ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-          <h2 className={`text-2xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Collaborators</h2>
+          <h2 className={`text-2xl font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>In Progress</h2>
           <p className={`text-5xl font-bold ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
-            {collaboratorCount}
+            {inProgressProjects}
           </p>
         </div>
       </div>

@@ -56,7 +56,7 @@ const About = ({ isDarkMode, setActiveSection }) => {
   const stats = [
     {
       label: 'Projects Completed',
-      value: '9+',
+      value: '4+',
       icon: <FaHammer className="text-xl" />,
       color: 'text-indigo-500'
     },
