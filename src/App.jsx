@@ -9,6 +9,7 @@ import Contact from './components/sections/Contact'
 import Dashboard from './components/sections/Dashboard'
 import Design from './components/sections/Design'
 import Loading from './components/Loading'
+import Experience from './components/sections/Experience'
 import './App.css'
 
 function App() {
@@ -65,6 +66,8 @@ function App() {
         return <Design isDarkMode={isDarkMode} />
       case 'contact':
         return <Contact isDarkMode={isDarkMode} />
+        case 'experience ':
+        return <Experience isDarkMode={isDarkMode} />
       default:
         return <Dashboard isDarkMode={isDarkMode} />
     }

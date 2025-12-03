@@ -4,12 +4,13 @@ const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveS
   const [title, setTitle] = useState('About Me')
 
   const navItems = [
-    { id: 'about', label: 'About', icon: '👨‍💻', title: 'About Me' },
-    { id: 'skills', label: 'Skills', icon: '⚡', title: 'My Skills' },
-    { id: 'projects', label: 'Projects', icon: '🚀', title: 'My Projects' },
+    { id: 'about', label: 'About', icon: '👨', title: 'About Me' },
+    { id: 'experience ', label: 'experience', icon: '💼', title: ' experience' }, 
+    { id: 'skills', label: 'Skills', icon: '💻', title: 'My Skills' },
+    { id: 'projects', label: 'Projects', icon: '🏗️', title: 'My Projects' },
     { id: 'design', label: 'Design', icon: '🎨', title: 'My Designs' },
-    { id: 'dashboard', label: 'Dashboard', icon: '📊', title: 'Project Stats' },
-    { id: 'contact', label: 'Contact', icon: '📧', title: 'Contact Me' }
+    { id: 'dashboard', label: 'Dashboard', icon: '🐙', title: 'Project Stats' },
+    { id: 'contact', label: 'Contact', icon: '💬', title: 'Contact Me' }
   ]
 
   useEffect(() => {
