@@ -1,44 +1,40 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState } from 'react'
 import emailjs from '@emailjs/browser'
 import { 
   FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane, 
-  FaGithub, FaLinkedin, FaTwitter, FaTimes, FaCopy, 
+  FaGithub, FaLinkedin, FaTimes, FaCopy, 
   FaExternalLinkAlt, FaCheck, FaExclamationTriangle 
 } from 'react-icons/fa'
 
 const Contact = ({ isDarkMode }) => {
   // --- STATE MANAGEMENT ---
-  const [activePopup, setActivePopup] = useState(null) // Controls which popup is open
-  const [copyStatus, setCopyStatus] = useState(null)   // Controls "Copied!" tooltip
+  const [activePopup, setActivePopup] = useState(null)
+  const [copyStatus, setCopyStatus] = useState(null)
   
   // Form State
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
-  const [status, setStatus] = useState({ type: null, msg: null }) // 'loading', 'success', 'error'
+  const [status, setStatus] = useState({ type: null, msg: null })
 
   // --- ACTIONS ---
 
-  // 1. Robust Copy Functionality
   const handleCopy = (text) => {
     navigator.clipboard.writeText(text)
-    setCopyStatus(text) // Set the copied text as the status to identify which button was clicked
-    setTimeout(() => setCopyStatus(null), 2000) // Reset after 2 seconds
+    setCopyStatus(text)
+    setTimeout(() => setCopyStatus(null), 2000)
   }
 
-  // 2. Clear Status Message (Fix for "Message not gone")
   const clearStatus = () => {
     setStatus({ type: null, msg: null })
   }
 
-  // 3. Email Sending Logic
   const sendEmail = async (e) => {
     e.preventDefault()
     setStatus({ type: 'loading', msg: 'Sending...' })
 
-    // Using .send() for better stability with popups than .sendForm()
     try {
       const result = await emailjs.send(
-        'service_1ufqts8',    // Service ID
-        'template_diahb1s',   // Template ID
+        'service_1ufqts8',
+        'template_diahb1s',
         {
           from_name: formData.name,
           from_email: formData.email,
@@ -46,14 +42,12 @@ const Contact = ({ isDarkMode }) => {
           message: formData.message,
           to_name: 'Ibrahim'
         },
-        'ZUrx5yuwUN5c538nb'   // Public Key
+        'ZUrx5yuwUN5c538nb'
       )
 
       if (result.status === 200) {
         setStatus({ type: 'success', msg: 'Message sent! I will reply soon.' })
         setFormData({ name: '', email: '', subject: '', message: '' })
-        
-        // AUTO-DISMISS: Close the popup automatically after 3 seconds on success
         setTimeout(() => {
           clearStatus()
           setActivePopup(null)
@@ -63,14 +57,12 @@ const Contact = ({ isDarkMode }) => {
       }
     } catch (error) {
       console.error('Email Error:', error)
-      // MANUAL DISMISS: Error stays until user closes it, so they can read it
       setStatus({ type: 'error', msg: 'Failed to send. Please use the Email button instead.' })
     }
   }
 
-  // --- SUB-COMPONENTS (For Clean Code) ---
+  // --- SUB-COMPONENTS ---
 
-  // A. The Trigger Card (The bouncy buttons on the main screen)
   const TriggerCard = ({ icon: Icon, label, colorClass, onClick, delay }) => (
     <button
       onClick={onClick}
@@ -85,13 +77,10 @@ const Contact = ({ isDarkMode }) => {
         <Icon className="text-2xl" />
       </div>
       <span className={`font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{label}</span>
-      
-      {/* Hover Glow Effect */}
       <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 ${colorClass.replace('bg-', 'bg-')}`}></div>
     </button>
   )
 
-  // B. The Modal Wrapper (The Pop Up Container)
   const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null
     return (
@@ -103,14 +92,12 @@ const Contact = ({ isDarkMode }) => {
         <div className={`relative w-full max-w-md transform transition-all animate-bounce-in rounded-3xl shadow-2xl overflow-hidden ${
           isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
         }`}>
-          {/* Modal Header */}
           <div className="flex justify-between items-center p-6 border-b border-gray-200/10">
             <h3 className="text-xl font-bold">{title}</h3>
             <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-500/20 transition-colors">
               <FaTimes />
             </button>
           </div>
-          {/* Modal Content */}
           <div className="p-6">
             {children}
           </div>
@@ -121,7 +108,9 @@ const Contact = ({ isDarkMode }) => {
 
   // --- RENDER ---
   return (
-    <div className={`min-h-screen relative flex flex-col items-center justify-center p-4 overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    // CHANGE: Removed 'justify-center' so it doesn't force middle alignment.
+    // ADDED: 'pt-24' to push it down from the very top edge slightly.
+    <div className={`min-h-screen relative flex flex-col items-center pt-24 overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       
       {/* Animated Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -130,7 +119,7 @@ const Contact = ({ isDarkMode }) => {
         <div className={`absolute top-[40%] left-[40%] w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000 ${isDarkMode ? 'bg-pink-600' : 'bg-pink-300'}`}></div>
       </div>
 
-      <div className="relative z-10 text-center mb-12 animate-fade-in-up">
+      <div className="relative z-10 text-center mb-12 animate-fade-in-up px-4">
         <h1 className={`text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r ${isDarkMode ? 'from-blue-400 to-purple-500' : 'from-blue-600 to-purple-600'}`}>
           Get in Touch
         </h1>
@@ -140,7 +129,7 @@ const Contact = ({ isDarkMode }) => {
       </div>
 
       {/* --- THE GRID HUB --- */}
-      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-3xl">
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-3xl px-4 pb-12">
         
         <TriggerCard 
           icon={FaPaperPlane} label="Message" delay="0"
@@ -229,7 +218,6 @@ const Contact = ({ isDarkMode }) => {
             {status.type === 'loading' ? 'Sending...' : <><FaPaperPlane /> Send Now</>}
           </button>
 
-          {/* STATUS MESSAGE AREA */}
           {status.msg && (
             <div className={`mt-4 p-3 rounded-lg flex items-center gap-3 text-sm animate-fade-in ${
               status.type === 'success' 
@@ -238,7 +226,6 @@ const Contact = ({ isDarkMode }) => {
             }`}>
               {status.type === 'success' ? <FaCheck /> : <FaExclamationTriangle />}
               <span className="flex-1">{status.msg}</span>
-              {/* Manual Close Button for Status */}
               <button type="button" onClick={clearStatus} className="p-1 hover:bg-black/10 rounded-full">
                 <FaTimes />
               </button>
@@ -268,8 +255,11 @@ const Contact = ({ isDarkMode }) => {
               {copyStatus === 'ibrahimtuyizere2@gmail.com' ? <FaCheck className="text-green-500"/> : <FaCopy />} 
               {copyStatus === 'ibrahimtuyizere2@gmail.com' ? 'Copied' : 'Copy'}
             </button>
+            
             <a 
               href="mailto:ibrahimtuyizere2@gmail.com"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 p-3 rounded-xl font-medium bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-500/30"
             >
               <FaExternalLinkAlt /> Open App
@@ -322,8 +312,8 @@ const Contact = ({ isDarkMode }) => {
       >
         <div className="text-center space-y-4">
           <div className="h-48 w-full bg-gray-200 rounded-xl overflow-hidden relative">
-            {/* Simple static map placeholder or image */}
-            <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
+            {/* Background Map Placeholder */}
+            <div className={`absolute inset-0 flex items-center justify-center ${isDarkMode ? 'bg-gray-700' : 'bg-blue-100'}`}>
                <FaMapMarkerAlt className="text-4xl text-red-500 animate-bounce" />
             </div>
           </div>
@@ -331,8 +321,9 @@ const Contact = ({ isDarkMode }) => {
             <h4 className="font-bold text-lg">Kigali, Rwanda</h4>
             <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Kicukiro, Gatenga, KK595st</p>
           </div>
+          {/* UPDATED: Corrected Google Maps Search Link */}
           <a 
-            href="https://www.google.com/maps/search/?api=1&query=Kigali+Kicukiro+Gatenga" 
+            href="https://www.google.com/maps/search/Kicukiro,+Gatenga,+KK595st" 
             target="_blank" 
             rel="noopener noreferrer"
             className="block w-full py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30"
