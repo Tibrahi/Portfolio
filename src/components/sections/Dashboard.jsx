@@ -1,199 +1,332 @@
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FaGithub, FaLinkedin, FaEnvelope, FaCode, FaStar, FaCodeBranch, FaJs, FaReact, 
-  FaNodeJs, FaPython, FaDatabase, FaGitAlt, FaPhp, FaHtml5, FaCss3Alt, FaFigma, 
-  FaLaravel, FaBootstrap, FaEye, FaChevronRight, FaMapMarkerAlt, FaExternalLinkAlt 
+  FaGithub, FaLinkedin, FaEnvelope, FaCode, FaStar, FaCodeBranch,
+  FaJs, FaReact, FaNodeJs, FaPython, FaDatabase, FaGitAlt, FaPhp,
+  FaHtml5, FaCss3Alt, FaFigma, FaLaravel, FaBootstrap, FaEye,
+  FaExternalLinkAlt, FaDownload, FaCircle
 } from 'react-icons/fa';
 import { 
-  SiTypescript, SiMongodb, SiVercel, SiTailwindcss, SiBulma, SiPreact, 
-  SiNextdotjs, SiSass, SiLess 
+  SiTypescript, SiMongodb, SiVercel, SiTailwindcss, SiBulma, 
+  SiPreact, SiNextdotjs, SiSass, SiLess
 } from 'react-icons/si';
 
 const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [lastUpdated, setLastUpdated] = useState(null);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [visibleProjects, setVisibleProjects] = useState(6);
 
-  const technologies = [
-    { name: "JavaScript", icon: <FaJs className="text-yellow-400" />, proficiency: 95 },
-    { name: "React", icon: <FaReact className="text-blue-400" />, proficiency: 90 },
-    { name: "Node.js", icon: <FaNodeJs className="text-green-500" />, proficiency: 85 },
-    { name: "TypeScript", icon: <SiTypescript className="text-blue-600" />, proficiency: 80 },
-    { name: "Next.js", icon: <SiNextdotjs />, proficiency: 88 },
-    { name: "Laravel", icon: <FaLaravel className="text-red-500" />, proficiency: 75 },
-    { name: "Python", icon: <FaPython className="text-blue-500" />, proficiency: 70 },
-    { name: "TailwindCSS", icon: <SiTailwindcss className="text-cyan-400" />, proficiency: 95 }
-  ];
-
+  // Personal Info - Centralized for easy editing
   const personalInfo = {
     name: "Tuyizere Ibrahim",
-    role: "Senior Full Stack Engineer",
-    bio: "Architecting scalable digital solutions with a focus on performance, security, and exceptional user experience.",
+    role: "Full Stack Developer",
+    status: "Open to Work",
+    bio: "I build scalable, user-centric applications. Specializing in the MERN stack and modern web technologies to solve real-world business problems.",
     location: "Kigali, Rwanda",
     email: "ibrahimtuyizere2@gmail.com",
     github: "Tibrahi",
     linkedin: "tuyizere-ibrahim-89ba8b275",
+    resumeLink: "#", // Add your actual resume link here
   };
 
-  const fetchGithubData = async (pageNum = 1) => {
+  // Categorized Skills for better readability
+  const skillCategories = {
+    Frontend: [
+      { name: "React", icon: <FaReact className="text-blue-500" /> },
+      { name: "Next.js", icon: <SiNextdotjs className="text-black dark:text-white" /> },
+      { name: "TypeScript", icon: <SiTypescript className="text-blue-600" /> },
+      { name: "Tailwind", icon: <SiTailwindcss className="text-cyan-500" /> },
+      { name: "JavaScript", icon: <FaJs className="text-yellow-400" /> },
+    ],
+    Backend: [
+      { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
+      { name: "Python", icon: <FaPython className="text-blue-600" /> },
+      { name: "Laravel", icon: <FaLaravel className="text-red-500" /> },
+      { name: "PHP", icon: <FaPhp className="text-purple-600" /> },
+      { name: "MongoDB", icon: <SiMongodb className="text-green-600" /> },
+      { name: "MySQL", icon: <FaDatabase className="text-blue-700" /> },
+    ],
+    Tools: [
+      { name: "Git", icon: <FaGitAlt className="text-orange-500" /> },
+      { name: "Vercel", icon: <SiVercel className="text-black dark:text-white" /> },
+      { name: "Figma", icon: <FaFigma className="text-pink-500" /> },
+    ]
+  };
+
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { staggerChildren: 0.1 }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: { 
+      y: 0, 
+      opacity: 1,
+      transition: { type: "spring", stiffness: 100 }
+    }
+  };
+
+  const fetchGithubData = async () => {
     try {
       setLoading(true);
+      // Fetching all repos sorted by updated to filter client-side
       const response = await fetch(
-        `https://api.github.com/users/${personalInfo.github}/repos?page=${pageNum}&per_page=10&sort=updated`
+        `https://api.github.com/users/${personalInfo.github}/repos?per_page=100&sort=updated`
       );
-      if (!response.ok) throw new Error(`API Error: ${response.status}`);
+      
+      if (!response.ok) throw new Error("Failed to fetch data");
+
       const data = await response.json();
       
-      const linkHeader = response.headers.get('Link');
-      setHasMore(linkHeader && linkHeader.includes('rel="next"'));
-      
-      setGithubData(pageNum === 1 ? data : prev => [...prev, ...data]);
-      setLastUpdated(new Date());
-    } catch (err) {
-      setError(err.message);
+      // Smart Filtering: Recruiters don't want to see forks or archived projects usually
+      const cleanData = data
+        .filter(repo => !repo.fork && !repo.archived)
+        .sort((a, b) => b.stargazers_count - a.stargazers_count); // Sort by stars (quality)
+
+      setGithubData(cleanData);
+    } catch (error) {
+      setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchGithubData(page); }, [page]);
+  useEffect(() => {
+    fetchGithubData();
+  }, []);
+
+  const loadMore = () => {
+    setVisibleProjects(prev => prev + 6);
+  };
 
   return (
-    <div className={`min-h-screen p-4 md:p-8 ${isDarkMode ? 'bg-gray-900 text-gray-100' : 'bg-gray-50 text-gray-800'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 text-slate-100' : 'bg-gray-50 text-gray-900'}`}>
       
-      {/* EXPERT PROFILE HEADER */}
-      <header className={`max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-2xl mb-8 ${isDarkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white'}`}>
-        <div className="h-32 bg-gradient-to-r from-blue-600 to-purple-600 w-full" />
-        <div className="px-6 pb-8 -mt-16 flex flex-col md:flex-row items-end gap-6">
-          <div className="relative">
-            <img
-              src={`https://github.com/${personalInfo.github}.png`}
-              alt="Profile"
-              className="w-40 h-40 rounded-2xl border-4 border-gray-900 shadow-xl object-cover"
-            />
-            <div className="absolute bottom-2 right-2 w-5 h-5 bg-green-500 border-2 border-white rounded-full"></div>
+      {/* Hero Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
+      >
+        <div className="flex flex-col md:flex-row items-center gap-12">
+          {/* Avatar with Status Ring */}
+          <div className="relative group">
+            <div className={`absolute -inset-1 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 ${isDarkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-blue-400 to-purple-400'}`}></div>
+            <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
+              <img
+                src={`https://github.com/${personalInfo.github}.png`}
+                alt={personalInfo.name}
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute bottom-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 border-2 border-white dark:border-slate-900">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+              </span>
+              {personalInfo.status}
+            </div>
           </div>
-          <div className="flex-1 mb-2">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div>
-                <h1 className="text-3xl font-bold">{personalInfo.name}</h1>
-                <p className="text-blue-500 font-medium tracking-wide uppercase text-sm">{personalInfo.role}</p>
-                <div className="flex items-center gap-3 mt-2 text-sm opacity-75">
-                  <span className="flex items-center gap-1"><FaMapMarkerAlt /> {personalInfo.location}</span>
-                  <span className="flex items-center gap-1"><FaEnvelope /> {personalInfo.email}</span>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <a href={`https://github.com/${personalInfo.github}`} className="p-3 rounded-xl bg-gray-700 hover:bg-blue-600 transition-colors"><FaGithub size={20} /></a>
-                <a href={`https://linkedin.com/in/${personalInfo.linkedin}`} className="p-3 rounded-xl bg-gray-700 hover:bg-blue-600 transition-colors"><FaLinkedin size={20} /></a>
+
+          {/* Intro Text */}
+          <div className="flex-1 text-center md:text-left space-y-6">
+            <div>
+              <h2 className="text-blue-500 dark:text-blue-400 font-semibold tracking-wide uppercase text-sm">Full Stack Developer</h2>
+              <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">
+                Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{personalInfo.name}</span>
+              </h1>
+            </div>
+            
+            <p className={`text-lg md:text-xl max-w-2xl leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+              {personalInfo.bio}
+            </p>
+
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <a 
+                href={personalInfo.resumeLink}
+                className="px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-lg hover:shadow-blue-500/30 flex items-center gap-2"
+              >
+                <FaDownload /> Download CV
+              </a>
+              <div className="flex gap-4 items-center">
+                {[
+                  { icon: <FaGithub />, href: `https://github.com/${personalInfo.github}` },
+                  { icon: <FaLinkedin />, href: `https://linkedin.com/in/${personalInfo.linkedin}` },
+                  { icon: <FaEnvelope />, href: `mailto:${personalInfo.email}` }
+                ].map((social, idx) => (
+                  <a 
+                    key={idx} 
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`p-3 rounded-full text-xl transition-all hover:scale-110 ${isDarkMode ? 'bg-slate-800 hover:bg-slate-700 text-white' : 'bg-white hover:bg-gray-100 text-slate-700 shadow-md'}`}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
               </div>
             </div>
           </div>
         </div>
-      </header>
+      </motion.div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* LEFT COLUMN: SYSTEM FLOW STATS */}
-        <aside className="space-y-6">
-          <div className={`p-6 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h2 className="text-lg font-bold mb-6 flex items-center gap-2">
-              <span className="w-2 h-6 bg-blue-500 rounded-full"></span>
-              Skill Matrix Progress
-            </h2>
-            <div className="space-y-5">
-              {technologies.map((tech) => (
-                <div key={tech.name}>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className="flex items-center gap-2">{tech.icon} {tech.name}</span>
-                    <span className="font-mono text-blue-400">{tech.proficiency}%</span>
-                  </div>
-                  <div className="w-full bg-gray-700 rounded-full h-1.5">
-                    <div 
-                      className="bg-blue-500 h-1.5 rounded-full transition-all duration-1000" 
-                      style={{ width: `${tech.proficiency}%` }}
-                    />
-                  </div>
+      {/* Skills Section - Categorized */}
+      <div className={`py-12 ${isDarkMode ? 'bg-slate-800/50' : 'bg-white'}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <h3 className="text-2xl font-bold mb-8 text-center">Technical Arsenal</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {Object.entries(skillCategories).map(([category, skills], idx) => (
+              <motion.div 
+                key={category}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.1 }}
+                className={`p-6 rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-gray-50 border border-gray-200'}`}
+              >
+                <h4 className="text-lg font-semibold mb-4 text-blue-500">{category}</h4>
+                <div className="flex flex-wrap gap-3">
+                  {skills.map((skill, sIdx) => (
+                    <div key={sIdx} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${isDarkMode ? 'bg-slate-700' : 'bg-white shadow-sm'}`}>
+                      {skill.icon}
+                      <span>{skill.name}</span>
+                    </div>
+                  ))}
                 </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Projects Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+        <div className="flex justify-between items-end mb-10">
+          <div>
+            <h2 className="text-3xl font-bold">Featured Projects</h2>
+            <p className={`mt-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+              Selected repositories showcasing my capabilities
+            </p>
+          </div>
+          <a 
+            href={`https://github.com/${personalInfo.github}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors"
+          >
+            View all on GitHub <FaExternalLinkAlt className="text-sm" />
+          </a>
+        </div>
+
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1,2,3,4,5,6].map(i => (
+              <div key={i} className={`h-64 rounded-xl animate-pulse ${isDarkMode ? 'bg-slate-800' : 'bg-gray-200'}`}></div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center p-8 bg-red-100 dark:bg-red-900/20 text-red-600 rounded-xl">
+            {error}
+          </div>
+        ) : (
+          <motion.div 
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            <AnimatePresence>
+              {githubData.slice(0, visibleProjects).map((repo) => (
+                <motion.article
+                  key={repo.id}
+                  variants={itemVariants}
+                  whileHover={{ y: -5 }}
+                  className={`group relative flex flex-col justify-between rounded-xl overflow-hidden border transition-all duration-300 ${
+                    isDarkMode 
+                      ? 'bg-slate-800 border-slate-700 hover:border-blue-500/50 hover:shadow-blue-900/20' 
+                      : 'bg-white border-gray-200 hover:border-blue-300 hover:shadow-xl'
+                  }`}
+                >
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-2">
+                        <FaGithub className={`text-2xl ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`} />
+                        <h3 className="font-bold text-lg truncate pr-2">{repo.name}</h3>
+                      </div>
+                      <span className="flex items-center gap-1 text-xs font-medium px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                        <FaStar className="text-yellow-500" /> {repo.stargazers_count}
+                      </span>
+                    </div>
+                    
+                    <p className={`text-sm line-clamp-3 mb-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                      {repo.description || "A comprehensive project demonstrating modern web development practices and clean code architecture."}
+                    </p>
+
+                    <div className="flex flex-wrap gap-2 mt-auto">
+                      {repo.language && (
+                        <span className="flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                          <FaCircle className="text-[8px]" /> {repo.language}
+                        </span>
+                      )}
+                      <span className="flex items-center gap-1 text-xs px-2 py-1 rounded-md bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+                        {(repo.size / 1024).toFixed(0)} KB
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className={`px-6 py-4 border-t flex justify-between items-center ${isDarkMode ? 'border-slate-700 bg-slate-800/50' : 'border-gray-100 bg-gray-50'}`}>
+                    <span className={`text-xs ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
+                      Updated {new Date(repo.updated_at).toLocaleDateString()}
+                    </span>
+                    <a 
+                      href={repo.html_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-semibold text-blue-500 hover:text-blue-600 flex items-center gap-1"
+                    >
+                      Code <FaExternalLinkAlt className="text-xs" />
+                    </a>
+                  </div>
+                </motion.article>
               ))}
-            </div>
-          </div>
+            </AnimatePresence>
+          </motion.div>
+        )}
 
-          <div className={`p-6 rounded-2xl shadow-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <h3 className="font-bold mb-4">Quick Insights</h3>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/20 text-center">
-                <p className="text-2xl font-bold text-blue-500">{githubData.length}+</p>
-                <p className="text-xs uppercase opacity-60">Repositories</p>
-              </div>
-              <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-center">
-                <p className="text-2xl font-bold text-purple-500">24/7</p>
-                <p className="text-xs uppercase opacity-60">Deployment</p>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        {/* RIGHT COLUMN: PROJECT ROW REPRESENTATION */}
-        <section className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="text-xl font-bold">Project Feed</h2>
-            <button onClick={() => fetchGithubData(1)} className="text-sm text-blue-500 hover:underline">Sync Data</button>
-          </div>
-
-          {githubData.map((repo) => (
-            <div 
-              key={repo.id}
-              className={`group flex flex-col md:flex-row items-start md:items-center gap-4 p-5 rounded-2xl transition-all border ${
-                isDarkMode ? 'bg-gray-800 border-gray-700 hover:border-blue-500' : 'bg-white border-gray-200 hover:shadow-xl'
+        {visibleProjects < githubData.length && (
+          <div className="mt-12 text-center">
+            <button
+              onClick={loadMore}
+              className={`px-8 py-3 rounded-full font-semibold transition-all ${
+                isDarkMode 
+                  ? 'bg-slate-800 hover:bg-slate-700 text-white' 
+                  : 'bg-white hover:bg-gray-50 text-slate-800 shadow-md border border-gray-200'
               }`}
             >
-              <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-                <FaCode size={24} className="text-blue-500" />
-              </div>
-              
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="font-bold text-lg group-hover:text-blue-500 transition-colors">{repo.name}</h3>
-                  <span className={`text-[10px] px-2 py-0.5 rounded-full border ${repo.private ? 'border-gray-500 text-gray-500' : 'border-green-500 text-green-500'}`}>
-                    {repo.private ? 'Private' : 'Public'}
-                  </span>
-                </div>
-                <p className="text-sm opacity-70 line-clamp-1">{repo.description || "No description provided for this architectural build."}</p>
-                
-                <div className="flex flex-wrap gap-4 mt-3">
-                  <span className="flex items-center gap-1 text-xs"><FaStar className="text-yellow-500" /> {repo.stargazers_count}</span>
-                  <span className="flex items-center gap-1 text-xs"><FaCodeBranch className="text-blue-400" /> {repo.forks_count}</span>
-                  <span className="flex items-center gap-1 text-xs opacity-60 italic">{repo.language}</span>
-                </div>
-              </div>
-
-              <div className="flex md:flex-col gap-2 w-full md:w-auto">
-                <a 
-                  href={repo.html_url} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className="flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm transition-all"
-                >
-                  <FaExternalLinkAlt size={12} /> View
-                </a>
-              </div>
-            </div>
-          ))}
-
-          {hasMore && (
-            <button 
-              onClick={() => setPage(p => p + 1)}
-              className="w-full py-4 rounded-2xl border-2 border-dashed border-gray-700 hover:border-blue-500 text-gray-500 hover:text-blue-500 transition-all flex items-center justify-center gap-2"
-            >
-              {loading ? "Initializing..." : <>Load More Projects <FaChevronRight /></>}
+              Show More Projects
             </button>
-          )}
-        </section>
+          </div>
+        )}
       </div>
+
+      {/* Footer / CTA */}
+      <footer className={`py-12 text-center ${isDarkMode ? 'bg-slate-900 border-t border-slate-800' : 'bg-gray-50 border-t border-gray-200'}`}>
+        <p className={`mb-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+          Interested in working together?
+        </p>
+        <a 
+          href={`mailto:${personalInfo.email}`}
+          className="inline-flex items-center gap-2 text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-80"
+        >
+          Let's connect <FaEnvelope className="text-blue-600" />
+        </a>
+      </footer>
     </div>
   );
 };
