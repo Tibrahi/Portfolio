@@ -4,7 +4,7 @@ import {
   FaGithub, FaLinkedin, FaEnvelope, FaCode, FaStar, FaCodeBranch,
   FaJs, FaReact, FaNodeJs, FaPython, FaDatabase, FaGitAlt, FaPhp,
   FaHtml5, FaCss3Alt, FaFigma, FaLaravel, FaBootstrap, FaEye,
-  FaExternalLinkAlt, FaDownload, FaCircle
+  FaExternalLinkAlt, FaDownload, FaCircle, FaChevronLeft, FaChevronRight
 } from 'react-icons/fa';
 import { 
   SiTypescript, SiMongodb, SiVercel, SiTailwindcss, SiBulma, 
@@ -15,7 +15,10 @@ const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [visibleProjects, setVisibleProjects] = useState(6);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   // Personal Info - Centralized for easy editing
   const personalInfo = {
@@ -101,8 +104,18 @@ const Dashboard = ({ isDarkMode }) => {
     fetchGithubData();
   }, []);
 
-  const loadMore = () => {
-    setVisibleProjects(prev => prev + 6);
+  // Pagination Logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProjects = githubData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(githubData.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage(prev => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage(prev => prev - 1);
   };
 
   return (
@@ -115,7 +128,7 @@ const Dashboard = ({ isDarkMode }) => {
         className="relative pt-20 pb-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto"
       >
         <div className="flex flex-col md:flex-row items-center gap-12">
-          {/* Avatar with Status Ring */}
+          {/* Avatar - Indicator Removed */}
           <div className="relative group">
             <div className={`absolute -inset-1 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 ${isDarkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-blue-400 to-purple-400'}`}></div>
             <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
@@ -124,13 +137,6 @@ const Dashboard = ({ isDarkMode }) => {
                 alt={personalInfo.name}
                 className="w-full h-full object-cover"
               />
-            </div>
-            <div className="absolute bottom-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-1 border-2 border-white dark:border-slate-900">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-200 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-              </span>
-              {personalInfo.status}
             </div>
           </div>
 
@@ -148,17 +154,11 @@ const Dashboard = ({ isDarkMode }) => {
             </p>
 
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-              <a 
-                href={personalInfo.resumeLink}
-                className="px-8 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-all shadow-lg hover:shadow-blue-500/30 flex items-center gap-2"
-              >
-                <FaDownload /> Download CV
-              </a>
+
               <div className="flex gap-4 items-center">
                 {[
                   { icon: <FaGithub />, href: `https://github.com/${personalInfo.github}` },
-                  { icon: <FaLinkedin />, href: `https://linkedin.com/in/${personalInfo.linkedin}` },
-                  { icon: <FaEnvelope />, href: `mailto:${personalInfo.email}` }
+                  { icon: <FaLinkedin />, href: `https://linkedin.com/in/${personalInfo.linkedin}` }
                 ].map((social, idx) => (
                   <a 
                     key={idx} 
@@ -241,8 +241,8 @@ const Dashboard = ({ isDarkMode }) => {
             animate="visible"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            <AnimatePresence>
-              {githubData.slice(0, visibleProjects).map((repo) => (
+            <AnimatePresence mode='wait'>
+              {currentProjects.map((repo) => (
                 <motion.article
                   key={repo.id}
                   variants={itemVariants}
@@ -299,34 +299,40 @@ const Dashboard = ({ isDarkMode }) => {
           </motion.div>
         )}
 
-        {visibleProjects < githubData.length && (
-          <div className="mt-12 text-center">
+        {/* Pagination Controls */}
+        {githubData.length > itemsPerPage && (
+          <div className="mt-12 flex justify-center items-center gap-4">
             <button
-              onClick={loadMore}
-              className={`px-8 py-3 rounded-full font-semibold transition-all ${
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+              className={`p-3 rounded-full transition-all flex items-center justify-center ${
                 isDarkMode 
-                  ? 'bg-slate-800 hover:bg-slate-700 text-white' 
-                  : 'bg-white hover:bg-gray-50 text-slate-800 shadow-md border border-gray-200'
+                  ? 'bg-slate-800 text-white disabled:bg-slate-800/50 disabled:text-slate-600 hover:bg-slate-700' 
+                  : 'bg-white text-slate-800 shadow-md border border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-50'
               }`}
             >
-              Show More Projects
+              <FaChevronLeft />
+            </button>
+            
+            <span className={`font-medium ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+              Page {currentPage} of {totalPages}
+            </span>
+
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`p-3 rounded-full transition-all flex items-center justify-center ${
+                isDarkMode 
+                  ? 'bg-slate-800 text-white disabled:bg-slate-800/50 disabled:text-slate-600 hover:bg-slate-700' 
+                  : 'bg-white text-slate-800 shadow-md border border-gray-200 disabled:bg-gray-100 disabled:text-gray-400 hover:bg-gray-50'
+              }`}
+            >
+              <FaChevronRight />
             </button>
           </div>
         )}
       </div>
 
-      {/* Footer / CTA */}
-      <footer className={`py-12 text-center ${isDarkMode ? 'bg-slate-900 border-t border-slate-800' : 'bg-gray-50 border-t border-gray-200'}`}>
-        <p className={`mb-4 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-          Interested in working together?
-        </p>
-        <a 
-          href={`mailto:${personalInfo.email}`}
-          className="inline-flex items-center gap-2 text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 hover:opacity-80"
-        >
-          Let's connect <FaEnvelope className="text-blue-600" />
-        </a>
-      </footer>
     </div>
   );
 };

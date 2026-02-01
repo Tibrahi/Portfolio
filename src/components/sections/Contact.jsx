@@ -1,277 +1,349 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import emailjs from '@emailjs/browser'
 import { 
-  FaEnvelope, FaGithub, FaLinkedin, FaTwitter, 
-  FaPaperPlane, FaTimes, FaCopy, FaCheckCircle, 
-  FaMapMarkerAlt, FaPhone 
+  FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane, 
+  FaGithub, FaLinkedin, FaTwitter, FaTimes, FaCopy, 
+  FaExternalLinkAlt, FaCheck, FaExclamationTriangle 
 } from 'react-icons/fa'
 
 const Contact = ({ isDarkMode }) => {
-  // State for Modal (The Popup)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  // --- STATE MANAGEMENT ---
+  const [activePopup, setActivePopup] = useState(null) // Controls which popup is open
+  const [copyStatus, setCopyStatus] = useState(null)   // Controls "Copied!" tooltip
   
-  // State for Form Data
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  })
-  
-  const [status, setStatus] = useState({ type: null, message: null })
-  const [copiedField, setCopiedField] = useState(null)
+  // Form State
+  const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' })
+  const [status, setStatus] = useState({ type: null, msg: null }) // 'loading', 'success', 'error'
 
-  // --- 1. ROBUST EMAIL LOGIC (Fixing the error) ---
-  const handleSubmit = async (e) => {
+  // --- ACTIONS ---
+
+  // 1. Robust Copy Functionality
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text)
+    setCopyStatus(text) // Set the copied text as the status to identify which button was clicked
+    setTimeout(() => setCopyStatus(null), 2000) // Reset after 2 seconds
+  }
+
+  // 2. Clear Status Message (Fix for "Message not gone")
+  const clearStatus = () => {
+    setStatus({ type: null, msg: null })
+  }
+
+  // 3. Email Sending Logic
+  const sendEmail = async (e) => {
     e.preventDefault()
-    setStatus({ type: 'loading', message: 'Sending your message...' })
+    setStatus({ type: 'loading', msg: 'Sending...' })
 
-    const serviceId = 'service_1ufqts8'
-    const templateId = 'template_diahb1s'
-    const publicKey = 'ZUrx5yuwUN5c538nb' //
-
-    // Create a plain object to send (Stable fix for React)
-    const templateParams = {
-      name: formData.name,
-      email: formData.email,
-      subject: formData.subject,
-      message: formData.message,
-      to_name: 'Ibrahim' // Standard EmailJS variable
-    }
-
+    // Using .send() for better stability with popups than .sendForm()
     try {
-      // Using .send() instead of .sendForm() to prevent DOM reference errors
-      const response = await emailjs.send(serviceId, templateId, templateParams, publicKey)
+      const result = await emailjs.send(
+        'service_1ufqts8',    // Service ID
+        'template_diahb1s',   // Template ID
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to_name: 'Ibrahim'
+        },
+        'ZUrx5yuwUN5c538nb'   // Public Key
+      )
 
-      if (response.status === 200) {
-        setStatus({ type: 'success', message: 'Message sent successfully!' })
+      if (result.status === 200) {
+        setStatus({ type: 'success', msg: 'Message sent! I will reply soon.' })
         setFormData({ name: '', email: '', subject: '', message: '' })
         
-        // Close modal after success (optional)
+        // AUTO-DISMISS: Close the popup automatically after 3 seconds on success
         setTimeout(() => {
-          setIsModalOpen(false)
-          setStatus({ type: null, message: null })
-        }, 2000)
+          clearStatus()
+          setActivePopup(null)
+        }, 3000)
       } else {
-        throw new Error('Email service failed')
+        throw new Error('EmailJS returned non-200 status')
       }
     } catch (error) {
-      console.error('EmailJS Error:', error)
-      setStatus({ 
-        type: 'error', 
-        message: 'Failed to send. Please check your internet or try email directly.' 
-      })
+      console.error('Email Error:', error)
+      // MANUAL DISMISS: Error stays until user closes it, so they can read it
+      setStatus({ type: 'error', msg: 'Failed to send. Please use the Email button instead.' })
     }
   }
 
-  // --- 2. INTERACTION HANDLERS ---
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
+  // --- SUB-COMPONENTS (For Clean Code) ---
+
+  // A. The Trigger Card (The bouncy buttons on the main screen)
+  const TriggerCard = ({ icon: Icon, label, colorClass, onClick, delay }) => (
+    <button
+      onClick={onClick}
+      className={`relative group flex flex-col items-center justify-center p-6 rounded-3xl border shadow-xl transition-all duration-500 hover:scale-110 hover:-translate-y-2 ${
+        isDarkMode 
+          ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' 
+          : 'bg-white border-white hover:bg-gray-50'
+      }`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <div className={`p-4 rounded-full mb-3 transition-transform duration-300 group-hover:rotate-12 ${colorClass}`}>
+        <Icon className="text-2xl" />
+      </div>
+      <span className={`font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>{label}</span>
+      
+      {/* Hover Glow Effect */}
+      <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-20 transition-opacity duration-300 ${colorClass.replace('bg-', 'bg-')}`}></div>
+    </button>
+  )
+
+  // B. The Modal Wrapper (The Pop Up Container)
+  const Modal = ({ isOpen, onClose, title, children }) => {
+    if (!isOpen) return null
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div 
+          className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity animate-fade-in"
+          onClick={onClose}
+        ></div>
+        <div className={`relative w-full max-w-md transform transition-all animate-bounce-in rounded-3xl shadow-2xl overflow-hidden ${
+          isDarkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
+        }`}>
+          {/* Modal Header */}
+          <div className="flex justify-between items-center p-6 border-b border-gray-200/10">
+            <h3 className="text-xl font-bold">{title}</h3>
+            <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-500/20 transition-colors">
+              <FaTimes />
+            </button>
+          </div>
+          {/* Modal Content */}
+          <div className="p-6">
+            {children}
+          </div>
+        </div>
+      </div>
+    )
   }
 
-  const handleCopy = (text, field) => {
-    navigator.clipboard.writeText(text)
-    setCopiedField(field)
-    setTimeout(() => setCopiedField(null), 2000)
-  }
-
-  // --- 3. UI COMPONENTS ---
-  
+  // --- RENDER ---
   return (
     <div className={`min-h-screen relative flex flex-col items-center justify-center p-4 overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       
-      {/* Background Decor */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute top-20 left-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob ${isDarkMode ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
-        <div className={`absolute bottom-20 right-10 w-72 h-72 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 ${isDarkMode ? 'bg-purple-600' : 'bg-purple-300'}`}></div>
+      {/* Animated Background */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className={`absolute top-[10%] left-[10%] w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob ${isDarkMode ? 'bg-blue-600' : 'bg-blue-300'}`}></div>
+        <div className={`absolute bottom-[10%] right-[10%] w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000 ${isDarkMode ? 'bg-purple-600' : 'bg-purple-300'}`}></div>
+        <div className={`absolute top-[40%] left-[40%] w-64 h-64 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000 ${isDarkMode ? 'bg-pink-600' : 'bg-pink-300'}`}></div>
       </div>
 
-      <div className="relative z-10 max-w-5xl w-full">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className={`text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r ${isDarkMode ? 'from-blue-400 to-purple-500' : 'from-blue-600 to-purple-600'}`}>
-            Let's Connect
-          </h1>
-          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Choose how you want to reach out. Click a card to interact.
-          </p>
-        </div>
+      <div className="relative z-10 text-center mb-12 animate-fade-in-up">
+        <h1 className={`text-4xl md:text-6xl font-black mb-4 bg-clip-text text-transparent bg-gradient-to-r ${isDarkMode ? 'from-blue-400 to-purple-500' : 'from-blue-600 to-purple-600'}`}>
+          Get in Touch
+        </h1>
+        <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          Click an icon below to interact
+        </p>
+      </div>
 
-        {/* --- THE GRID OF "POP UPS" / INTERACTIVE CARDS --- */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* --- THE GRID HUB --- */}
+      <div className="relative z-10 grid grid-cols-2 md:grid-cols-3 gap-6 w-full max-w-3xl">
+        
+        <TriggerCard 
+          icon={FaPaperPlane} label="Message" delay="0"
+          colorClass={isDarkMode ? 'bg-blue-600/20 text-blue-400' : 'bg-blue-100 text-blue-600'}
+          onClick={() => setActivePopup('message')} 
+        />
+        
+        <TriggerCard 
+          icon={FaEnvelope} label="Email" delay="100"
+          colorClass={isDarkMode ? 'bg-green-600/20 text-green-400' : 'bg-green-100 text-green-600'}
+          onClick={() => setActivePopup('email')} 
+        />
+
+        <TriggerCard 
+          icon={FaPhone} label="Phone" delay="200"
+          colorClass={isDarkMode ? 'bg-orange-600/20 text-orange-400' : 'bg-orange-100 text-orange-600'}
+          onClick={() => setActivePopup('phone')} 
+        />
+
+        <TriggerCard 
+          icon={FaMapMarkerAlt} label="Location" delay="300"
+          colorClass={isDarkMode ? 'bg-red-600/20 text-red-400' : 'bg-red-100 text-red-600'}
+          onClick={() => setActivePopup('location')} 
+        />
+
+        <TriggerCard 
+          icon={FaGithub} label="GitHub" delay="400"
+          colorClass={isDarkMode ? 'bg-gray-600/20 text-gray-300' : 'bg-gray-200 text-gray-800'}
+          onClick={() => window.open('https://github.com/Tibrahi', '_blank')} 
+        />
+
+        <TriggerCard 
+          icon={FaLinkedin} label="LinkedIn" delay="500"
+          colorClass={isDarkMode ? 'bg-blue-800/20 text-blue-300' : 'bg-blue-50 text-blue-700'}
+          onClick={() => window.open('https://linkedin.com/in/tuyizere-ibrahim-89ba8b275', '_blank')} 
+        />
+      </div>
+
+      {/* --- POPUP 1: CONTACT FORM --- */}
+      <Modal 
+        isOpen={activePopup === 'message'} 
+        onClose={() => { setActivePopup(null); clearStatus(); }}
+        title="Send a Message"
+      >
+        <form onSubmit={sendEmail} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <input 
+              className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
+              placeholder="Name" 
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              required
+            />
+            <input 
+              className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
+              placeholder="Email" 
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({...formData, email: e.target.value})}
+              required
+            />
+          </div>
+          <input 
+            className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
+            placeholder="Subject" 
+            value={formData.subject}
+            onChange={(e) => setFormData({...formData, subject: e.target.value})}
+            required
+          />
+          <textarea 
+            className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all resize-none ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
+            placeholder="Your Message..." 
+            rows="4"
+            value={formData.message}
+            onChange={(e) => setFormData({...formData, message: e.target.value})}
+            required
+          />
           
-          {/* 1. The Message Launcher (Triggers Modal) */}
           <button 
-            onClick={() => setIsModalOpen(true)}
-            className={`group col-span-1 md:col-span-2 lg:col-span-1 row-span-2 p-8 rounded-3xl text-left transition-all duration-300 transform hover:scale-[1.02] shadow-xl border ${
-              isDarkMode 
-                ? 'bg-gradient-to-br from-blue-600 to-blue-800 border-blue-500/30 text-white' 
-                : 'bg-gradient-to-br from-blue-500 to-blue-700 border-blue-400 text-white'
+            type="submit"
+            disabled={status.type === 'loading'}
+            className={`w-full py-3 rounded-xl font-bold flex items-center justify-center gap-2 transition-transform active:scale-95 ${
+              status.type === 'loading' ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30'
             }`}
           >
-            <div className="h-full flex flex-col justify-between">
-              <div>
-                <div className="bg-white/20 w-12 h-12 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-sm">
-                  <FaPaperPlane className="text-xl text-white" />
-                </div>
-                <h3 className="text-2xl font-bold mb-2">Send a Message</h3>
-                <p className="text-blue-100 text-sm">Got a project? Fill out the form and I'll get back to you asap.</p>
-              </div>
-              <div className="mt-8 flex items-center gap-2 font-semibold group-hover:gap-4 transition-all">
-                Open Form <span>→</span>
-              </div>
-            </div>
+            {status.type === 'loading' ? 'Sending...' : <><FaPaperPlane /> Send Now</>}
           </button>
 
-          {/* 2. Email Card (Click to Copy) */}
-          <div 
-            onClick={() => handleCopy('ibrahimtuyizere2@gmail.com', 'email')}
-            className={`cursor-pointer p-6 rounded-3xl shadow-lg border transition-all duration-300 hover:scale-[1.02] ${
-              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-white'
-            }`}
-          >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`p-3 rounded-2xl ${isDarkMode ? 'bg-gray-700 text-green-400' : 'bg-green-50 text-green-600'}`}>
-                <FaEnvelope className="text-xl" />
-              </div>
-              {copiedField === 'email' && <span className="text-xs font-bold text-green-500 animate-fade-in-up">Copied!</span>}
-            </div>
-            <h3 className={`text-lg font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Email Me</h3>
-            <p className={`text-sm truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>ibrahimtuyizere2@gmail.com</p>
-          </div>
-
-          {/* 3. Phone Card (Click to Copy) */}
-          <div 
-            onClick={() => handleCopy('+250798893468', 'phone')}
-            className={`cursor-pointer p-6 rounded-3xl shadow-lg border transition-all duration-300 hover:scale-[1.02] ${
-              isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-white'
-            }`}
-          >
-            <div className="flex justify-between items-start mb-4">
-              <div className={`p-3 rounded-2xl ${isDarkMode ? 'bg-gray-700 text-orange-400' : 'bg-orange-50 text-orange-600'}`}>
-                <FaPhone className="text-xl" />
-              </div>
-              {copiedField === 'phone' && <span className="text-xs font-bold text-green-500 animate-fade-in-up">Copied!</span>}
-            </div>
-            <h3 className={`text-lg font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Call Me</h3>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>+250 798893468</p>
-          </div>
-
-          {/* 4. Social Links Row */}
-          <div className={`md:col-span-2 p-6 rounded-3xl shadow-lg border flex items-center justify-around ${
-            isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-white'
-          }`}>
-            <SocialLink href="https://github.com/Tibrahi" icon={FaGithub} label="GitHub" isDarkMode={isDarkMode} />
-            <SocialLink href="https://linkedin.com/in/tuyizere-ibrahim-89ba8b275" icon={FaLinkedin} label="LinkedIn" isDarkMode={isDarkMode} />
-            <SocialLink href="https://x.com/BaddestIbrah" icon={FaTwitter} label="Twitter" isDarkMode={isDarkMode} />
-            <SocialLink href="https://maps.google.com/?q=Kigali,Rwanda" icon={FaMapMarkerAlt} label="Location" isDarkMode={isDarkMode} />
-          </div>
-
-        </div>
-      </div>
-
-      {/* --- THE MODAL / POPUP FORM --- */}
-      {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          
-          {/* Backdrop Blur */}
-          <div 
-            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity"
-            onClick={() => setIsModalOpen(false)}
-          ></div>
-
-          {/* Modal Content */}
-          <div className={`relative w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden transform transition-all animate-bounce-in ${
-            isDarkMode ? 'bg-gray-800' : 'bg-white'
-          }`}>
-            
-            {/* Modal Header */}
-            <div className={`px-6 py-4 flex justify-between items-center border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
-              <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Write a Message</h3>
-              <button 
-                onClick={() => setIsModalOpen(false)}
-                className={`p-2 rounded-full transition-colors ${isDarkMode ? 'hover:bg-gray-700 text-gray-400' : 'hover:bg-gray-100 text-gray-500'}`}
-              >
+          {/* STATUS MESSAGE AREA */}
+          {status.msg && (
+            <div className={`mt-4 p-3 rounded-lg flex items-center gap-3 text-sm animate-fade-in ${
+              status.type === 'success' 
+                ? 'bg-green-100 text-green-700 border border-green-200' 
+                : 'bg-red-100 text-red-700 border border-red-200'
+            }`}>
+              {status.type === 'success' ? <FaCheck /> : <FaExclamationTriangle />}
+              <span className="flex-1">{status.msg}</span>
+              {/* Manual Close Button for Status */}
+              <button type="button" onClick={clearStatus} className="p-1 hover:bg-black/10 rounded-full">
                 <FaTimes />
               </button>
             </div>
+          )}
+        </form>
+      </Modal>
 
-            {/* Modal Body */}
-            <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <input 
-                  type="text" name="name" placeholder="Name" required 
-                  value={formData.name} onChange={handleChange}
-                  className={`w-full p-3 rounded-xl outline-none border transition-all focus:ring-2 ${
-                    isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'
-                  }`}
-                />
-                <input 
-                  type="email" name="email" placeholder="Email" required 
-                  value={formData.email} onChange={handleChange}
-                  className={`w-full p-3 rounded-xl outline-none border transition-all focus:ring-2 ${
-                    isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'
-                  }`}
-                />
-              </div>
-              <input 
-                type="text" name="subject" placeholder="Subject" required 
-                value={formData.subject} onChange={handleChange}
-                className={`w-full p-3 rounded-xl outline-none border transition-all focus:ring-2 ${
-                  isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'
-                }`}
-              />
-              <textarea 
-                name="message" rows="4" placeholder="Your message..." required 
-                value={formData.message} onChange={handleChange}
-                className={`w-full p-3 rounded-xl outline-none border transition-all focus:ring-2 resize-none ${
-                  isDarkMode ? 'bg-gray-700 border-gray-600 text-white focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'
-                }`}
-              ></textarea>
-
-              {/* Submit Button */}
-              <button 
-                type="submit" 
-                disabled={status.type === 'loading'}
-                className={`w-full py-3 rounded-xl font-bold text-white transition-all transform active:scale-95 ${
-                  status.type === 'loading' ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-500/30'
-                }`}
-              >
-                {status.type === 'loading' ? 'Sending...' : 'Send Message'}
-              </button>
-
-              {/* Status Message */}
-              {status.message && (
-                <div className={`text-center text-sm font-medium mt-2 ${
-                  status.type === 'success' ? 'text-green-500' : 'text-red-500'
-                }`}>
-                  {status.message}
-                </div>
-              )}
-            </form>
+      {/* --- POPUP 2: EMAIL INFO --- */}
+      <Modal 
+        isOpen={activePopup === 'email'} 
+        onClose={() => setActivePopup(null)} 
+        title="Email Me"
+      >
+        <div className="space-y-4 text-center">
+          <div className="p-4 rounded-xl bg-green-500/10 text-green-500 mx-auto w-fit">
+            <FaEnvelope className="text-4xl" />
+          </div>
+          <p className={`text-lg font-mono p-2 rounded ${isDarkMode ? 'bg-black/20' : 'bg-gray-100'}`}>
+            ibrahimtuyizere2@gmail.com
+          </p>
+          <div className="grid grid-cols-2 gap-3">
+            <button 
+              onClick={() => handleCopy('ibrahimtuyizere2@gmail.com')}
+              className={`flex items-center justify-center gap-2 p-3 rounded-xl font-medium transition-colors ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}
+            >
+              {copyStatus === 'ibrahimtuyizere2@gmail.com' ? <FaCheck className="text-green-500"/> : <FaCopy />} 
+              {copyStatus === 'ibrahimtuyizere2@gmail.com' ? 'Copied' : 'Copy'}
+            </button>
+            <a 
+              href="mailto:ibrahimtuyizere2@gmail.com"
+              className="flex items-center justify-center gap-2 p-3 rounded-xl font-medium bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-500/30"
+            >
+              <FaExternalLinkAlt /> Open App
+            </a>
           </div>
         </div>
-      )}
+      </Modal>
+
+      {/* --- POPUP 3: PHONE INFO --- */}
+      <Modal 
+        isOpen={activePopup === 'phone'} 
+        onClose={() => setActivePopup(null)} 
+        title="Call Me"
+      >
+        <div className="space-y-4">
+          {['+250 798893468', '+250 725931245'].map((phone, idx) => (
+            <div key={idx} className={`flex items-center justify-between p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50 border border-gray-100'}`}>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
+                  <FaPhone />
+                </div>
+                <span className="font-mono text-sm sm:text-base">{phone}</span>
+              </div>
+              <div className="flex gap-2">
+                <button 
+                  onClick={() => handleCopy(phone)}
+                  className="p-2 hover:bg-gray-500/20 rounded-lg transition-colors"
+                  title="Copy"
+                >
+                  {copyStatus === phone ? <FaCheck className="text-green-500"/> : <FaCopy />}
+                </button>
+                <a 
+                  href={`tel:${phone.replace(/\s/g, '')}`}
+                  className="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow-md"
+                  title="Call"
+                >
+                  <FaPhone />
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </Modal>
+
+      {/* --- POPUP 4: LOCATION INFO --- */}
+      <Modal 
+        isOpen={activePopup === 'location'} 
+        onClose={() => setActivePopup(null)} 
+        title="My Location"
+      >
+        <div className="text-center space-y-4">
+          <div className="h-48 w-full bg-gray-200 rounded-xl overflow-hidden relative">
+            {/* Simple static map placeholder or image */}
+            <div className="absolute inset-0 bg-blue-100 flex items-center justify-center">
+               <FaMapMarkerAlt className="text-4xl text-red-500 animate-bounce" />
+            </div>
+          </div>
+          <div>
+            <h4 className="font-bold text-lg">Kigali, Rwanda</h4>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Kicukiro, Gatenga, KK595st</p>
+          </div>
+          <a 
+            href="https://www.google.com/maps/search/?api=1&query=Kigali+Kicukiro+Gatenga" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="block w-full py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30"
+          >
+            Open in Google Maps
+          </a>
+        </div>
+      </Modal>
 
     </div>
   )
 }
-
-// Small Helper for Social Icons
-const SocialLink = ({ href, icon: Icon, label, isDarkMode }) => (
-  <a 
-    href={href} 
-    target="_blank" 
-    rel="noopener noreferrer"
-    className={`flex flex-col items-center gap-2 transition-transform hover:-translate-y-1 group`}
-  >
-    <div className={`p-3 rounded-full transition-colors ${
-      isDarkMode ? 'bg-gray-700 group-hover:bg-blue-600 text-white' : 'bg-gray-100 group-hover:bg-blue-500 text-gray-600 group-hover:text-white'
-    }`}>
-      <Icon className="text-xl" />
-    </div>
-    <span className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{label}</span>
-  </a>
-)
 
 export default Contact
