@@ -1,82 +1,186 @@
 import React, { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  FaUser, 
+  FaBriefcase, 
+  FaLaptopCode, 
+  FaProjectDiagram, 
+  FaPalette, 
+  FaChartPie, 
+  FaEnvelope,
+  FaBars,
+  FaTimes
+} from 'react-icons/fa'
 
 const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveSection, isDarkMode, isMobile }) => {
-  const [title, setTitle] = useState('About Me')
+  const [headerTitle, setHeaderTitle] = useState('Overview')
 
+  // Refined Data with Professional Icons
   const navItems = [
-    { id: 'about', label: 'Intro', icon: '👨', title: 'Intro' },
-    { id: 'experience ', label: 'experience', icon: '💼', title: ' experience' }, 
-    { id: 'skills', label: 'Skills', icon: '💻', title: 'My Skills' },
-    { id: 'projects', label: 'Projects', icon: '🏗️', title: 'My Projects' },
-    { id: 'design', label: 'Design', icon: '🎨', title: 'My Designs' },
-    { id: 'dashboard', label: 'Dashboard', icon: '🐙', title: 'Project Stats' },
-    { id: 'contact', label: 'Contact', icon: '💬', title: 'Contact Me' }
+    { id: 'about', label: 'Overview', icon: <FaUser />, title: 'Professional Profile' },
+    { id: 'experience', label: 'Experience', icon: <FaBriefcase />, title: 'Career History' }, // Fixed typo 'experience '
+    { id: 'skills', label: 'Expertise', icon: <FaLaptopCode />, title: 'Technical Stack' },
+    { id: 'projects', label: 'Portfolio', icon: <FaProjectDiagram />, title: 'Selected Works' },
+    { id: 'design', label: 'UI/UX', icon: <FaPalette />, title: 'Design Gallery' },
+    { id: 'dashboard', label: 'Metrics', icon: <FaChartPie />, title: 'Performance Stats' },
+    { id: 'contact', label: 'Contact', icon: <FaEnvelope />, title: 'Get in Touch' }
   ]
 
+  // Sync Header Title with Active Section
   useEffect(() => {
     const activeItem = navItems.find(item => item.id === activeSection)
     if (activeItem) {
-      setTitle(activeItem.title)
+      setHeaderTitle(activeItem.title)
     }
   }, [activeSection])
 
+  // --- Animations ---
+  const sidebarVariants = {
+    expanded: { width: "16rem", transition: { type: "spring", stiffness: 300, damping: 30 } },
+    collapsed: { width: "5rem", transition: { type: "spring", stiffness: 300, damping: 30 } },
+    mobileHidden: { x: "-100%", transition: { type: "spring", stiffness: 300, damping: 30 } },
+    mobileVisible: { x: 0, width: "16rem", transition: { type: "spring", stiffness: 300, damping: 30 } }
+  }
+
+  const textVariants = {
+    hidden: { opacity: 0, x: -10, display: "none" },
+    visible: { opacity: 1, x: 0, display: "block", transition: { delay: 0.1 } }
+  }
+
   return (
     <>
-      {isMobile && !isCollapsed && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20"
-          onClick={() => setIsCollapsed(true)}
-        />
-      )}
-      <nav 
-        className={`fixed md:relative z-30 transition-all duration-300 ${
-          isDarkMode ? 'bg-gray-800' : 'bg-white'
-        } ${
-          isCollapsed 
-            ? 'w-16 md:w-20' 
-            : 'w-64'
-        } ${
-          isMobile 
-            ? (isCollapsed ? '-translate-x-full' : 'translate-x-0')
-            : ''
-        } h-full border-r ${
-          isDarkMode ? 'border-gray-700' : 'border-gray-200'
-        }`}
+      {/* Mobile Overlay (Backdrop) */}
+      <AnimatePresence>
+        {isMobile && !isCollapsed && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+            onClick={() => setIsCollapsed(true)}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Main Sidebar */}
+      <motion.nav 
+        variants={sidebarVariants}
+        initial={isMobile ? "mobileHidden" : "expanded"}
+        animate={
+            isMobile 
+            ? (!isCollapsed ? "mobileVisible" : "mobileHidden") 
+            : (isCollapsed ? "collapsed" : "expanded")
+        }
+        className={`fixed md:relative z-50 h-full shadow-2xl flex flex-col justify-between
+          ${isDarkMode 
+            ? 'bg-gray-900 border-r border-gray-800' 
+            : 'bg-white border-r border-gray-200'
+          }`}
       >
-        <div className="p-4">
-          <h2 className={`text-xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'} ${isCollapsed ? 'hidden' : 'block'}`}>
-            {title}
-          </h2>
-          <ul className="space-y-2">
-            {navItems.map((item) => (
-              <li key={item.id}>
+        {/* Top Section: Header / Toggle */}
+        <div className="p-5 flex items-center justify-between">
+           {/* Dynamic Title (Only visible when expanded) */}
+           <motion.div 
+             variants={textVariants}
+             initial="visible"
+             animate={isCollapsed ? "hidden" : "visible"}
+           >
+              <h2 className={`font-bold text-sm uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                {headerTitle}
+              </h2>
+           </motion.div>
+
+           {/* Mobile Close Button (Only visible on Mobile) */}
+           {isMobile && !isCollapsed && (
+             <button onClick={() => setIsCollapsed(true)} className={`text-xl ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+                <FaTimes />
+             </button>
+           )}
+        </div>
+
+        {/* Navigation List */}
+        <div className="flex-1 px-3 space-y-2 overflow-y-auto py-4 scrollbar-hide">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              
+              return (
                 <button
+                  key={item.id}
                   onClick={() => {
                     setActiveSection(item.id)
-                    if (isMobile) {
-                      setIsCollapsed(true)
-                    }
+                    if (isMobile) setIsCollapsed(true)
                   }}
-                  className={`w-full flex items-center p-2 rounded-lg transition-colors ${
-                    activeSection === item.id
-                      ? isDarkMode
-                        ? 'bg-gray-700 text-white'
-                        : 'bg-gray-100 text-gray-900'
+                  className={`relative group w-full flex items-center p-3 rounded-xl transition-all duration-200 ease-in-out
+                    ${isActive 
+                      ? isDarkMode 
+                        ? 'bg-gradient-to-r from-blue-900/40 to-blue-800/20 text-blue-400' 
+                        : 'bg-blue-50 text-blue-700'
                       : isDarkMode
-                        ? 'text-gray-300 hover:bg-gray-700'
-                        : 'text-gray-600 hover:bg-gray-100'
-                  }`}
+                        ? 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
                 >
-                  <span className="text-xl">{item.icon}</span>
-                  {!isCollapsed && (
-                    <span className="ml-3">{item.label}</span>
+                  {/* Active Indicator Line (Left Side) */}
+                  {isActive && (
+                    <motion.div 
+                        layoutId="activeIndicator"
+                        className="absolute left-0 w-1 h-8 bg-blue-500 rounded-r-full" 
+                    />
+                  )}
+
+                  {/* Icon Area */}
+                  <span className={`text-xl z-10 ${isCollapsed ? 'mx-auto' : 'mr-4'} transition-transform group-hover:scale-110`}>
+                    {item.icon}
+                  </span>
+
+                  {/* Label (Hidden when collapsed) */}
+                  <AnimatePresence>
+                    {!isCollapsed && (
+                      <motion.span 
+                        variants={textVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="hidden"
+                        className="whitespace-nowrap font-medium text-sm z-10"
+                      >
+                        {item.label}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Tooltip for Collapsed Mode (Desktop Only) */}
+                  {isCollapsed && !isMobile && (
+                    <div className={`absolute left-16 px-3 py-1 rounded bg-gray-900 text-white text-xs whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none shadow-xl border border-gray-700`}>
+                      {item.label}
+                    </div>
                   )}
                 </button>
-              </li>
-            ))}
-          </ul>
+              )
+            })}
         </div>
-      </nav>
+
+        {/* Footer / Branding Area */}
+        <div className={`p-4 border-t ${isDarkMode ? 'border-gray-800' : 'border-gray-100'}`}>
+            <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'justify-start gap-3'}`}>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs
+                    ${isDarkMode ? 'bg-blue-600 text-white' : 'bg-blue-600 text-white'}`}>
+                    TI
+                </div>
+                {!isCollapsed && (
+                    <motion.div 
+                        variants={textVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="flex flex-col"
+                    >
+                        <span className={`text-sm font-bold ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>T. Ibrahim</span>
+                        <span className="text-[10px] opacity-60">v2.0.0</span>
+                    </motion.div>
+                )}
+            </div>
+        </div>
+
+      </motion.nav>
     </>
   )
 }
