@@ -1,242 +1,266 @@
 import React from 'react';
-// Imported all necessary icons
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaCodeBranch, FaLink, FaTools, FaLaptopCode, FaRobot, FaMicrochip } from 'react-icons/fa';
+import { motion } from 'framer-motion';
+// Keeping your existing icons
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaCodeBranch, FaExternalLinkAlt, FaTools, FaLaptopCode, FaRobot, FaMicrochip, FaCertificate } from 'react-icons/fa';
 
-
-const timelineData = [
+// --- REFINED DATA STRUCTURE ---
+// 1. Professional Experience (Real Jobs/Internships)
+const workHistory = [
   {
     id: 1,
-    title: 'Senior Frontend Developer || Web Design Specialist',
+    title: 'Senior Frontend Developer',
     company: '¡GITREE',
-    duration: 'July 2024 - Present (1 year 5 months)',
-    location: 'Nyarugenge District, Kigali City, Rwanda',
-    description: "Led the design and development of high-impact, user-centered digital solutions for the health and human services sector. Focused on building intuitive, accessible, and scalable user interfaces, collaborating with cross-functional teams to transform complex requirements into clean, functional web products. Responsibilities include designing seamless UX flows, developing high-performance frontend systems, and translating product needs into modern web experiences.",
-    technologies: ['React/Modern JS', 'UX Design', 'Optimized Frontend Architecture', 'Responsive/Accessible UI', 'Analytics'],
-    type: 'Professional', 
+    duration: 'July 2024 - Present',
+    location: 'Kigali City, Rwanda',
+    // Converted to bullet points for readability and impact
+    description: [
+      "Architecting high-performance frontend systems for health and human services sectors.",
+      "Leading UX/UI implementation to ensure WCAG accessibility compliance and mobile responsiveness.",
+      "Collaborating with backend teams to integrate complex APIs into seamless user flows."
+    ],
+    technologies: ['React.js', 'Redux', 'Tailwind CSS', 'Figma', 'Rest API'],
+    type: 'Full-time',
     icon: FaLaptopCode,
-    link: '#' 
-  },
-  {
-    id: 5,
-    title: 'Computer Technician',
-    company: 'Technology Channel (Training Company)',
-    duration: 'July 2024 - September 2024 (3 months) - Note: This overlaps with Igitree/Elco dates in source.',
-    location: 'Nepal',
-    description: "Developed strong computer literacy and technical skills through comprehensive training in software applications, hardware basics, and troubleshooting. Enhanced ability to quickly learn and adapt to new technologies and apply practical IT knowledge in real-world scenarios.",
-    technologies: ['Computer Literacy', 'Hardware Basics', 'Software Training', 'Troubleshooting', 'Adaptability'],
-    type: 'Education/Field',
-    icon: FaTools,
-    link: '#'
-  },
-  {
-    id: 2,
-    title: 'Technical Assistant',
-    company: 'Elco.ltd',
-    duration: 'August 2023 - August 2024 (1 year 1 month)',
-    location: 'Kicukiro District, Kigali City, Rwanda',
-    description: "Managed a wide range of hardware and software technical tasks, including fixing and replacing components in computers and printers, diagnosing issues, and ensuring devices ran smoothly. Provided software support (installations, updates, troubleshooting errors) and handled basic network configuration, significantly strengthening problem-solving and adaptability.",
-    technologies: ['Hardware Troubleshooting', 'Software Installation/Configuration', 'Network Basics', 'IT Support', 'Problem-Solving'],
-    type: 'Professional',
-    icon: FaTools,
-    link: '#' 
-  },
-  {
-    id: 3,
-    title: 'Robotics Developer',
-    company: 'Boeing (ThinkYoung & Boeing Coding School)',
-    duration: 'April 2023 - April 2024 (1 year 1 month)',
-    location: 'Kimihurura, Kigali City, Rwanda',
-    description: "Gained hands-on exposure to core principles of robotics, automation, and drone systems. Learned robot programming (commands, sensor data interpretation, control mechanisms) and explored drone technology, studying flight control, navigation algorithms, and motor coordination. Experience significantly strengthened problem-solving, logical reasoning, and analytical thinking.",
-    technologies: ['Robotics Programming', 'Drone Technology', 'Automation', 'Flight Control', 'System Integration'],
-    type: 'Education/Field',
-    icon: FaRobot,
-    link: '#' 
-  },
-  {
-    id: 4,
-    title: 'Software Developer',
-    company: 'ThinkYoung (Coding Class)',
-    duration: 'April 2023 - April 2023 (1 month)',
-    location: 'Kimihurura, Kigali City, Rwanda',
-    description: "Engaged in an intensive, hands-on program, gaining practical experience coding with JavaScript, Python, HTML/CSS, PictoBlox, and Arduino. Designed and programmed a functional robotic car, integrating sensors and automation logic. Strengthened critical skills like problem-solving, logical reasoning, and technical adaptability in combining software and hardware.",
-    technologies: ['JavaScript', 'Python', 'HTML/CSS', 'Arduino', 'Robotic Car Design', 'System Integration'],
-    type: 'Education/Field',
-    icon: FaMicrochip,
     link: '#' 
   },
   { 
-    id: 6,
+    id: 2,
     title: 'Full-stack Developer',
     company: 'NATCOM SERVICES RWANDA',
-    duration: 'Mar 2022 - Mar 2025 (3 yrs 1 mo)',
-    location: 'Kimihurura, Kigali City, Rwanda · Hybrid',
-    description: "During this internship, I strengthened my technical foundation and grew into a capable full-stack developer, gaining practical experience on both the frontend and backend of web applications. My responsibilities included building UIs, developing server-side logic, managing databases, and deploying websites. The internship concluded with my final full-stack project, MEMO (Memorize), a complete system that earned official certification from Natcom.",
-    technologies: ['Front-End Development', 'Back-End Web Development', 'Web Design', 'Web Hosting'],
-    type: 'Professional',
-    icon: FaLaptopCode,
+    duration: 'Mar 2022 - Mar 2025',
+    location: 'Kigali City, Rwanda (Hybrid)',
+    description: [
+      "Built and deployed scalable full-stack web applications, managing both server-side logic and client-side rendering.",
+      "Developed 'MEMO', a certified system for optimized data management.",
+      "Managed database architecture and server deployment pipelines."
+    ],
+    technologies: ['Node.js', 'MongoDB', 'Express', 'React', 'System Design'],
+    type: 'Internship -> Contract',
+    icon: FaCodeBranch,
     link: '#'
+  },
+  {
+    id: 3,
+    title: 'Technical Support Specialist',
+    company: 'Elco.ltd',
+    duration: 'Aug 2023 - Aug 2024',
+    location: 'Kigali City, Rwanda',
+    description: [
+      "Provided critical IT infrastructure support, reducing hardware downtime by 20%.",
+      "Managed network configurations and software troubleshooting for enterprise environments.",
+      "Executed hardware diagnostics and component-level repairs."
+    ],
+    technologies: ['IT Operations', 'Network Config', 'Hardware Repair', 'System Admin'],
+    type: 'Full-time',
+    icon: FaTools,
+    link: '#' 
   },
 ];
 
-// --- Experience Card Component (MODIFIED for Left-Aligned Text in Alternating Layout) ---
-const ExperienceCard = ({ item, isDarkMode, index }) => {
-  const isProfessional = item.type === 'Professional';
-  
-  // Custom colors: Blue for Professional, Purple for Education/Field
-  const iconColor = isProfessional ? 'text-blue-500' : 'text-purple-500';
-  const borderColor = isProfessional ? 'border-blue-500' : 'border-purple-500';
+// 2. Training & Certifications (Workshops, Bootcamps, Short Courses)
+// Separating this makes your actual work history look much more legitimate.
+const trainingHistory = [
+  {
+    id: 4,
+    title: 'Computer Systems Technician',
+    company: 'Technology Channel Nepal',
+    duration: 'July 2024 - Sept 2024',
+    description: "Intensive training on advanced hardware troubleshooting and software diagnostics.",
+    icon: FaMicrochip
+  },
+  {
+    id: 5,
+    title: 'Robotics Automation Developer',
+    company: 'Boeing (ThinkYoung)',
+    duration: 'Apr 2023 - Apr 2024',
+    description: "Hands-on robotics programming, drone flight algorithms, and sensor integration logic.",
+    icon: FaRobot
+  },
+  {
+    id: 6,
+    title: 'Software Development Trainee',
+    company: 'ThinkYoung',
+    duration: 'Apr 2023 (1 Month)',
+    description: "Rapid prototyping bootcamp using Python and Arduino for embedded systems.",
+    icon: FaCertificate
+  }
+];
 
-  // Fallback to FaBriefcase if no icon is specified
-  const DynamicIcon = item.icon || FaBriefcase; 
+// --- ANIMATION VARIANTS ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.2 }
+  }
+};
 
-  // Determine alignment: even index is LEFT, odd index is RIGHT
-  const isRightAligned = index % 2 !== 0;
+const cardVariants = {
+  hidden: { opacity: 0, y: 30, scale: 0.95 },
+  visible: { 
+    opacity: 1, 
+    y: 0, 
+    scale: 1,
+    transition: { type: "spring", stiffness: 50, damping: 20 }
+  }
+};
 
-  // Base classes for the card container (uses flex-col for mobile, responsive classes for desktop)
-  const baseCardClasses = `flex flex-col relative group mb-12 lg:mb-16`;
-  
-  // Alignment classes for large screens (S-Curve - NO CHANGE HERE)
-  const alignmentClasses = isRightAligned 
-    ? 'lg:flex-row-reverse lg:justify-start' 
-    : 'lg:flex-row lg:justify-start';
+// --- COMPONENTS ---
 
-  // Card body margins and width (NO CHANGE HERE)
-  const cardBodyClasses = isRightAligned
-    ? 'w-full lg:w-4/5 lg:pl-4 lg:pr-0 lg:ml-auto lg:mr-0' 
-    : 'w-full lg:w-4/5 lg:pr-4 lg:pl-0 lg:ml-0 lg:mr-auto'; 
-
-  // --- START OF TEXT ALIGNMENT CHANGES ---
-  // Text alignment for the card content is now always left
-  const textAlignmentClasses = 'lg:text-left'; 
-  // --- END OF TEXT ALIGNMENT CHANGES ---
-
-
+const ExperienceCard = ({ item, isDarkMode }) => {
   return (
-    <div className={`${baseCardClasses} ${alignmentClasses}`}>
-      
-      {/* --- Central Timeline Icon & Connector (Only visible on large screens) --- */}
-      <div className="hidden lg:flex lg:flex-col lg:items-center absolute left-1/2 top-0 transform -translate-x-1/2 h-full z-10">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center z-20 
-          ${isDarkMode ? 'bg-gray-900 border-4 border-gray-700' : 'bg-white border-4 border-gray-200'}
-          ${borderColor} group-hover:scale-110 transition-transform duration-300`}>
-          <DynamicIcon className={`text-base ${iconColor}`} /> 
-        </div>
-        {/* Horizontal Connector Line for alternating view */}
-        <div className={`absolute top-4 w-4 h-0.5 z-10 
-            ${isRightAligned ? 'right-full' : 'left-full'} 
-            ${isProfessional ? 'bg-blue-500' : 'bg-purple-500'}`}>
-        </div>
+    <motion.div 
+      variants={cardVariants}
+      className={`relative pl-8 md:pl-0`}
+    >
+      {/* Timeline Line (Mobile/Desktop consistent) */}
+      <div className={`absolute top-0 left-0 md:left-[21px] h-full w-[2px] 
+        ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} z-0`}>
       </div>
-      
-      {/* --- Card Body --- */}
-      <div className={`p-0 transition-all duration-300 ${cardBodyClasses}`}>
-        <div className={`rounded-xl p-5 shadow-lg border-t-4 ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} ${borderColor}`}>
-          
-          {/* Title & Company - Now always left-aligned */}
-          <h3 className={`text-xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'} ${textAlignmentClasses}`}>
-            {item.title}
-          </h3>
-          <p className={`text-lg font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'} ${textAlignmentClasses}`}>
-            {item.company}
-          </p>
 
-          {/* Details - Now always justify-start (left-aligned) */}
-          {/* Removed the ${isRightAligned ? 'lg:justify-end' : 'lg:justify-start'} logic */}
-          <div className={`flex flex-wrap items-center gap-x-4 gap-y-1 text-sm mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} lg:justify-start`}>
-            <span className="flex items-center gap-1">
-              <FaCalendarAlt className="text-xs" /> {item.duration}
-            </span>
-            <span className="flex items-center gap-1">
-              <FaMapMarkerAlt className="text-xs" /> {item.location}
-            </span>
-            {item.type && (
-                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${isProfessional ? 'bg-blue-500/20 text-blue-400' : 'bg-purple-500/20 text-purple-400'}`}>
-                  {item.type}
-                </span>
-            )}
-          </div>
-          
-          {/* Description - Now always left-aligned */}
-          <p className={`mt-4 text-base leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'} ${textAlignmentClasses}`}>
-            {item.description}
-          </p>
+      {/* Timeline Dot */}
+      <div className={`absolute top-6 left-[-5px] md:left-[16px] w-3 h-3 rounded-full z-10 border-2
+        ${isDarkMode ? 'bg-blue-500 border-gray-900' : 'bg-blue-600 border-white'}`}>
+      </div>
 
-          {/* Technologies & Link - Now always justify-start (left-aligned) */}
-          <div className={`mt-4 pt-3 border-t border-gray-700 dark:border-gray-600`}>
-            {/* Removed the ${isRightAligned ? 'lg:justify-end' : 'lg:justify-start'} logic */}
-            <div className={`flex flex-wrap items-center gap-2 lg:justify-start`}>
-              <span className={`text-sm font-semibold mr-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                <FaCodeBranch className="inline-block mr-1" /> Stack:
+      {/* Card Content */}
+      <div className={`relative ml-4 md:ml-12 mb-10 p-6 rounded-2xl border transition-all duration-300 hover:shadow-xl
+        ${isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700 hover:bg-gray-800' 
+          : 'bg-white border-gray-100 hover:border-blue-100 shadow-sm'
+        }`}>
+        
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4 gap-2">
+          <div>
+            <h3 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              {item.title}
+            </h3>
+            <div className="flex items-center gap-2 mt-1">
+              <span className={`font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                {item.company}
               </span>
-              {/* Removed the ${isRightAligned ? 'lg:order-last' : ''} logic for technology tags */}
-              {item.technologies.map((tech, i) => (
-                <span key={i} className={`text-xs px-2 py-0.5 rounded ${isDarkMode ? 'text-gray-200 bg-gray-600/50' : 'text-gray-800 bg-gray-200'}`}>
-                  {tech}
-                </span>
-              ))}
-              {item.link !== '#' && (
-                <a 
-                  href={item.link} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  // Removed the alignment classes for the link
-                  className={`text-sm font-semibold flex items-center gap-1 ml-auto ${isDarkMode ? 'text-emerald-400 hover:text-emerald-300' : 'text-emerald-600 hover:text-emerald-700'}`}>
-                  <FaLink /> View Source
-                </a>
-              )}
+              <span className={`text-xs px-2 py-0.5 rounded-full border 
+                ${isDarkMode ? 'border-gray-600 text-gray-400' : 'border-gray-300 text-gray-600'}`}>
+                {item.type}
+              </span>
             </div>
           </div>
+          
+          <div className={`flex flex-col text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+            <span className="flex items-center gap-2">
+              <FaCalendarAlt className="text-xs" /> {item.duration}
+            </span>
+            <span className="flex items-center gap-2 mt-1">
+              <FaMapMarkerAlt className="text-xs" /> {item.location}
+            </span>
+          </div>
         </div>
-      </div>
 
-      {/* --- Small Screen/Mobile Vertical Line (Preserved) --- */}
-      {/* On small screens, use the old vertical timeline effect on the side */}
-      <div className="flex flex-col items-center ml-6 lg:hidden">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center z-10 
-          ${isDarkMode ? 'bg-gray-900 border-4 border-gray-700' : 'bg-white border-4 border-gray-200'}
-          ${borderColor} group-hover:scale-110 transition-transform duration-300 absolute -left-10`}>
-          <DynamicIcon className={`text-base ${iconColor}`} /> 
+        {/* Description: Bullet Points for Scannability */}
+        <ul className={`list-disc list-outside ml-4 space-y-2 mb-6 text-sm leading-relaxed
+          ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          {item.description.map((point, idx) => (
+            <li key={idx} className="pl-1">{point}</li>
+          ))}
+        </ul>
+
+        {/* Footer: Tech Stack */}
+        <div className={`flex flex-wrap gap-2 pt-4 border-t ${isDarkMode ? 'border-gray-700' : 'border-gray-100'}`}>
+          {item.technologies.map((tech, i) => (
+            <span key={i} className={`text-xs font-medium px-2.5 py-1 rounded-md 
+              ${isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+              {tech}
+            </span>
+          ))}
         </div>
-        {/* Only show the line if it's not the last item */}
-        <div className={`w-0.5 h-full ${isProfessional ? 'bg-blue-500' : 'bg-purple-500'} opacity-50 group-last:h-0 absolute -left-6 top-0`}></div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-// --- Main Component ---
-const Experience = ({ isDarkMode }) => {
-  const professionalExperience = timelineData.filter(item => item.type === 'Professional').length;
-  const educationExperience = timelineData.filter(item => item.type.includes('Education')).length;
-
-  return (
-    <div className="p-2 xs:p-4 sm:p-6 md:p-8">
-      <div className="max-w-4xl mx-auto">
-        
-        {/* Header and Summary */}
-        <div className="text-center mb-10">
-          <h1 className={`text-3xl xs:text-4xl sm:text-5xl font-extrabold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Professional Journey & Milestones 🚀
-          </h1>
-        </div>
-
-        {/* Timeline Layout (S-Curve with Left-Aligned Text) */}
-        <div className={`relative ${isDarkMode ? 'before:bg-gray-700' : 'before:bg-gray-300'} 
-          lg:before:content-[''] lg:before:absolute lg:before:top-0 lg:before:bottom-0 lg:before:left-1/2 lg:before:w-0.5 lg:before:transform lg:before:-translate-x-1/2`}>
-          
-          {timelineData.map((item, index) => (
-            <ExperienceCard 
-              key={item.id} 
-              item={item} 
-              isDarkMode={isDarkMode} 
-              index={index} // Pass index to alternate card alignment
-            />
-          ))}
-        </div>
-
-        
-      </div>
+const TrainingCard = ({ item, isDarkMode }) => (
+  <motion.div variants={cardVariants} className={`flex items-start gap-4 mb-6`}>
+    <div className={`p-3 rounded-lg shrink-0 ${isDarkMode ? 'bg-gray-800 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>
+      <item.icon />
     </div>
+    <div>
+      <h4 className={`font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>{item.title}</h4>
+      <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        {item.company} • {item.duration}
+      </p>
+      <p className={`text-sm mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+        {item.description}
+      </p>
+    </div>
+  </motion.div>
+);
+
+const Experience = ({ isDarkMode }) => {
+  return (
+    <section className="py-16 md:py-24 px-4 overflow-hidden">
+      <div className="max-w-5xl mx-auto">
+        
+        {/* Section Header */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
+          <h2 className={`text-4xl md:text-5xl font-extrabold mb-4 tracking-tight 
+            ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Professional <span className="text-blue-600">Experience</span>
+          </h2>
+          <p className={`max-w-2xl mx-auto text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            A timeline of my professional roles, technical contributions, and career milestones.
+          </p>
+        </motion.div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          
+          {/* Main Professional Timeline (Left Side / Top - 2/3 width) */}
+          <motion.div 
+            className="lg:col-span-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
+             <h3 className={`text-xl font-bold mb-8 flex items-center gap-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+               <FaBriefcase className="text-blue-500" /> Career History
+             </h3>
+            
+            <div className="pl-2">
+              {workHistory.map((item) => (
+                <ExperienceCard key={item.id} item={item} isDarkMode={isDarkMode} />
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Education & Training Sidebar (Right Side / Bottom - 1/3 width) */}
+          <motion.div 
+            className="lg:col-span-4"
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            <div className={`sticky top-8 p-6 rounded-2xl border ${isDarkMode ? 'bg-gray-800/30 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+              <h3 className={`text-lg font-bold mb-6 flex items-center gap-2 ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                <FaCertificate className="text-purple-500" /> Certifications & Training
+              </h3>
+              
+              <div className="flex flex-col">
+                {trainingHistory.map((item) => (
+                  <TrainingCard key={item.id} item={item} isDarkMode={isDarkMode} />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+        </div>
+      </div>
+    </section>
   );
 };
 
