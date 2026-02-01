@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { 
   FaJs, 
   FaHtml5, 
@@ -8,174 +8,93 @@ import {
   FaPhp, 
   FaGitAlt, 
   FaFigma,
-  FaDatabase,
   FaEnvelope,
   FaLaravel,
   FaReact
 } from 'react-icons/fa'
-import { SiTypescript, SiVercel, SiRender, SiMongodb, SiFirebase, SiMysql, SiExpress } from 'react-icons/si'
-import { BsFillChatDotsFill, BsPeopleFill, BsLightbulbFill, BsClockFill } from 'react-icons/bs'
+import { SiVercel, SiRender, SiMongodb, SiFirebase, SiMysql, SiExpress } from 'react-icons/si'
 
 const Skills = ({ isDarkMode }) => {
-  const [animatedSkills, setAnimatedSkills] = useState({
-    frontend: [],
-    backend: [],
-    databases: [],
-    frameworks: [],
-    additional: [],
-    soft: []
-  })
-
-  const skills = {
+  
+  // Professional Data Structure:
+  // Level: Beginner, Intermediate, Advanced, Expert
+  // Years: Actual time spent using the tech
+  const skillsData = {
     frontend: [
-      { name: 'HTML', level: 100, icon: <FaHtml5 className="text-orange-500" /> },
-      { name: 'CSS', level: 100, icon: <FaCss3Alt className="text-blue-500" /> },
-      { name: 'JavaScript', level: 89, icon: <FaJs className="text-yellow-400" /> }
+      { name: 'HTML5', years: '4+ Years', level: 'Expert', icon: <FaHtml5 className="text-orange-500" /> },
+      { name: 'CSS3 / Tailwind', years: '4+ Years', level: 'Expert', icon: <FaCss3Alt className="text-blue-500" /> },
+      { name: 'JavaScript (ES6+)', years: '3+ Years', level: 'Advanced', icon: <FaJs className="text-yellow-400" /> },
+      { name: 'TypeScript', years: '1+ Years', level: 'Intermediate', icon: <FaJs className="text-blue-600" /> } 
+      // Note: Added TS icon here as placeholder if SiTypescript isn't working, or import it if you have it
     ],
     backend: [
-      { name: 'Node.js', level: 95, icon: <FaNodeJs className="text-green-500" /> },
-      { name: 'Python', level: 89, icon: <FaPython className="text-blue-600" /> },
-      { name: 'PHP', level: 92, icon: <FaPhp className="text-purple-600" /> }
+      { name: 'Node.js', years: '3 Years', level: 'Advanced', icon: <FaNodeJs className="text-green-500" /> },
+      { name: 'Python', years: '2 Years', level: 'Intermediate', icon: <FaPython className="text-blue-600" /> },
+      { name: 'PHP', years: '2 Years', level: 'Intermediate', icon: <FaPhp className="text-purple-600" /> }
     ],
     databases: [
-      { name: 'MySQL', level: 95, icon: <SiMysql className="text-blue-700" /> },
-      { name: 'MongoDB', level: 90, icon: <SiMongodb className="text-green-600" /> },
-      { name: 'Firebase', level: 85, icon: <SiFirebase className="text-orange-500" /> }
+      { name: 'MySQL', years: '3 Years', level: 'Advanced', icon: <SiMysql className="text-blue-700" /> },
+      { name: 'MongoDB', years: '2 Years', level: 'Intermediate', icon: <SiMongodb className="text-green-600" /> },
+      { name: 'Firebase', years: '1 Year', level: 'Intermediate', icon: <SiFirebase className="text-orange-500" /> }
     ],
     frameworks: [
-      { name: 'React', level: 90, icon: <FaReact className="text-blue-500" /> },
-      { name: 'Express.js', level: 88, icon: <SiExpress className="text-gray-800 dark:text-white" /> },
-      { name: 'Laravel', level: 85, icon: <FaLaravel className="text-red-500" /> },
-      { name: 'EmailJS', level: 88, icon: <FaEnvelope className="text-blue-600" /> }
+      { name: 'React.js', years: '3 Years', level: 'Advanced', icon: <FaReact className="text-blue-500" /> },
+      { name: 'Express.js', years: '3 Years', level: 'Advanced', icon: <SiExpress className="text-gray-800 dark:text-white" /> },
+      { name: 'Laravel', years: '1 Year', level: 'Intermediate', icon: <FaLaravel className="text-red-500" /> },
     ],
-    additional: [
-      { name: 'Git', level: 90, icon: <FaGitAlt className="text-orange-500" /> },
-      { name: 'Vercel', level: 80, icon: <SiVercel className="text-black dark:text-white" /> },
-      { name: 'Render', level: 75, icon: <SiRender className="text-blue-500" /> },
-      { name: 'Figma', level: 80, icon: <FaFigma className="text-pink-500" /> }
-    ],
-    soft: [
-      { name: 'Communication', level: 95, icon: <BsFillChatDotsFill className="text-green-500" /> },
-      { name: 'Teamwork', level: 90, icon: <BsPeopleFill className="text-blue-500" /> },
-      { name: 'Problem Solving', level: 95, icon: <BsLightbulbFill className="text-yellow-500" /> },
-      { name: 'Time Management', level: 90, icon: <BsClockFill className="text-purple-500" /> }
+    tools: [
+      { name: 'Git & GitHub', years: '4 Years', level: 'Expert', icon: <FaGitAlt className="text-orange-500" /> },
+      { name: 'Vercel/Render', years: '2 Years', level: 'Intermediate', icon: <SiVercel className="text-black dark:text-white" /> },
+      { name: 'Figma', years: '2 Years', level: 'Intermediate', icon: <FaFigma className="text-pink-500" /> }
     ]
   }
 
-  useEffect(() => {
-    const animateSkills = () => {
-      const frontendSkills = skills.frontend.map(skill => ({
-        ...skill,
-        currentLevel: 0
-      }))
-      const backendSkills = skills.backend.map(skill => ({
-        ...skill,
-        currentLevel: 0
-      }))
-      const databasesSkills = skills.databases.map(skill => ({
-        ...skill,
-        currentLevel: 0
-      }))
-      const frameworksSkills = skills.frameworks.map(skill => ({
-        ...skill,
-        currentLevel: 0
-      }))
-      const additionalSkills = skills.additional.map(skill => ({
-        ...skill,
-        currentLevel: 0
-      }))
-      const softSkills = skills.soft.map(skill => ({
-        ...skill,
-        currentLevel: 0
-      }))
-      setAnimatedSkills({ 
-        frontend: frontendSkills, 
-        backend: backendSkills,
-        databases: databasesSkills,
-        frameworks: frameworksSkills,
-        additional: additionalSkills,
-        soft: softSkills
-      })
-
-      const interval = setInterval(() => {
-        setAnimatedSkills(prevSkills => {
-          const newFrontend = prevSkills.frontend.map(skill => ({
-            ...skill,
-            currentLevel: skill.currentLevel < skill.level ? skill.currentLevel + 1 : skill.level
-          }))
-          const newBackend = prevSkills.backend.map(skill => ({
-            ...skill,
-            currentLevel: skill.currentLevel < skill.level ? skill.currentLevel + 1 : skill.level
-          }))
-          const newDatabases = prevSkills.databases.map(skill => ({
-            ...skill,
-            currentLevel: skill.currentLevel < skill.level ? skill.currentLevel + 1 : skill.level
-          }))
-          const newFrameworks = prevSkills.frameworks.map(skill => ({
-            ...skill,
-            currentLevel: skill.currentLevel < skill.level ? skill.currentLevel + 1 : skill.level
-          }))
-          const newAdditional = prevSkills.additional.map(skill => ({
-            ...skill,
-            currentLevel: skill.currentLevel < skill.level ? skill.currentLevel + 1 : skill.level
-          }))
-          const newSoft = prevSkills.soft.map(skill => ({
-            ...skill,
-            currentLevel: skill.currentLevel < skill.level ? skill.currentLevel + 1 : skill.level
-          }))
-
-          const isComplete = [
-            ...newFrontend, 
-            ...newBackend, 
-            ...newDatabases,
-            ...newFrameworks,
-            ...newAdditional, 
-            ...newSoft
-          ].every(skill => skill.currentLevel === skill.level)
-
-          if (isComplete) {
-            clearInterval(interval)
-          }
-
-          return { 
-            frontend: newFrontend, 
-            backend: newBackend,
-            databases: newDatabases,
-            frameworks: newFrameworks,
-            additional: newAdditional,
-            soft: newSoft
-          }
-        })
-      }, 30)
-
-      return () => clearInterval(interval)
+  // A reusable badge component for the proficiency level
+  const LevelBadge = ({ level }) => {
+    let colorClass = ''
+    switch(level) {
+      case 'Expert': colorClass = 'bg-purple-100 text-purple-800 border-purple-200'; break;
+      case 'Advanced': colorClass = 'bg-green-100 text-green-800 border-green-200'; break;
+      case 'Intermediate': colorClass = 'bg-blue-100 text-blue-800 border-blue-200'; break;
+      default: colorClass = 'bg-gray-100 text-gray-800 border-gray-200';
     }
+    
+    return (
+      <span className={`text-[10px] xs:text-xs font-medium px-2 py-0.5 rounded border ${colorClass}`}>
+        {level}
+      </span>
+    )
+  }
 
-    animateSkills()
-  }, [])
-
-  const SkillCard = ({ title, skills }) => (
-    <div className={`${isDarkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-md p-3 xs:p-4 sm:p-5 md:p-6 transition-all duration-300 hover:shadow-lg`}>
-      <h2 className={`text-base xs:text-lg sm:text-xl font-semibold mb-3 xs:mb-4 ${isDarkMode ? 'text-white' : 'text-gray-800'} text-center sm:text-left`}>{title}</h2>
-      <div className="space-y-2 xs:space-y-3 sm:space-y-4">
-        {skills.map((skill) => (
-          <div key={skill.name} className="transform transition-all duration-300 hover:scale-[1.02]">
-            <div className="flex justify-between items-center mb-1 xs:mb-1.5 sm:mb-2">
-              <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-2.5 min-w-0">
-                <span className="flex-shrink-0 text-sm xs:text-base sm:text-lg">{skill.icon}</span>
-                <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'} text-xs xs:text-sm sm:text-base truncate`}>
+  const SkillCategory = ({ title, items }) => (
+    <div className={`${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-100'} border rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-5`}>
+      <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'} border-b ${isDarkMode ? 'border-gray-700' : 'border-gray-100'} pb-2`}>
+        {title}
+      </h3>
+      <div className="space-y-4">
+        {items.map((skill, index) => (
+          <div key={index} className="flex items-center justify-between group">
+            {/* Left side: Icon and Name */}
+            <div className="flex items-center gap-3">
+              <div className={`text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-110`}>
+                {skill.icon}
+              </div>
+              <div className="flex flex-col">
+                <span className={`font-medium text-sm sm:text-base ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                   {skill.name}
                 </span>
+                <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'} sm:hidden`}>
+                  {skill.years}
+                </span>
               </div>
-              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-500'} text-xs xs:text-sm sm:text-base ml-2`}>
-                {skill.currentLevel}%
-              </span>
             </div>
-            <div className={`w-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} rounded-full h-1.5 xs:h-2 sm:h-2.5 overflow-hidden`}>
-              <div
-                className={`${isDarkMode ? 'bg-blue-500' : 'bg-blue-600'} h-1.5 xs:h-2 sm:h-2.5 rounded-full transition-all duration-300 ease-out`}
-                style={{ width: `${skill.currentLevel}%` }}
-              ></div>
+
+            {/* Right side: Years (hidden on tiny screens) and Level Badge */}
+            <div className="flex items-center gap-3">
+              <span className={`hidden sm:block text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+                {skill.years}
+              </span>
+              <LevelBadge level={skill.level} />
             </div>
           </div>
         ))}
@@ -184,22 +103,27 @@ const Skills = ({ isDarkMode }) => {
   )
 
   return (
-    <div className="min-h-screen p-2 xs:p-3 sm:p-4 md:p-6 lg:p-8">
-      <div className="max-w-[2000px] mx-auto">
-        <h1 className={`text-lg xs:text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 xs:mb-4 sm:mb-5 md:mb-6 ${isDarkMode ? 'text-white' : 'text-gray-800'} text-center sm:text-left`}>
-          Technical Skills
-        </h1>
-        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-2 xs:gap-3 sm:gap-4 md:gap-5 lg:gap-6">
-          <SkillCard title="Frontend" skills={animatedSkills.frontend} />
-          <SkillCard title="Backend" skills={animatedSkills.backend} />
-          <SkillCard title="Databases" skills={animatedSkills.databases} />
-          <SkillCard title="Frameworks & Services" skills={animatedSkills.frameworks} />
-          <SkillCard title="Additional Tools" skills={animatedSkills.additional} />
-          <SkillCard title="Soft Skills" skills={animatedSkills.soft} />
+    <div className={`min-h-screen py-10 px-4 sm:px-6 lg:px-8 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-8 text-center sm:text-left">
+          <h2 className={`text-3xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Technical Proficiency
+          </h2>
+          <p className={`mt-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            A breakdown of my technical skills and years of production experience.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <SkillCategory title="Frontend Development" items={skillsData.frontend} />
+          <SkillCategory title="Backend Infrastructure" items={skillsData.backend} />
+          <SkillCategory title="Database Management" items={skillsData.databases} />
+          <SkillCategory title="Frameworks & Libraries" items={skillsData.frameworks} />
+          <SkillCategory title="DevOps & Tools" items={skillsData.tools} />
         </div>
       </div>
     </div>
   )
 }
 
-export default Skills 
+export default Skills

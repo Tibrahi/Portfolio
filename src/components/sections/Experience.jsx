@@ -81,7 +81,7 @@ const certifications = [
     id: 5,
     title: 'Robotics & Automation',
     issuer: 'Boeing (ThinkYoung)',
-    date: 'Apr 2023 - Apr 2024',
+    date: 'Apr 2023',
     note: "Programming autonomous systems, drones, and sensor logic.",
     icon: FaRobot
   },
@@ -91,7 +91,7 @@ const certifications = [
     issuer: 'ThinkYoung',
     date: 'Apr 2023',
     note: "Intensive Python & Arduino prototyping course.",
-    icon: FaCodeBranch => FaGraduationCap // Using generic cap for bootcamp
+    icon: FaGraduationCap // Using generic cap for bootcamp
   }
 ];
 
