@@ -4,7 +4,7 @@ const SideNavigation = ({ isCollapsed, setIsCollapsed, activeSection, setActiveS
   const [title, setTitle] = useState('About Me')
 
   const navItems = [
-    { id: 'about', label: 'About', icon: '👨', title: 'About Me' },
+    { id: 'about', label: 'Intro', icon: '👨', title: 'Intro' },
     { id: 'experience ', label: 'experience', icon: '💼', title: ' experience' }, 
     { id: 'skills', label: 'Skills', icon: '💻', title: 'My Skills' },
     { id: 'projects', label: 'Projects', icon: '🏗️', title: 'My Projects' },
