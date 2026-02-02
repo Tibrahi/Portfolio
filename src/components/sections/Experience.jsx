@@ -21,7 +21,7 @@ const professionalWork = [
     id: 1,
     title: 'Web Developer (Fullstack)',
     company: '¡GITREE',
-    type: 'Full-time (Promoted)',
+    type: 'Hybrid (Promoted)',
     duration: 'Oct 2025 - Present',
     location: 'Kigali, Rwanda',
     description: "Promoted from Web Designer to lead Fullstack development. Expanded scope to handle end-to-end architecture.",
@@ -30,7 +30,7 @@ const professionalWork = [
       "Spearheading backend integration with frontend architectures.",
       "Optimizing database queries and API response times."
     ],
-    stack: ['React', 'Node.js', 'Redux', 'Rest API', 'System Architecture'],
+    stack: ['React', 'Node.js', 'Firebase', 'Rest API','MongoDb', 'Tailwind','Express.js'],
     icon: FaArrowUp, // Icon indicating growth/promotion
   },
   // --- WORK: ¡GITREE (Previous Role) ---
@@ -47,7 +47,7 @@ const professionalWork = [
       "Established the company's design system and brand guidelines.",
       "Ensured WCAG accessibility compliance across all layouts."
     ],
-    stack: ['Figma', 'UI/UX', 'HTML5', 'CSS3', 'Responsive Design'],
+    stack: ['Figma', 'UI/UX'],
     icon: FaLaptopCode,
   },
   // --- WORK: Elco ---
@@ -73,7 +73,7 @@ const professionalWork = [
     title: 'Phase III: Advanced Full Stack & DevOps',
     company: 'NATCOM SERVICES RWANDA',
     type: 'Internship (Year 3)',
-    duration: 'Mar 2025 - Present',
+    duration: 'Mar 2025',
     location: 'Kigali, Rwanda',
     description: "Final phase of intensive internship. Focusing on complex system integrations, emerging tech, and deployment pipelines.",
     achievements: [
@@ -116,7 +116,7 @@ const professionalWork = [
       "Analyzed client project requirements to create technical specs.",
       "Developed responsive layouts from scratch."
     ],
-    stack: ['HTML', 'CSS', 'JavaScript', 'Design Principles', 'Requirements'],
+    stack: ['HTML', 'CSS', 'JavaScript', 'Graphic Design ', 'Requirements','Web Design'],
     icon: FaLayerGroup,
   }
 ];
