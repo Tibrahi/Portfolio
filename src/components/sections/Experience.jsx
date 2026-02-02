@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   FaBriefcase, 
   FaLaptopCode, 
@@ -8,11 +8,11 @@ import {
   FaRobot, 
   FaCertificate, 
   FaGraduationCap,
-  FaExternalLinkAlt,
-  FaCheckCircle
+  FaCheckCircle,
+  FaIdBadge
 } from 'react-icons/fa';
 
-// --- DATA: PROFESSIONAL EXPERIENCE (The "Real" Jobs) ---
+// --- DATA: PROFESSIONAL EXPERIENCE ---
 const professionalWork = [
   {
     id: 1,
@@ -29,7 +29,6 @@ const professionalWork = [
     ],
     stack: ['React', 'Redux', 'Tailwind', 'Figma', 'Rest API'],
     icon: FaLaptopCode,
-    color: 'blue'
   },
   {
     id: 2,
@@ -46,7 +45,6 @@ const professionalWork = [
     ],
     stack: ['Hardware Diagnostics', 'Network Config', 'System Admin'],
     icon: FaTools,
-    color: 'emerald'
   },
   {
     id: 3,
@@ -63,11 +61,10 @@ const professionalWork = [
     ],
     stack: ['Node.js', 'MongoDB', 'React', 'Express', 'Deployment'],
     icon: FaServer,
-    color: 'indigo'
   }
 ];
 
-// --- DATA: CERTIFICATIONS & TRAINING (The Skills/Education) ---
+// --- DATA: CERTIFICATIONS ---
 const certifications = [
   {
     id: 4,
@@ -91,52 +88,47 @@ const certifications = [
     issuer: 'ThinkYoung',
     date: 'Apr 2023',
     note: "Intensive Python & Arduino prototyping course.",
-    icon: FaGraduationCap // Using generic cap for bootcamp
+    icon: FaGraduationCap
   }
 ];
 
-// --- ANIMATION VARIANTS ---
-const containerVar = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
-};
-
+// --- ANIMATION ---
 const itemVar = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 60 } }
+  hidden: { opacity: 0, y: 10 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
 };
 
-// --- COMPONENT: JOB CARD ---
+// --- COMPONENT: JOB CARD (Work & Internships) ---
 const JobCard = ({ data, isDarkMode }) => (
   <motion.div 
     variants={itemVar}
+    initial="hidden"
+    animate="show"
     className={`relative pl-8 pb-12 border-l-2 last:border-0 last:pb-0 
     ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
   >
     {/* Timeline Dot */}
-    <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content
+    <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
       ${isDarkMode ? 'bg-gray-900 border-blue-500' : 'bg-white border-blue-600'}`}>
     </div>
 
     {/* Card Body */}
-    <div className={`p-6 rounded-xl border shadow-sm transition-all hover:shadow-md
-      ${isDarkMode ? 'bg-gray-800/60 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-blue-200'}`}>
+    <div className={`p-6 rounded-xl border shadow-sm transition-all hover:shadow-md group
+      ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-blue-200'}`}>
       
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
         <div>
           <h3 className={`text-xl font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <data.icon className={isDarkMode ? 'text-blue-400' : 'text-blue-600'} size={20}/> 
             {data.title}
           </h3>
-          <p className={`font-semibold text-sm ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+          <p className={`font-semibold text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             {data.company}
           </p>
         </div>
-        <div className="text-right">
+        <div className="sm:text-right">
           <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold mb-1
-            ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+            ${isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
             {data.duration}
           </span>
           <p className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>{data.type}</p>
@@ -147,11 +139,8 @@ const JobCard = ({ data, isDarkMode }) => (
         {data.description}
       </p>
 
-      {/* Key Achievements List */}
+      {/* Achievements */}
       <div className="mb-5">
-        <h4 className={`text-xs font-bold uppercase tracking-wider mb-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-          Key Achievements
-        </h4>
         <ul className="space-y-2">
           {data.achievements.map((item, idx) => (
             <li key={idx} className={`text-sm flex items-start gap-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -162,11 +151,11 @@ const JobCard = ({ data, isDarkMode }) => (
         </ul>
       </div>
 
-      {/* Tech Stack Tags */}
+      {/* Tech Stack */}
       <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-700/20">
         {data.stack.map((tech, i) => (
           <span key={i} className={`text-xs font-medium px-2 py-1 rounded 
-            ${isDarkMode ? 'bg-blue-500/10 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+            ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'}`}>
             {tech}
           </span>
         ))}
@@ -175,108 +164,157 @@ const JobCard = ({ data, isDarkMode }) => (
   </motion.div>
 );
 
-// --- COMPONENT: CERTIFICATE CARD ---
+// --- COMPONENT: CERTIFICATE CARD (Redesigned as Timeline) ---
 const CertCard = ({ data, isDarkMode }) => (
   <motion.div 
     variants={itemVar}
-    className={`flex gap-4 p-4 rounded-xl border mb-4 transition-colors
-      ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-purple-200'}`}
+    initial="hidden"
+    animate="show"
+    className={`relative pl-8 pb-12 border-l-2 last:border-0 last:pb-0 
+    ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
   >
-    <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0
-      ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>
-      <data.icon size={18} />
+     {/* Timeline Dot (Purple for certs) */}
+     <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
+      ${isDarkMode ? 'bg-gray-900 border-purple-500' : 'bg-white border-purple-600'}`}>
     </div>
-    <div>
-      <h4 className={`font-bold text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-        {data.title}
-      </h4>
-      <p className={`text-xs font-semibold mt-0.5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
-        {data.issuer}
-      </p>
-      <p className={`text-xs mt-1 mb-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-        {data.date}
-      </p>
-      <p className={`text-xs leading-snug ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-        {data.note}
-      </p>
+
+    <div className={`flex flex-col sm:flex-row gap-4 p-5 rounded-xl border transition-colors
+      ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-purple-200'}`}>
+      
+      {/* Icon Box */}
+      <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0
+        ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>
+        <data.icon size={22} />
+      </div>
+
+      <div className="flex-1">
+        <div className="flex justify-between items-start">
+          <h4 className={`font-bold text-lg ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+            {data.title}
+          </h4>
+          <span className={`text-xs font-mono px-2 py-0.5 rounded
+             ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
+            {data.date}
+          </span>
+        </div>
+        
+        <p className={`text-sm font-semibold mt-1 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+          {data.issuer}
+        </p>
+        
+        <p className={`text-sm mt-2 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          {data.note}
+        </p>
+      </div>
     </div>
   </motion.div>
 );
 
 // --- MAIN COMPONENT ---
 const Experience = ({ isDarkMode }) => {
+  const [activeTab, setActiveTab] = useState('work'); // 'work', 'internship', 'certificates'
+
+  // Filter Data Logic
+  const workData = professionalWork.filter(job => !job.type.toLowerCase().includes('internship'));
+  const internData = professionalWork.filter(job => job.type.toLowerCase().includes('internship'));
+
+  const tabItems = [
+    { id: 'work', label: 'Work Experience', icon: FaBriefcase },
+    { id: 'internship', label: 'Internships', icon: FaIdBadge },
+    { id: 'certificates', label: 'Certificates', icon: FaCertificate },
+  ];
+
   return (
-    <section className="py-16 md:py-24 px-4 sm:px-6">
-      <div className="max-w-6xl mx-auto">
+    <section className="py-20 px-4 sm:px-6 relative overflow-hidden">
+      <div className="max-w-4xl mx-auto">
         
         {/* Header */}
-        <div className="mb-16 md:text-center">
+        <div className="text-center mb-12">
           <motion.h2 
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className={`text-3xl md:text-4xl font-extrabold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
+            className={`text-3xl md:text-5xl font-extrabold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}
           >
-            Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Experience</span>
+            Career <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-600">Roadmap</span>
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className={`max-w-2xl mx-auto text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
+            className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
           >
-            A track record of building scalable web systems and maintaining technical infrastructure.
+            My professional journey, practical internships, and technical qualifications.
           </motion.p>
         </div>
 
-        {/* Grid Layout: 2/3 Jobs, 1/3 Certs */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
-          
-          {/* Left Column: Employment History */}
-          <div className="lg:col-span-8">
-            <h3 className={`text-sm font-bold uppercase tracking-widest mb-8 flex items-center gap-2 
-              ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-              <FaBriefcase /> Employment History
-            </h3>
-            <motion.div 
-              variants={containerVar}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-50px" }}
-            >
-              {professionalWork.map(job => (
-                <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
-              ))}
-            </motion.div>
+        {/* --- INLINE NAVIGATION (TABS) --- */}
+        <div className="flex justify-center mb-12">
+          <div className={`inline-flex p-1 rounded-xl border 
+            ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
+            
+            {tabItems.map((tab) => {
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 rounded-lg text-sm font-bold transition-all
+                    ${isActive 
+                      ? (isDarkMode ? 'bg-gray-700 text-white shadow-md' : 'bg-gray-100 text-blue-600 shadow-sm') 
+                      : (isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-800')
+                    }`}
+                >
+                  <tab.icon className={isActive ? 'text-blue-500' : ''} />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span> {/* Mobile short label */}
+                </button>
+              );
+            })}
           </div>
-
-          {/* Right Column: Training & Certs */}
-          <div className="lg:col-span-4">
-            <h3 className={`text-sm font-bold uppercase tracking-widest mb-8 flex items-center gap-2 
-              ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-              <FaCertificate /> Professional Training
-            </h3>
-            <motion.div 
-              variants={containerVar}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, margin: "-50px" }}
-              className="sticky top-8"
-            >
-              {certifications.map(cert => (
-                <CertCard key={cert.id} data={cert} isDarkMode={isDarkMode} />
-              ))}
-              
-              {/* Optional: Add a 'Download Resume' or 'View LinkedIn' block here later */}
-              <div className={`mt-6 p-4 rounded-xl border text-center
-                 ${isDarkMode ? 'border-gray-800 bg-gray-900/50' : 'border-gray-200 bg-gray-50'}`}>
-                <p className={`text-xs mb-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                  Verified references available upon request.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
         </div>
+
+        {/* --- CONTENT AREA --- */}
+        <div className="min-h-[400px]"> {/* Min-height prevents jumpiness */}
+            {activeTab === 'work' && (
+              <motion.div 
+                key="work" 
+                initial={{ opacity: 0, x: -20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                transition={{ duration: 0.3 }}
+              >
+                {workData.map(job => (
+                  <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
+                ))}
+              </motion.div>
+            )}
+
+            {activeTab === 'internship' && (
+              <motion.div 
+                key="internship" 
+                initial={{ opacity: 0, x: 20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                transition={{ duration: 0.3 }}
+              >
+                {internData.map(job => (
+                  <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
+                ))}
+              </motion.div>
+            )}
+
+            {activeTab === 'certificates' && (
+              <motion.div 
+                key="certs" 
+                initial={{ opacity: 0, y: 20 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.3 }}
+              >
+                {certifications.map(cert => (
+                  <CertCard key={cert.id} data={cert} isDarkMode={isDarkMode} />
+                ))}
+              </motion.div>
+            )}
+        </div>
+
       </div>
     </section>
   );
