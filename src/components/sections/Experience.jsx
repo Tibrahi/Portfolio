@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { 
   FaBriefcase, 
   FaLaptopCode, 
@@ -9,58 +9,115 @@ import {
   FaCertificate, 
   FaGraduationCap,
   FaCheckCircle,
-  FaIdBadge
+  FaIdBadge,
+  FaLayerGroup,
+  FaArrowUp
 } from 'react-icons/fa';
 
 // --- DATA: PROFESSIONAL EXPERIENCE ---
 const professionalWork = [
+  // --- WORK: ¡GITREE (Current Role - Promoted) ---
   {
     id: 1,
-    title: 'Senior Frontend Developer',
+    title: 'Web Developer (Fullstack)',
     company: '¡GITREE',
-    type: 'Hybrid',
-    duration: 'July 2024 - Present',
+    type: 'Full-time (Promoted)',
+    duration: 'Oct 2025 - Present',
     location: 'Kigali, Rwanda',
-    description: "Spearheading the frontend architecture for health-sector digital solutions. Focusing on scalability, accessibility (WCAG), and performance optimization.",
+    description: "Promoted from Web Designer to lead Fullstack development. Expanded scope to handle end-to-end architecture.",
     achievements: [
-      "Translating complex UX requirements into responsive, pixel-perfect React interfaces.",
-      "Optimizing load times and component re-usability for large-scale applications.",
-      "Mentoring junior team members on modern JavaScript best practices."
+      "Transitioned from design-only to full lifecycle development.",
+      "Spearheading backend integration with frontend architectures.",
+      "Optimizing database queries and API response times."
     ],
-    stack: ['React', 'Redux', 'Tailwind', 'Figma', 'Rest API'],
-    icon: FaLaptopCode,
+    stack: ['React', 'Node.js', 'Redux', 'Rest API', 'System Architecture'],
+    icon: FaArrowUp, // Icon indicating growth/promotion
   },
+  // --- WORK: ¡GITREE (Previous Role) ---
   {
     id: 2,
+    title: 'Web Designer',
+    company: '¡GITREE',
+    type: 'Hybrid',
+    duration: 'July 2024 - Oct 2025',
+    location: 'Kigali, Rwanda',
+    description: "Laid the visual foundation for the company's digital products, focusing on UI/UX and visual consistency.",
+    achievements: [
+      "Created high-fidelity mockups in Figma and converted them to HTML/CSS.",
+      "Established the company's design system and brand guidelines.",
+      "Ensured WCAG accessibility compliance across all layouts."
+    ],
+    stack: ['Figma', 'UI/UX', 'HTML5', 'CSS3', 'Responsive Design'],
+    icon: FaLaptopCode,
+  },
+  // --- WORK: Elco ---
+  {
+    id: 3,
     title: 'Technical Support Specialist',
     company: 'Elco.ltd',
     type: 'Part-time',
     duration: 'Aug 2023 - Aug 2024',
     location: 'Kigali, Rwanda',
-    description: "Managed critical IT infrastructure and provided tier-2 technical support for enterprise hardware and networks.",
+    description: "Managed critical IT infrastructure and provided tier-2 technical support.",
     achievements: [
-      "Diagnosed and repaired component-level hardware issues, reducing equipment replacement costs.",
-      "Streamlined software installation workflows for new employee onboarding.",
+      "Diagnosed component-level hardware issues.",
       "Maintained 99% uptime for internal office networks."
     ],
     stack: ['Hardware Diagnostics', 'Network Config', 'System Admin'],
     icon: FaTools,
   },
+
+  // --- INTERNSHIP: NATCOM PHASE 3 ---
   {
-    id: 3,
-    title: 'Full Stack Engineering Intern',
+    id: 101,
+    title: 'Phase III: Advanced Full Stack & DevOps',
     company: 'NATCOM SERVICES RWANDA',
-    type: 'Internship (Project-Based)',
-    duration: 'Mar 2022 - Mar 2025',
+    type: 'Internship (Year 3)',
+    duration: 'Mar 2025 - Present',
     location: 'Kigali, Rwanda',
-    description: "Intensive 3-year practical engagement focusing on end-to-end web development, culminating in the deployment of the MEMO system.",
+    description: "Final phase of intensive internship. Focusing on complex system integrations, emerging tech, and deployment pipelines.",
     achievements: [
-      "Built 'MEMO' (Memorize), a complete full-stack system for data management.",
-      "Designed database schemas (MongoDB) and implemented secure server-side logic (Node.js).",
-      "🏆 Earned Official Natcom Certification for successful project delivery."
+      "Mastering React.js for complex state management.",
+      "Introduction to Python for Web3 and Machine Learning integrations.",
+      "Implementing CI/CD pipelines and DevOps best practices.",
+      "Mobile intro with Dart/Flutter."
     ],
-    stack: ['Node.js', 'MongoDB', 'React', 'Express', 'Deployment'],
+    stack: ['React.js', 'Python (Web3/ML)', 'DevOps', 'MongoDB', 'Dart'],
+    icon: FaRobot,
+  },
+  // --- INTERNSHIP: NATCOM PHASE 2 ---
+  {
+    id: 102,
+    title: 'Phase II: Backend Development',
+    company: 'NATCOM SERVICES RWANDA',
+    type: 'Internship (Year 2)',
+    duration: 'Mar 2024 - Mar 2025',
+    location: 'Kigali, Rwanda',
+    description: "Dedicated year to server-side logic, database management, and system flow architecture.",
+    achievements: [
+      "Built robust backends using Node.js and PHP (Laravel).",
+      "Designed relational database schemas in MySQL.",
+      "Mapped out System Logic Flows for enterprise data handling."
+    ],
+    stack: ['Node.js', 'PHP', 'Laravel', 'MySQL', 'System Logic'],
     icon: FaServer,
+  },
+  // --- INTERNSHIP: NATCOM PHASE 1 ---
+  {
+    id: 103,
+    title: 'Phase I: Frontend Foundations',
+    company: 'NATCOM SERVICES RWANDA',
+    type: 'Internship (Year 1)',
+    duration: 'Mar 2023 - Mar 2024',
+    location: 'Kigali, Rwanda',
+    description: "Initial intensive training focused on the visual layer and user requirements.",
+    achievements: [
+      "Mastered the core web trio: HTML, CSS, and JavaScript.",
+      "Analyzed client project requirements to create technical specs.",
+      "Developed responsive layouts from scratch."
+    ],
+    stack: ['HTML', 'CSS', 'JavaScript', 'Design Principles', 'Requirements'],
+    icon: FaLayerGroup,
   }
 ];
 
@@ -98,7 +155,7 @@ const itemVar = {
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
 };
 
-// --- COMPONENT: JOB CARD (Work & Internships) ---
+// --- COMPONENT: JOB CARD ---
 const JobCard = ({ data, isDarkMode }) => (
   <motion.div 
     variants={itemVar}
@@ -164,7 +221,7 @@ const JobCard = ({ data, isDarkMode }) => (
   </motion.div>
 );
 
-// --- COMPONENT: CERTIFICATE CARD (Redesigned as Timeline) ---
+// --- COMPONENT: CERTIFICATE CARD ---
 const CertCard = ({ data, isDarkMode }) => (
   <motion.div 
     variants={itemVar}
@@ -173,7 +230,7 @@ const CertCard = ({ data, isDarkMode }) => (
     className={`relative pl-8 pb-12 border-l-2 last:border-0 last:pb-0 
     ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
   >
-     {/* Timeline Dot (Purple for certs) */}
+     {/* Timeline Dot */}
      <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
       ${isDarkMode ? 'bg-gray-900 border-purple-500' : 'bg-white border-purple-600'}`}>
     </div>
@@ -266,7 +323,7 @@ const Experience = ({ isDarkMode }) => {
                 >
                   <tab.icon className={isActive ? 'text-blue-500' : ''} />
                   <span className="hidden sm:inline">{tab.label}</span>
-                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span> {/* Mobile short label */}
+                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                 </button>
               );
             })}
@@ -274,7 +331,7 @@ const Experience = ({ isDarkMode }) => {
         </div>
 
         {/* --- CONTENT AREA --- */}
-        <div className="min-h-[400px]"> {/* Min-height prevents jumpiness */}
+        <div className="min-h-[400px]">
             {activeTab === 'work' && (
               <motion.div 
                 key="work" 
