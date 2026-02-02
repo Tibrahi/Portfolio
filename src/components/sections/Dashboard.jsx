@@ -179,7 +179,7 @@ const Dashboard = ({ isDarkMode }) => {
       {/* Skills Section - Categorized */}
       <div className={`py-12 ${isDarkMode ? 'bg-slate-800/50' : 'bg-white'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h3 className="text-2xl font-bold mb-8 text-center">Technical Arsenal</h3>
+          <h3 className="text-2xl font-bold mb-8 text-center">Technical Tools</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {Object.entries(skillCategories).map(([category, skills], idx) => (
               <motion.div 
@@ -209,7 +209,7 @@ const Dashboard = ({ isDarkMode }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
         <div className="flex justify-between items-end mb-10">
           <div>
-            <h2 className="text-3xl font-bold">Featured Projects</h2>
+            <h2 className="text-3xl font-bold">Github Project</h2>
             <p className={`mt-2 ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
               Selected repositories showcasing my capabilities
             </p>
