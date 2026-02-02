@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import emailjs from '@emailjs/browser'
+// REMOVED: import emailjs (Not needed for this method)
 import { 
   FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane, 
   FaGithub, FaLinkedin, FaTimes, FaCopy, 
@@ -7,6 +7,16 @@ import {
 } from 'react-icons/fa'
 
 const Contact = ({ isDarkMode }) => {
+  // --- CONFIGURATION ---
+  const MY_EMAIL = 'ibrahimtuyizere2@gmail.com'
+  const PHONE_NUMBERS = ['+250 798893468', '+250 725931245']
+  const LOCATION = {
+    title: 'Kigali, Rwanda',
+    subtitle: 'Kicukiro, Gatenga, KK595st',
+    // Uses Google Maps Universal Search Link
+    mapLink: 'https://www.google.com/maps/search/?api=1&query=Kicukiro+Gatenga+KK595st+Kigali+Rwanda'
+  }
+
   // --- STATE MANAGEMENT ---
   const [activePopup, setActivePopup] = useState(null)
   const [copyStatus, setCopyStatus] = useState(null)
@@ -27,38 +37,44 @@ const Contact = ({ isDarkMode }) => {
     setStatus({ type: null, msg: null })
   }
 
-  const sendEmail = async (e) => {
+  // --- NEW: MAILTO REDIRECT METHOD ---
+  const handleMailtoRedirect = (e) => {
     e.preventDefault()
-    setStatus({ type: 'loading', msg: 'Sending...' })
+    setStatus({ type: 'loading', msg: 'Redirecting to your email client...' })
 
-    try {
-      const result = await emailjs.send(
-        'service_1ufqts8',
-        'template_diahb1s',
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          subject: formData.subject,
-          message: formData.message,
-          to_name: 'Ibrahim'
-        },
-        'ZUrx5yuwUN5c538nb'
-      )
+    // 1. Construct the email body
+    const emailBody = `
+Name: ${formData.name}
+Email: ${formData.email}
 
-      if (result.status === 200) {
-        setStatus({ type: 'success', msg: 'Message sent! I will reply soon.' })
-        setFormData({ name: '', email: '', subject: '', message: '' })
-        setTimeout(() => {
-          clearStatus()
-          setActivePopup(null)
-        }, 3000)
-      } else {
-        throw new Error('EmailJS returned non-200 status')
-      }
-    } catch (error) {
-      console.error('Email Error:', error)
-      setStatus({ type: 'error', msg: 'Failed to send. Please use the Email button instead.' })
-    }
+Message:
+${formData.message}
+
+-------------------------
+Sent via Portfolio Contact Form
+    `.trim()
+
+    // 2. Encode for URL (Safety)
+    const subjectEncoded = encodeURIComponent(formData.subject)
+    const bodyEncoded = encodeURIComponent(emailBody)
+
+    // 3. Create the Mailto Link
+    const mailtoLink = `mailto:${MY_EMAIL}?subject=${subjectEncoded}&body=${bodyEncoded}`
+
+    // 4. Execute Redirect (Simulate "Sending")
+    setTimeout(() => {
+      window.location.href = mailtoLink
+      
+      // 5. Update UI to Success state
+      setStatus({ type: 'success', msg: 'Email client opened! Please hit Send there.' })
+      setFormData({ name: '', email: '', subject: '', message: '' })
+      
+      // 6. Close modal after brief delay
+      setTimeout(() => {
+        clearStatus()
+        setActivePopup(null)
+      }, 3000)
+    }, 1000) // Small delay for UX feel
   }
 
   // --- SUB-COMPONENTS ---
@@ -108,9 +124,7 @@ const Contact = ({ isDarkMode }) => {
 
   // --- RENDER ---
   return (
-    // CHANGE: Removed 'justify-center' so it doesn't force middle alignment.
-    // ADDED: 'pt-24' to push it down from the very top edge slightly.
-    <div className={`min-h-screen relative flex flex-col items-center pt-24 overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen relative flex flex-col items-center pt-24 pb-12 overflow-hidden ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
       
       {/* Animated Background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -168,13 +182,13 @@ const Contact = ({ isDarkMode }) => {
         />
       </div>
 
-      {/* --- POPUP 1: CONTACT FORM --- */}
+      {/* --- POPUP 1: CONTACT FORM (REDIRECT METHOD) --- */}
       <Modal 
         isOpen={activePopup === 'message'} 
         onClose={() => { setActivePopup(null); clearStatus(); }}
-        title="Send a Message"
+        title="Compose Message"
       >
-        <form onSubmit={sendEmail} className="space-y-4">
+        <form onSubmit={handleMailtoRedirect} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <input 
               className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
@@ -185,7 +199,7 @@ const Contact = ({ isDarkMode }) => {
             />
             <input 
               className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
-              placeholder="Email" 
+              placeholder="Your Email" 
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -201,7 +215,7 @@ const Contact = ({ isDarkMode }) => {
           />
           <textarea 
             className={`w-full p-3 rounded-xl border outline-none focus:ring-2 transition-all resize-none ${isDarkMode ? 'bg-gray-700 border-gray-600 focus:ring-blue-500' : 'bg-gray-50 border-gray-200 focus:ring-blue-500'}`}
-            placeholder="Your Message..." 
+            placeholder="Write your message here..." 
             rows="4"
             value={formData.message}
             onChange={(e) => setFormData({...formData, message: e.target.value})}
@@ -215,14 +229,14 @@ const Contact = ({ isDarkMode }) => {
               status.type === 'loading' ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-500/30'
             }`}
           >
-            {status.type === 'loading' ? 'Sending...' : <><FaPaperPlane /> Send Now</>}
+            {status.type === 'loading' ? 'Opening Mail App...' : <><FaPaperPlane /> Prepare Email</>}
           </button>
 
           {status.msg && (
             <div className={`mt-4 p-3 rounded-lg flex items-center gap-3 text-sm animate-fade-in ${
               status.type === 'success' 
                 ? 'bg-green-100 text-green-700 border border-green-200' 
-                : 'bg-red-100 text-red-700 border border-red-200'
+                : 'bg-blue-100 text-blue-700 border border-blue-200'
             }`}>
               {status.type === 'success' ? <FaCheck /> : <FaExclamationTriangle />}
               <span className="flex-1">{status.msg}</span>
@@ -245,21 +259,19 @@ const Contact = ({ isDarkMode }) => {
             <FaEnvelope className="text-4xl" />
           </div>
           <p className={`text-lg font-mono p-2 rounded ${isDarkMode ? 'bg-black/20' : 'bg-gray-100'}`}>
-            ibrahimtuyizere2@gmail.com
+            {MY_EMAIL}
           </p>
           <div className="grid grid-cols-2 gap-3">
             <button 
-              onClick={() => handleCopy('ibrahimtuyizere2@gmail.com')}
+              onClick={() => handleCopy(MY_EMAIL)}
               className={`flex items-center justify-center gap-2 p-3 rounded-xl font-medium transition-colors ${isDarkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}
             >
-              {copyStatus === 'ibrahimtuyizere2@gmail.com' ? <FaCheck className="text-green-500"/> : <FaCopy />} 
-              {copyStatus === 'ibrahimtuyizere2@gmail.com' ? 'Copied' : 'Copy'}
+              {copyStatus === MY_EMAIL ? <FaCheck className="text-green-500"/> : <FaCopy />} 
+              {copyStatus === MY_EMAIL ? 'Copied' : 'Copy'}
             </button>
             
             <a 
-              href="mailto:ibrahimtuyizere2@gmail.com"
-              target="_blank"
-              rel="noopener noreferrer"
+              href={`mailto:${MY_EMAIL}`}
               className="flex items-center justify-center gap-2 p-3 rounded-xl font-medium bg-green-600 text-white hover:bg-green-700 transition-colors shadow-lg shadow-green-500/30"
             >
               <FaExternalLinkAlt /> Open App
@@ -275,7 +287,7 @@ const Contact = ({ isDarkMode }) => {
         title="Call Me"
       >
         <div className="space-y-4">
-          {['+250 798893468', '+250 725931245'].map((phone, idx) => (
+          {PHONE_NUMBERS.map((phone, idx) => (
             <div key={idx} className={`flex items-center justify-between p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50 border border-gray-100'}`}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-orange-100 text-orange-600 rounded-lg">
@@ -318,12 +330,11 @@ const Contact = ({ isDarkMode }) => {
             </div>
           </div>
           <div>
-            <h4 className="font-bold text-lg">Kigali, Rwanda</h4>
-            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Kicukiro, Gatenga, KK595st</p>
+            <h4 className="font-bold text-lg">{LOCATION.title}</h4>
+            <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>{LOCATION.subtitle}</p>
           </div>
-          {/* UPDATED: Corrected Google Maps Search Link */}
           <a 
-            href="https://www.google.com/maps/search/Kicukiro,+Gatenga,+KK595st" 
+            href={LOCATION.mapLink}
             target="_blank" 
             rel="noopener noreferrer"
             className="block w-full py-3 rounded-xl font-bold bg-blue-600 text-white hover:bg-blue-700 transition-colors shadow-lg shadow-blue-500/30"
