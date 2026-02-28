@@ -13,7 +13,7 @@ export default defineConfig({
   base: '/',
   build: {
     outDir: 'dist',
-    minify: 'terser',
+    // minify: 'terser',
     sourcemap: true,
     rollupOptions: {
       output: {
