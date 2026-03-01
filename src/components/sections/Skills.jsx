@@ -88,7 +88,9 @@ const Skills = ({ isDarkMode }) => {
   return (
     {/* Removed the solid backgrounds (bg-slate-900 / bg-[#f4f7f6]) to let the parent's background show through */}
     <section className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden w-full">
-      
+      <div className="absolute inset-0 -z-10">
+        <div className="w-full h-full rounded-3xl border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-xl" />
+      </div>                        
       {/* Decorative Orbs to ensure the glass has something to blur (can be removed if your main background is already colorful) */}
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/20 blur-[120px] pointer-events-none z-0" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/20 blur-[120px] pointer-events-none z-0" />
@@ -173,7 +175,7 @@ const Skills = ({ isDarkMode }) => {
 
       </div>
     </section>
-  );
+//   );
 };
 
 export default Skills;
