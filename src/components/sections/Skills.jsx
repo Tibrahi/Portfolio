@@ -58,10 +58,10 @@ const Skills = ({ isDarkMode }) => {
 
   // Pure Glassmorphic Pill
   const SkillPill = ({ skill }) => (
-    <div className={`flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-all duration-300 cursor-default shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-md
+    <div className={`flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-all duration-300 cursor-default backdrop-blur-md
       ${isDarkMode 
-        ? 'bg-white/5 border-white/10 text-gray-200 hover:bg-white/10' 
-        : 'bg-white/20 border-white/40 text-gray-700 hover:bg-white/40'}`}>
+        ? 'bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)]' 
+        : 'bg-white/30 border-white/40 text-gray-700 hover:bg-white/50 shadow-[0_4px_15px_rgba(0,0,0,0.05)]'}`}>
       <span className="text-lg drop-shadow-sm">{skill.icon}</span>
       <span className="text-sm font-semibold tracking-wide">{skill.name}</span>
     </div>
@@ -71,8 +71,8 @@ const Skills = ({ isDarkMode }) => {
   const BentoCard = ({ title, items, className = "" }) => (
     <div className={`p-7 rounded-3xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl
       ${isDarkMode 
-        ? 'bg-black/20 border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]' 
-        : 'bg-white/10 border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)]'} 
+        ? 'bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
+        : 'bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.07)]'} 
       ${className}`}>
       <h3 className={`text-xl font-bold mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
         {title}
@@ -86,15 +86,12 @@ const Skills = ({ isDarkMode }) => {
   );
 
   return (
-    {/* Removed the solid backgrounds (bg-slate-900 / bg-[#f4f7f6]) to let the parent's background show through */}
     <section className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 overflow-hidden w-full">
-      <div className="absolute inset-0 -z-10">
-        <div className="w-full h-full rounded-3xl border border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)] backdrop-blur-xl" />
-      </div>                        
-      {/* Decorative Orbs to ensure the glass has something to blur (can be removed if your main background is already colorful) */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-blue-500/20 blur-[120px] pointer-events-none z-0" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-emerald-500/20 blur-[120px] pointer-events-none z-0" />
-      <div className="absolute top-[40%] left-[30%] w-[30%] h-[30%] rounded-full bg-purple-500/15 blur-[100px] pointer-events-none z-0" />
+      
+      {/* Background Decorative Orbs (The "Color" behind the glass) */}
+      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" />
+      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         
@@ -134,14 +131,14 @@ const Skills = ({ isDarkMode }) => {
         </div>
 
         {/* Roadmap / Future Focus Section (Glassmorphic) */}
-        <div className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-xl transition-all duration-300 hover:shadow-2xl
+        <div className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-2xl transition-all duration-300 hover:shadow-2xl
           ${isDarkMode 
-            ? 'bg-blue-900/10 border-white/10 shadow-[0_4px_30px_rgba(0,0,0,0.3)]' 
-            : 'bg-white/10 border-white/30 shadow-[0_4px_30px_rgba(0,0,0,0.1)]'}`}>
+            ? 'bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
+            : 'bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.1)]'}`}>
           
           <div className="relative z-10">
             <h3 className={`text-2xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              <div className={`p-3 rounded-xl border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-white/30 border-white/50 shadow-sm'}`}>
+              <div className={`p-3 rounded-xl border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-white/40 border-white/60 shadow-sm'}`}>
                 <FaNetworkWired className="text-blue-500" />
               </div>
               Learning Roadmap
@@ -172,10 +169,9 @@ const Skills = ({ isDarkMode }) => {
             </div>
           </div>
         </div>
-
       </div>
     </section>
-//   );
+  );
 };
 
 export default Skills;
