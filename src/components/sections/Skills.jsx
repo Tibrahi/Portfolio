@@ -14,7 +14,6 @@ import {
 
 // ============================================================================
 // 1. STATIC DATA EXTRACTION & MEMORY OPTIMIZATION
-// Storing component references instead of instantiated React elements.
 // ============================================================================
 const techStack = {
   frontend: [
@@ -89,20 +88,19 @@ const roadmap = {
 };
 
 // ============================================================================
-// 2. STATIC CSS CLASS EXTRACTION
-// Replaced high-impact backdrop-blur hierarchies and removed will-change.
+// 2. STATIC CSS CLASS EXTRACTION - MOBILE ACCELERATED
+// Offloads heavy filters on mobile devices to prevent compositing jank.
 // ============================================================================
-const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border transition-transform duration-200 hover:-translate-y-0.5 cursor-default backdrop-blur-sm";
-const PILL_DARK_CLASS = "bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-sm";
-const PILL_LIGHT_CLASS = "bg-white/40 border-white/40 text-gray-700 hover:bg-white/60 shadow-sm";
+const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2.5 rounded-full border md:transition-transform md:duration-200 lg:hover:-translate-y-0.5 cursor-default md:backdrop-blur-sm select-none touch-manipulation";
+const PILL_DARK_CLASS = "bg-neutral-900/90 border-white/10 md:bg-white/5 text-gray-200 shadow-sm";
+const PILL_LIGHT_CLASS = "bg-white/90 border-neutral-200 md:bg-white/40 text-gray-700 shadow-sm";
 
-const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-shadow duration-200 hover:shadow-lg backdrop-blur-md";
-const CARD_DARK_CLASS = "bg-white/5 border-white/10 shadow-md";
-const CARD_LIGHT_CLASS = "bg-white/30 border-white/20 shadow-sm";
+const CARD_BASE_CLASS = "p-5 sm:p-7 rounded-3xl border md:backdrop-blur-md contain-intrinsic-size";
+const CARD_DARK_CLASS = "bg-neutral-900/60 md:bg-white/5 border-white/10 shadow-sm";
+const CARD_LIGHT_CLASS = "bg-neutral-50/80 md:bg-white/30 border-neutral-200 md:border-white/20 shadow-sm";
 
 // ============================================================================
 // 3. COMPONENT OPTIMIZATION & DEFENSIVE RENDERING
-// Wrapped components in React.memo to ensure stable renders.
 // ============================================================================
 const SkillPill = memo(({ skill, isDarkMode }) => {
   const Icon = skill?.Icon;
@@ -110,7 +108,7 @@ const SkillPill = memo(({ skill, isDarkMode }) => {
 
   return (
     <li className={`${PILL_BASE_CLASS} ${isDarkMode ? PILL_DARK_CLASS : PILL_LIGHT_CLASS}`}>
-      <span className="text-lg flex items-center justify-center" aria-hidden="true">
+      <span className="text-lg flex items-center justify-center min-w-[1.25rem] min-h-[1.25rem]" aria-hidden="true">
         <Icon className={skill.color} />
       </span>
       <span className="text-sm font-semibold tracking-wide">{skill.name}</span>
@@ -128,7 +126,7 @@ const BentoCard = memo(({ title, items, className = "", isDarkMode }) => {
       <h3 className={`text-xl font-bold mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
         {title}
       </h3>
-      <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
+      <ul className="flex flex-wrap gap-2.5 sm:gap-3 m-0 p-0 list-none">
         {items.map((skill) => (
           <SkillPill key={skill.name} skill={skill} isDarkMode={isDarkMode} />
         ))}
@@ -144,31 +142,31 @@ BentoCard.displayName = 'BentoCard';
 // ============================================================================
 const Skills = ({ isDarkMode }) => {
   return (
-    <section className="relative min-h-screen pt-10 pb-20 lg:pt-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden" aria-labelledby="skills-heading">
+    <section className="relative min-h-screen pt-10 pb-20 lg:pt-12 px-4 sm:px-6 lg:px-8 w-full overflow-x-hidden prender-polyfill" aria-labelledby="skills-heading">
       
-      {/* Background Decorative Orbs - Optimized Opacity and Gradients instead of giant blur radius */}
-      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/5 blur-[60px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/5 blur-[60px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/5 blur-[60px] pointer-events-none -z-10" aria-hidden="true" />
+      {/* Background Decorative Orbs - Optimized using performant lightweight hardware opacity constraints */}
+      <div className="absolute top-[-2%] left-[-5%] w-[40%] h-[35%] rounded-full bg-blue-500/[0.03] md:blur-[40px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[35%] h-[30%] rounded-full bg-emerald-500/[0.03] md:blur-[40px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute top-[30%] right-[15%] w-[30%] h-[25%] rounded-full bg-purple-500/[0.03] md:blur-[40px] pointer-events-none -z-10" aria-hidden="true" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         
         {/* Header section */}
-        <header className="mb-16 text-center">
-          <h2 id="skills-heading" className={`text-4xl md:text-5xl font-extrabold tracking-tight mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500 drop-shadow-sm">Skills</span>
+        <header className="mb-12 md:mb-16 text-center">
+          <h2 id="skills-heading" className={`text-4xl md:text-5xl font-extrabold tracking-tight mb-5 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">Skills</span>
           </h2>
-          <p className={`max-w-2xl mx-auto text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+          <p className={`max-w-2xl mx-auto text-base sm:text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Technologies I use to build robust, scalable applications, alongside the tools that streamline my workflow.
           </p>
         </header>
 
         {/* Glassmorphism Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12">
           <BentoCard 
             title="Frontend Development" 
             items={techStack.frontend} 
-            className="lg:col-span-2"
+            className="md:col-span-2 lg:col-span-2"
             isDarkMode={isDarkMode}
           />
           <BentoCard 
@@ -199,31 +197,31 @@ const Skills = ({ isDarkMode }) => {
           <BentoCard 
             title="Professional Skills" 
             items={techStack.softSkills}
-            className="lg:col-span-2"
+            className="md:col-span-2 lg:col-span-2"
             isDarkMode={isDarkMode} 
           />
         </div>
 
         {/* Roadmap / Future Focus Section */}
-        <article className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-md transition-shadow duration-200 hover:shadow-lg
+        <article className={`mt-12 md:mt-16 p-6 sm:p-8 md:p-10 rounded-3xl border md:backdrop-blur-md
           ${isDarkMode 
-            ? 'bg-white/5 border-white/10 shadow-md' 
-            : 'bg-white/30 border-white/20 shadow-sm'}`}>
+            ? 'bg-neutral-900/60 md:bg-white/5 border-white/10 shadow-sm' 
+            : 'bg-neutral-50/80 md:bg-white/30 border-neutral-200 md:border-white/20 shadow-sm'}`}>
           
           <div className="relative z-10">
-            <h3 className={`text-2xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              <div className={`p-3 rounded-xl border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-white/40 border-white/60 shadow-sm'}`} aria-hidden="true">
+            <h3 className={`text-xl sm:text-2xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <div className={`p-2.5 rounded-xl border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-white/50 border-neutral-200 shadow-sm'}`} aria-hidden="true">
                 <FaNetworkWired className="text-blue-500" />
               </div>
               Learning Roadmap
             </h3>
             
-            <div className="grid md:grid-cols-2 gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10">
               <section aria-labelledby="roadmap-current">
-                <h4 id="roadmap-current" className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+                <h4 id="roadmap-current" className={`text-xs sm:text-sm font-bold uppercase tracking-widest mb-4 sm:mb-5 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
                   Currently Mastering
                 </h4>
-                <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
+                <ul className="flex flex-wrap gap-2.5 sm:gap-3 m-0 p-0 list-none">
                   {roadmap.inProgress.map((skill) => (
                     <SkillPill key={skill.name} skill={skill} isDarkMode={isDarkMode} />
                   ))}
@@ -231,10 +229,10 @@ const Skills = ({ isDarkMode }) => {
               </section>
               
               <section aria-labelledby="roadmap-future">
-                <h4 id="roadmap-future" className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+                <h4 id="roadmap-future" className={`text-xs sm:text-sm font-bold uppercase tracking-widest mb-4 sm:mb-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
                   Future Horizons
                 </h4>
-                <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
+                <ul className="flex flex-wrap gap-2.5 sm:gap-3 m-0 p-0 list-none">
                   {roadmap.future.map((skill) => (
                     <SkillPill key={skill.name} skill={skill} isDarkMode={isDarkMode} />
                   ))}
