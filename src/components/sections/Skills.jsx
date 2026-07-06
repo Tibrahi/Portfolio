@@ -3,40 +3,67 @@ import { VscVscode } from 'react-icons/vsc';
 import { 
   FaJs, FaHtml5, FaCss3Alt, FaReact, FaBootstrap, FaNodeJs, 
   FaChrome, FaGitAlt, FaRust, FaJava, FaGamepad, FaMobileAlt, 
-  FaNetworkWired, FaUsers, FaChartLine, FaComments 
+  FaNetworkWired, FaUsers, FaChartLine, FaComments, FaPython, 
+  FaWindows, FaGitlab, FaDatabase, FaProjectDiagram, FaPalette, 
+  FaPaintBrush, FaLinux, FaCode, FaCloud
 } from 'react-icons/fa';
 import { 
   SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiFirebase, 
-  SiVercel, SiRender 
+  SiVercel, SiNextdotjs, SiTypescript, SiPostgresql
 } from 'react-icons/si';
 
 // ============================================================================
 // 1. STATIC DATA EXTRACTION & MEMORY OPTIMIZATION
+// Storing component references instead of instantiated React elements.
+// This defers VDOM allocation to the render phase, reducing baseline memory.
 // ============================================================================
 const techStack = {
   frontend: [
-    { name: 'JavaScript', Icon: FaJs, color: 'text-yellow-500' },
-    { name: 'React.js', Icon: FaReact, color: 'text-blue-500' },
     { name: 'HTML5', Icon: FaHtml5, color: 'text-orange-500' },
     { name: 'CSS3', Icon: FaCss3Alt, color: 'text-blue-500' },
+    { name: 'JavaScript', Icon: FaJs, color: 'text-yellow-500' },
+    { name: 'TypeScript', Icon: SiTypescript, color: 'text-blue-600' },
+    { name: 'React.js', Icon: FaReact, color: 'text-blue-500' },
+    { name: 'Next.js', Icon: SiNextdotjs, color: 'text-black dark:text-white' },
     { name: 'Tailwind CSS', Icon: SiTailwindcss, color: 'text-cyan-400' },
     { name: 'Bootstrap', Icon: FaBootstrap, color: 'text-purple-500' },
   ],
   backend: [
     { name: 'Node.js', Icon: FaNodeJs, color: 'text-green-500' },
     { name: 'Express.js', Icon: SiExpress, color: 'text-gray-600 dark:text-gray-300' },
+    { name: 'Next.js', Icon: SiNextdotjs, color: 'text-black dark:text-white' },
+    { name: 'TypeScript', Icon: SiTypescript, color: 'text-blue-600' },
   ],
   databases: [
     { name: 'MongoDB', Icon: SiMongodb, color: 'text-green-600' },
     { name: 'MySQL', Icon: SiMysql, color: 'text-blue-700' },
+    { name: 'PostgreSQL', Icon: SiPostgresql, color: 'text-blue-400' },
+    { name: 'CockroachDB', Icon: FaDatabase, color: 'text-purple-600' },
+    { name: 'Neo4j', Icon: FaProjectDiagram, color: 'text-blue-500' },
     { name: 'Firebase', Icon: SiFirebase, color: 'text-orange-500' },
     { name: 'Browser DB', Icon: FaChrome, color: 'text-green-500' },
+  ],
+  languages: [
+    { name: 'JavaScript', Icon: FaJs, color: 'text-yellow-500' },
+    { name: 'TypeScript', Icon: SiTypescript, color: 'text-blue-600' },
+    { name: 'C', Icon: FaCode, color: 'text-blue-600' },
+    { name: 'Python', Icon: FaPython, color: 'text-yellow-400' },
+    { name: 'Rust', Icon: FaRust, color: 'text-orange-700' },
+    { name: 'Java', Icon: FaJava, color: 'text-red-500' },
   ],
   tools: [
     { name: 'VS Code', Icon: VscVscode, color: 'text-blue-500' },
     { name: 'Git', Icon: FaGitAlt, color: 'text-orange-500' },
+    { name: 'GitLab', Icon: FaGitlab, color: 'text-orange-600' },
+    { name: 'GIMP', Icon: FaPalette, color: 'text-gray-500' },
+    { name: 'Adobe Photoshop', Icon: FaPaintBrush, color: 'text-blue-600' },
     { name: 'Vercel', Icon: SiVercel, color: 'text-black dark:text-white' },
-    { name: 'Render', Icon: SiRender, color: 'text-black dark:text-white' },
+    { name: 'Render', Icon: FaCloud, color: 'text-black dark:text-white' },
+  ],
+  os: [
+    { name: 'Kali Linux', Icon: FaLinux, color: 'text-blue-400' },
+    { name: 'Linux Mint', Icon: FaLinux, color: 'text-green-500' },
+    { name: 'Windows Server', Icon: FaWindows, color: 'text-blue-500' },
   ],
   softSkills: [
     { name: 'Team Lead', Icon: FaUsers, color: 'text-indigo-500' },
@@ -49,6 +76,11 @@ const roadmap = {
   inProgress: [
     { name: 'Rust', Icon: FaRust, color: 'text-orange-700' },
     { name: 'Java', Icon: FaJava, color: 'text-red-500' },
+    { name: 'C', Icon: FaCode, color: 'text-blue-600' },
+    { name: 'Python', Icon: FaPython, color: 'text-yellow-400' },
+    { name: 'PostgreSQL', Icon: SiPostgresql, color: 'text-blue-400' },
+    { name: 'Neo4j', Icon: FaProjectDiagram, color: 'text-blue-500' },
+    { name: 'CockroachDB', Icon: FaDatabase, color: 'text-purple-600' },
   ],
   future: [
     { name: 'Game Development', Icon: FaGamepad, color: 'text-purple-500' },
@@ -59,40 +91,53 @@ const roadmap = {
 
 // ============================================================================
 // 2. STATIC CSS CLASS EXTRACTION
-// Removed mobile-killing blurs and restricted hover/will-change to desktop (md:)
+// Prevents string concatenation and garbage collection pressure on every render.
 // ============================================================================
-const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border md:hover:-translate-y-1 transition-transform duration-300 cursor-default";
-const PILL_DARK_CLASS = "bg-white/10 border-white/10 text-gray-200 md:hover:bg-white/15 md:shadow-[0_4px_15px_rgba(0,0,0,0.3)]";
-const PILL_LIGHT_CLASS = "bg-white/40 border-white/40 text-gray-700 md:hover:bg-white/60 md:shadow-[0_4px_15px_rgba(0,0,0,0.05)]";
+const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-transform duration-300 cursor-default backdrop-blur-md will-change-transform";
+const PILL_DARK_CLASS = "bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)]";
+const PILL_LIGHT_CLASS = "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50 shadow-[0_4px_15px_rgba(0,0,0,0.05)]";
 
-const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-all duration-300 md:hover:shadow-2xl md:hover:-translate-y-1 backdrop-blur-sm md:backdrop-blur-xl md:will-change-transform";
-const CARD_DARK_CLASS = "bg-[#1a1a1a]/40 md:bg-white/5 border-white/10 shadow-lg md:shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
-const CARD_LIGHT_CLASS = "bg-white/60 md:bg-white/20 border-white/30 shadow-sm md:shadow-[0_8px_32px_rgba(31,38,135,0.07)]";
+const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl will-change-transform";
+const CARD_DARK_CLASS = "bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
+const CARD_LIGHT_CLASS = "bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.07)]";
 
 // ============================================================================
-// 3. COMPONENT OPTIMIZATION
+// 3. COMPONENT OPTIMIZATION & DEFENSIVE RENDERING
+// Added null-checks to ensure missing icons do not cause a white-screen crash.
 // ============================================================================
-const SkillPill = ({ skill, isDarkMode }) => (
-  <li className={`${PILL_BASE_CLASS} ${isDarkMode ? PILL_DARK_CLASS : PILL_LIGHT_CLASS}`}>
-    <span className="text-lg drop-shadow-sm">
-      <skill.Icon className={skill.color} />
-    </span>
-    <span className="text-sm font-semibold tracking-wide">{skill.name}</span>
-  </li>
-);
+const SkillPill = ({ skill, isDarkMode }) => {
+  const Icon = skill?.Icon;
+  
+  // Failsafe: If the icon import failed or is undefined, do not render to prevent crash.
+  if (!Icon) return null;
 
-const BentoCard = memo(({ title, items, className = "", isDarkMode }) => (
-  <article className={`${CARD_BASE_CLASS} ${isDarkMode ? CARD_DARK_CLASS : CARD_LIGHT_CLASS} ${className}`}>
-    <h3 className={`text-xl font-bold mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
-      {title}
-    </h3>
-    <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
-      {items.map((skill) => (
-        <SkillPill key={skill.name} skill={skill} isDarkMode={isDarkMode} />
-      ))}
-    </ul>
-  </article>
-));
+  return (
+    <li className={`${PILL_BASE_CLASS} ${isDarkMode ? PILL_DARK_CLASS : PILL_LIGHT_CLASS}`}>
+      <span className="text-lg drop-shadow-sm">
+        <Icon className={skill.color} />
+      </span>
+      <span className="text-sm font-semibold tracking-wide">{skill.name}</span>
+    </li>
+  );
+};
+
+const BentoCard = memo(({ title, items, className = "", isDarkMode }) => {
+  // Failsafe: Prevent crash if items array is corrupted or undefined
+  if (!items || !Array.isArray(items)) return null;
+
+  return (
+    <article className={`${CARD_BASE_CLASS} ${isDarkMode ? CARD_DARK_CLASS : CARD_LIGHT_CLASS} ${className}`}>
+      <h3 className={`text-xl font-bold mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+        {title}
+      </h3>
+      <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
+        {items.map((skill) => (
+          <SkillPill key={skill.name} skill={skill} isDarkMode={isDarkMode} />
+        ))}
+      </ul>
+    </article>
+  );
+});
 
 BentoCard.displayName = 'BentoCard';
 
@@ -101,12 +146,12 @@ BentoCard.displayName = 'BentoCard';
 // ============================================================================
 const Skills = ({ isDarkMode }) => {
   return (
-    <section className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
+    <section className="relative min-h-screen pt-10 pb-20 lg:pt-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
       
-      {/* Background Decorative Orbs - Hidden on mobile (hidden md:block) to save GPU rendering during scroll */}
-      <div className="hidden md:block absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="hidden md:block absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="hidden md:block absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      {/* Background Decorative Orbs */}
+      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         
@@ -134,6 +179,11 @@ const Skills = ({ isDarkMode }) => {
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
+            title="Programming Languages" 
+            items={techStack.languages}
+            isDarkMode={isDarkMode} 
+          />
+          <BentoCard 
             title="Databases" 
             items={techStack.databases}
             isDarkMode={isDarkMode} 
@@ -144,17 +194,23 @@ const Skills = ({ isDarkMode }) => {
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
+            title="Operating Systems" 
+            items={techStack.os}
+            isDarkMode={isDarkMode} 
+          />
+          <BentoCard 
             title="Professional Skills" 
             items={techStack.softSkills}
+            className="lg:col-span-2"
             isDarkMode={isDarkMode} 
           />
         </div>
 
         {/* Roadmap / Future Focus Section */}
-        <article className={`mt-16 p-8 md:p-10 rounded-3xl border transition-all duration-300 md:hover:shadow-2xl md:will-change-transform backdrop-blur-sm md:backdrop-blur-2xl
+        <article className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-2xl transition-all duration-300 hover:shadow-2xl will-change-transform
           ${isDarkMode 
-            ? 'bg-[#1a1a1a]/40 md:bg-white/5 border-white/10 shadow-lg md:shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
-            : 'bg-white/60 md:bg-white/20 border-white/30 shadow-sm md:shadow-[0_8px_32px_rgba(31,38,135,0.1)]'}`}>
+            ? 'bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
+            : 'bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.1)]'}`}>
           
           <div className="relative z-10">
             <h3 className={`text-2xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
