@@ -11,78 +11,82 @@ import {
 } from 'react-icons/si';
 
 // ============================================================================
-// 1. STATIC DATA EXTRACTION
-// Moved completely OUTSIDE the component. It evaluates once at parse-time.
-// O(1) memory allocation instead of O(N) re-allocations on every render.
+// 1. STATIC DATA EXTRACTION & MEMORY OPTIMIZATION
+// Storing component references instead of instantiated React elements.
+// This defers VDOM allocation to the render phase, reducing baseline memory.
 // ============================================================================
 const techStack = {
   frontend: [
-    { name: 'JavaScript', icon: <FaJs className="text-yellow-500" /> },
-    { name: 'React.js', icon: <FaReact className="text-blue-500" /> },
-    { name: 'HTML5', icon: <FaHtml5 className="text-orange-500" /> },
-    { name: 'CSS3', icon: <FaCss3Alt className="text-blue-500" /> },
-    { name: 'Tailwind CSS', icon: <SiTailwindcss className="text-cyan-400" /> },
-    { name: 'Bootstrap', icon: <FaBootstrap className="text-purple-500" /> },
+    { name: 'JavaScript', Icon: FaJs, color: 'text-yellow-500' },
+    { name: 'React.js', Icon: FaReact, color: 'text-blue-500' },
+    { name: 'HTML5', Icon: FaHtml5, color: 'text-orange-500' },
+    { name: 'CSS3', Icon: FaCss3Alt, color: 'text-blue-500' },
+    { name: 'Tailwind CSS', Icon: SiTailwindcss, color: 'text-cyan-400' },
+    { name: 'Bootstrap', Icon: FaBootstrap, color: 'text-purple-500' },
   ],
   backend: [
-    { name: 'Node.js', icon: <FaNodeJs className="text-green-500" /> },
-    { name: 'Express.js', icon: <SiExpress className="text-gray-600 dark:text-gray-300" /> },
+    { name: 'Node.js', Icon: FaNodeJs, color: 'text-green-500' },
+    { name: 'Express.js', Icon: SiExpress, color: 'text-gray-600 dark:text-gray-300' },
   ],
   databases: [
-    { name: 'MongoDB', icon: <SiMongodb className="text-green-600" /> },
-    { name: 'MySQL', icon: <SiMysql className="text-blue-700" /> },
-    { name: 'Firebase', icon: <SiFirebase className="text-orange-500" /> },
-    { name: 'Browser DB', icon: <FaChrome className="text-green-500" /> },
+    { name: 'MongoDB', Icon: SiMongodb, color: 'text-green-600' },
+    { name: 'MySQL', Icon: SiMysql, color: 'text-blue-700' },
+    { name: 'Firebase', Icon: SiFirebase, color: 'text-orange-500' },
+    { name: 'Browser DB', Icon: FaChrome, color: 'text-green-500' },
   ],
   tools: [
-    { name: 'VS Code', icon: <VscVscode className="text-blue-500" /> },
-    { name: 'Git', icon: <FaGitAlt className="text-orange-500" /> },
-    { name: 'Vercel', icon: <SiVercel className="text-black dark:text-white" /> },
-    { name: 'Render', icon: <SiRender className="text-black dark:text-white" /> },
+    { name: 'VS Code', Icon: VscVscode, color: 'text-blue-500' },
+    { name: 'Git', Icon: FaGitAlt, color: 'text-orange-500' },
+    { name: 'Vercel', Icon: SiVercel, color: 'text-black dark:text-white' },
+    { name: 'Render', Icon: SiRender, color: 'text-black dark:text-white' },
   ],
   softSkills: [
-    { name: 'Team Lead', icon: <FaUsers className="text-indigo-500" /> },
-    { name: 'Project Analysis', icon: <FaChartLine className="text-emerald-500" /> },
-    { name: 'Communication', icon: <FaComments className="text-blue-400" /> },
+    { name: 'Team Lead', Icon: FaUsers, color: 'text-indigo-500' },
+    { name: 'Project Analysis', Icon: FaChartLine, color: 'text-emerald-500' },
+    { name: 'Communication', Icon: FaComments, color: 'text-blue-400' },
   ]
 };
 
 const roadmap = {
   inProgress: [
-    { name: 'Rust', icon: <FaRust className="text-orange-700" /> },
-    { name: 'Java', icon: <FaJava className="text-red-500" /> },
+    { name: 'Rust', Icon: FaRust, color: 'text-orange-700' },
+    { name: 'Java', Icon: FaJava, color: 'text-red-500' },
   ],
   future: [
-    { name: 'Game Development', icon: <FaGamepad className="text-purple-500" /> },
-    { name: 'Mobile Apps', icon: <FaMobileAlt className="text-blue-500" /> },
-    { name: 'Advanced JS', icon: <FaNetworkWired className="text-yellow-500" /> },
+    { name: 'Game Development', Icon: FaGamepad, color: 'text-purple-500' },
+    { name: 'Mobile Apps', Icon: FaMobileAlt, color: 'text-blue-500' },
+    { name: 'Advanced JS', Icon: FaNetworkWired, color: 'text-yellow-500' },
   ]
 };
 
 // ============================================================================
-// 2. SUB-COMPONENT EXTRACTION & MEMOIZATION
-// Extracted to prevent React from unmounting/remounting the DOM nodes on render.
-// Wrapped in React.memo() so they ONLY re-render if their specific props change.
+// 2. STATIC CSS CLASS EXTRACTION
+// Prevents string concatenation and garbage collection pressure on every render.
 // ============================================================================
-const SkillPill = memo(({ skill, isDarkMode }) => (
-  <li className={`flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-transform duration-300 cursor-default backdrop-blur-md will-change-transform
-    ${isDarkMode 
-      ? 'bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)]' 
-      : 'bg-white/30 border-white/40 text-gray-700 hover:bg-white/50 shadow-[0_4px_15px_rgba(0,0,0,0.05)]'}`}>
-    <span className="text-lg drop-shadow-sm">{skill.icon}</span>
+const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-transform duration-300 cursor-default backdrop-blur-md will-change-transform";
+const PILL_DARK_CLASS = "bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)]";
+const PILL_LIGHT_CLASS = "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50 shadow-[0_4px_15px_rgba(0,0,0,0.05)]";
+
+const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl will-change-transform";
+const CARD_DARK_CLASS = "bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
+const CARD_LIGHT_CLASS = "bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.07)]";
+
+// ============================================================================
+// 3. COMPONENT OPTIMIZATION
+// Removed redundant React.memo from SkillPill (saves CPU cycles).
+// Kept React.memo on BentoCard to prevent full layout re-renders.
+// ============================================================================
+const SkillPill = ({ skill, isDarkMode }) => (
+  <li className={`${PILL_BASE_CLASS} ${isDarkMode ? PILL_DARK_CLASS : PILL_LIGHT_CLASS}`}>
+    <span className="text-lg drop-shadow-sm">
+      <skill.Icon className={skill.color} />
+    </span>
     <span className="text-sm font-semibold tracking-wide">{skill.name}</span>
   </li>
-));
-
-// Added displayName for React DevTools debugging
-SkillPill.displayName = 'SkillPill';
+);
 
 const BentoCard = memo(({ title, items, className = "", isDarkMode }) => (
-  <article className={`p-7 rounded-3xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl will-change-transform
-    ${isDarkMode 
-      ? 'bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
-      : 'bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.07)]'} 
-    ${className}`}>
+  <article className={`${CARD_BASE_CLASS} ${isDarkMode ? CARD_DARK_CLASS : CARD_LIGHT_CLASS} ${className}`}>
     <h3 className={`text-xl font-bold mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
       {title}
     </h3>
@@ -97,17 +101,16 @@ const BentoCard = memo(({ title, items, className = "", isDarkMode }) => (
 BentoCard.displayName = 'BentoCard';
 
 // ============================================================================
-// 3. MAIN COMPONENT
-// Now lean, fast, and only handles layout and prop passing.
+// 4. MAIN COMPONENT
 // ============================================================================
 const Skills = ({ isDarkMode }) => {
   return (
     <section className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
       
-      {/* Background Decorative Orbs - Using will-change to offload to GPU */}
-      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10 will-change-transform" aria-hidden="true" />
-      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10 will-change-transform" aria-hidden="true" />
-      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10 will-change-transform" aria-hidden="true" />
+      {/* Background Decorative Orbs - Removed will-change to save GPU VRAM on static elements */}
+      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         
@@ -195,4 +198,4 @@ const Skills = ({ isDarkMode }) => {
   );
 };
 
-export default Skills;
+export default memo(Skills);
