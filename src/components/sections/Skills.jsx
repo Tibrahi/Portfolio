@@ -158,7 +158,7 @@ const Skills = ({ isDarkMode }) => {
         {/* Header section */}
         <header className="mb-16 text-center">
           <h2 className={`text-4xl md:text-5xl font-extrabold tracking-tight mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            My <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500 drop-shadow-sm">Tech Arsenal</span>
+            Technical  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500 drop-shadow-sm"> Skills</span>
           </h2>
           <p className={`max-w-2xl mx-auto text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Technologies I use to build robust, scalable applications, alongside the tools that streamline my workflow.
