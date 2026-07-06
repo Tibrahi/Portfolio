@@ -12,8 +12,6 @@ import {
 
 // ============================================================================
 // 1. STATIC DATA EXTRACTION & MEMORY OPTIMIZATION
-// Storing component references instead of instantiated React elements.
-// This defers VDOM allocation to the render phase, reducing baseline memory.
 // ============================================================================
 const techStack = {
   frontend: [
@@ -61,20 +59,18 @@ const roadmap = {
 
 // ============================================================================
 // 2. STATIC CSS CLASS EXTRACTION
-// Prevents string concatenation and garbage collection pressure on every render.
+// Removed mobile-killing blurs and restricted hover/will-change to desktop (md:)
 // ============================================================================
-const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-transform duration-300 cursor-default backdrop-blur-md will-change-transform";
-const PILL_DARK_CLASS = "bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)]";
-const PILL_LIGHT_CLASS = "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50 shadow-[0_4px_15px_rgba(0,0,0,0.05)]";
+const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border md:hover:-translate-y-1 transition-transform duration-300 cursor-default";
+const PILL_DARK_CLASS = "bg-white/10 border-white/10 text-gray-200 md:hover:bg-white/15 md:shadow-[0_4px_15px_rgba(0,0,0,0.3)]";
+const PILL_LIGHT_CLASS = "bg-white/40 border-white/40 text-gray-700 md:hover:bg-white/60 md:shadow-[0_4px_15px_rgba(0,0,0,0.05)]";
 
-const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl will-change-transform";
-const CARD_DARK_CLASS = "bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
-const CARD_LIGHT_CLASS = "bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.07)]";
+const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-all duration-300 md:hover:shadow-2xl md:hover:-translate-y-1 backdrop-blur-sm md:backdrop-blur-xl md:will-change-transform";
+const CARD_DARK_CLASS = "bg-[#1a1a1a]/40 md:bg-white/5 border-white/10 shadow-lg md:shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
+const CARD_LIGHT_CLASS = "bg-white/60 md:bg-white/20 border-white/30 shadow-sm md:shadow-[0_8px_32px_rgba(31,38,135,0.07)]";
 
 // ============================================================================
 // 3. COMPONENT OPTIMIZATION
-// Removed redundant React.memo from SkillPill (saves CPU cycles).
-// Kept React.memo on BentoCard to prevent full layout re-renders.
 // ============================================================================
 const SkillPill = ({ skill, isDarkMode }) => (
   <li className={`${PILL_BASE_CLASS} ${isDarkMode ? PILL_DARK_CLASS : PILL_LIGHT_CLASS}`}>
@@ -107,10 +103,10 @@ const Skills = ({ isDarkMode }) => {
   return (
     <section className="relative min-h-screen py-20 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
       
-      {/* Background Decorative Orbs - Removed will-change to save GPU VRAM on static elements */}
-      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      {/* Background Decorative Orbs - Hidden on mobile (hidden md:block) to save GPU rendering during scroll */}
+      <div className="hidden md:block absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="hidden md:block absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="hidden md:block absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         
@@ -155,10 +151,10 @@ const Skills = ({ isDarkMode }) => {
         </div>
 
         {/* Roadmap / Future Focus Section */}
-        <article className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-2xl transition-all duration-300 hover:shadow-2xl will-change-transform
+        <article className={`mt-16 p-8 md:p-10 rounded-3xl border transition-all duration-300 md:hover:shadow-2xl md:will-change-transform backdrop-blur-sm md:backdrop-blur-2xl
           ${isDarkMode 
-            ? 'bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
-            : 'bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.1)]'}`}>
+            ? 'bg-[#1a1a1a]/40 md:bg-white/5 border-white/10 shadow-lg md:shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
+            : 'bg-white/60 md:bg-white/20 border-white/30 shadow-sm md:shadow-[0_8px_32px_rgba(31,38,135,0.1)]'}`}>
           
           <div className="relative z-10">
             <h3 className={`text-2xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
