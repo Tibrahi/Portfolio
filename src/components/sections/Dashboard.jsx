@@ -1,15 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FaGithub, FaLinkedin, FaEnvelope, FaCode, FaStar, FaCodeBranch,
-  FaJs, FaReact, FaNodeJs, FaPython, FaDatabase, FaGitAlt, FaPhp,
-  FaHtml5, FaCss3Alt, FaFigma, FaLaravel, FaBootstrap, FaEye,
-  FaExternalLinkAlt, FaDownload, FaCircle, FaChevronLeft, FaChevronRight
+  FaGithub, FaLinkedin, FaStar, 
+  FaExternalLinkAlt, FaCircle, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
-import { 
-  SiTypescript, SiMongodb, SiVercel, SiTailwindcss, SiBulma, 
-  SiPreact, SiNextdotjs, SiSass, SiLess
-} from 'react-icons/si';
 
 const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
@@ -31,30 +25,6 @@ const Dashboard = ({ isDarkMode }) => {
     github: "Tibrahi",
     linkedin: "tuyizere-ibrahim-89ba8b275",
     resumeLink: "#", // Add your actual resume link here
-  };
-
-  // Categorized Skills for better readability
-  const skillCategories = {
-    Frontend: [
-      { name: "React", icon: <FaReact className="text-blue-500" /> },
-      { name: "Next.js", icon: <SiNextdotjs className="text-black dark:text-white" /> },
-      { name: "TypeScript", icon: <SiTypescript className="text-blue-600" /> },
-      { name: "Tailwind", icon: <SiTailwindcss className="text-cyan-500" /> },
-      { name: "JavaScript", icon: <FaJs className="text-yellow-400" /> },
-    ],
-    Backend: [
-      { name: "Node.js", icon: <FaNodeJs className="text-green-500" /> },
-      { name: "Python", icon: <FaPython className="text-blue-600" /> },
-      { name: "Laravel", icon: <FaLaravel className="text-red-500" /> },
-      { name: "PHP", icon: <FaPhp className="text-purple-600" /> },
-      { name: "MongoDB", icon: <SiMongodb className="text-green-600" /> },
-      { name: "MySQL", icon: <FaDatabase className="text-blue-700" /> },
-    ],
-    Tools: [
-      { name: "Git", icon: <FaGitAlt className="text-orange-500" /> },
-      { name: "Vercel", icon: <SiVercel className="text-black dark:text-white" /> },
-      { name: "Figma", icon: <FaFigma className="text-pink-500" /> },
-    ]
   };
 
   // Animation Variants
@@ -175,35 +145,6 @@ const Dashboard = ({ isDarkMode }) => {
           </div>
         </div>
       </motion.div>
-
-      {/* Skills Section - Categorized */}
-      <div className={`py-12 ${isDarkMode ? 'bg-slate-800/50' : 'bg-white'}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <h3 className="text-2xl font-bold mb-8 text-center">Technical Tools</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {Object.entries(skillCategories).map(([category, skills], idx) => (
-              <motion.div 
-                key={category}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-                className={`p-6 rounded-2xl ${isDarkMode ? 'bg-slate-800 border border-slate-700' : 'bg-gray-50 border border-gray-200'}`}
-              >
-                <h4 className="text-lg font-semibold mb-4 text-blue-500">{category}</h4>
-                <div className="flex flex-wrap gap-3">
-                  {skills.map((skill, sIdx) => (
-                    <div key={sIdx} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium ${isDarkMode ? 'bg-slate-700' : 'bg-white shadow-sm'}`}>
-                      {skill.icon}
-                      <span>{skill.name}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Projects Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
