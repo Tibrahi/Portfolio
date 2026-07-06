@@ -15,7 +15,6 @@ import {
 // ============================================================================
 // 1. STATIC DATA EXTRACTION & MEMORY OPTIMIZATION
 // Storing component references instead of instantiated React elements.
-// This defers VDOM allocation to the render phase, reducing baseline memory.
 // ============================================================================
 const techStack = {
   frontend: [
@@ -91,38 +90,37 @@ const roadmap = {
 
 // ============================================================================
 // 2. STATIC CSS CLASS EXTRACTION
-// Prevents string concatenation and garbage collection pressure on every render.
+// Replaced high-impact backdrop-blur hierarchies and removed will-change.
 // ============================================================================
-const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border hover:-translate-y-1 transition-transform duration-300 cursor-default backdrop-blur-md will-change-transform";
-const PILL_DARK_CLASS = "bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-[0_4px_15px_rgba(0,0,0,0.3)]";
-const PILL_LIGHT_CLASS = "bg-white/30 border-white/40 text-gray-700 hover:bg-white/50 shadow-[0_4px_15px_rgba(0,0,0,0.05)]";
+const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2 rounded-full border transition-transform duration-200 hover:-translate-y-0.5 cursor-default backdrop-blur-sm";
+const PILL_DARK_CLASS = "bg-white/5 border-white/10 text-gray-200 hover:bg-white/10 shadow-sm";
+const PILL_LIGHT_CLASS = "bg-white/40 border-white/40 text-gray-700 hover:bg-white/60 shadow-sm";
 
-const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 backdrop-blur-xl will-change-transform";
-const CARD_DARK_CLASS = "bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]";
-const CARD_LIGHT_CLASS = "bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.07)]";
+const CARD_BASE_CLASS = "p-7 rounded-3xl border transition-shadow duration-200 hover:shadow-lg backdrop-blur-md";
+const CARD_DARK_CLASS = "bg-white/5 border-white/10 shadow-md";
+const CARD_LIGHT_CLASS = "bg-white/30 border-white/20 shadow-sm";
 
 // ============================================================================
 // 3. COMPONENT OPTIMIZATION & DEFENSIVE RENDERING
-// Added null-checks to ensure missing icons do not cause a white-screen crash.
+// Wrapped components in React.memo to ensure stable renders.
 // ============================================================================
-const SkillPill = ({ skill, isDarkMode }) => {
+const SkillPill = memo(({ skill, isDarkMode }) => {
   const Icon = skill?.Icon;
-  
-  // Failsafe: If the icon import failed or is undefined, do not render to prevent crash.
   if (!Icon) return null;
 
   return (
     <li className={`${PILL_BASE_CLASS} ${isDarkMode ? PILL_DARK_CLASS : PILL_LIGHT_CLASS}`}>
-      <span className="text-lg drop-shadow-sm">
+      <span className="text-lg flex items-center justify-center" aria-hidden="true">
         <Icon className={skill.color} />
       </span>
       <span className="text-sm font-semibold tracking-wide">{skill.name}</span>
     </li>
   );
-};
+});
+
+SkillPill.displayName = 'SkillPill';
 
 const BentoCard = memo(({ title, items, className = "", isDarkMode }) => {
-  // Failsafe: Prevent crash if items array is corrupted or undefined
   if (!items || !Array.isArray(items)) return null;
 
   return (
@@ -146,19 +144,19 @@ BentoCard.displayName = 'BentoCard';
 // ============================================================================
 const Skills = ({ isDarkMode }) => {
   return (
-    <section className="relative min-h-screen pt-10 pb-20 lg:pt-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden">
+    <section className="relative min-h-screen pt-10 pb-20 lg:pt-12 px-4 sm:px-6 lg:px-8 w-full overflow-hidden" aria-labelledby="skills-heading">
       
-      {/* Background Decorative Orbs */}
-      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
-      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/10 blur-[100px] pointer-events-none -z-10" aria-hidden="true" />
+      {/* Background Decorative Orbs - Optimized Opacity and Gradients instead of giant blur radius */}
+      <div className="absolute top-[-5%] left-[-5%] w-[35%] h-[35%] rounded-full bg-blue-500/5 blur-[60px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute bottom-[10%] right-[-5%] w-[30%] h-[30%] rounded-full bg-emerald-500/5 blur-[60px] pointer-events-none -z-10" aria-hidden="true" />
+      <div className="absolute top-[30%] right-[20%] w-[25%] h-[25%] rounded-full bg-purple-500/5 blur-[60px] pointer-events-none -z-10" aria-hidden="true" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
         
         {/* Header section */}
         <header className="mb-16 text-center">
-          <h2 className={`text-4xl md:text-5xl font-extrabold tracking-tight mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Technical  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500 drop-shadow-sm"> Skills</span>
+          <h2 id="skills-heading" className={`text-4xl md:text-5xl font-extrabold tracking-tight mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500 drop-shadow-sm">Skills</span>
           </h2>
           <p className={`max-w-2xl mx-auto text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
             Technologies I use to build robust, scalable applications, alongside the tools that streamline my workflow.
@@ -207,22 +205,22 @@ const Skills = ({ isDarkMode }) => {
         </div>
 
         {/* Roadmap / Future Focus Section */}
-        <article className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-2xl transition-all duration-300 hover:shadow-2xl will-change-transform
+        <article className={`mt-16 p-8 md:p-10 rounded-3xl border backdrop-blur-md transition-shadow duration-200 hover:shadow-lg
           ${isDarkMode 
-            ? 'bg-white/5 border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.3)]' 
-            : 'bg-white/20 border-white/30 shadow-[0_8px_32px_rgba(31,38,135,0.1)]'}`}>
+            ? 'bg-white/5 border-white/10 shadow-md' 
+            : 'bg-white/30 border-white/20 shadow-sm'}`}>
           
           <div className="relative z-10">
             <h3 className={`text-2xl font-bold mb-8 flex items-center gap-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              <div className={`p-3 rounded-xl border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-white/40 border-white/60 shadow-sm'}`}>
-                <FaNetworkWired className="text-blue-500" aria-hidden="true" />
+              <div className={`p-3 rounded-xl border ${isDarkMode ? 'bg-blue-500/10 border-blue-500/20' : 'bg-white/40 border-white/60 shadow-sm'}`} aria-hidden="true">
+                <FaNetworkWired className="text-blue-500" />
               </div>
               Learning Roadmap
             </h3>
             
             <div className="grid md:grid-cols-2 gap-10">
-              <section>
-                <h4 className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
+              <section aria-labelledby="roadmap-current">
+                <h4 id="roadmap-current" className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDarkMode ? 'text-emerald-400' : 'text-emerald-600'}`}>
                   Currently Mastering
                 </h4>
                 <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
@@ -232,8 +230,8 @@ const Skills = ({ isDarkMode }) => {
                 </ul>
               </section>
               
-              <section>
-                <h4 className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
+              <section aria-labelledby="roadmap-future">
+                <h4 id="roadmap-future" className={`text-sm font-bold uppercase tracking-widest mb-5 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
                   Future Horizons
                 </h4>
                 <ul className="flex flex-wrap gap-3 m-0 p-0 list-none">
