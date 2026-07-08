@@ -66,7 +66,7 @@ function App() {
         return <Design isDarkMode={isDarkMode} />
       case 'contact':
         return <Contact isDarkMode={isDarkMode} />
-        case 'experience ':
+      case 'experience':
         return <Experience isDarkMode={isDarkMode} />
       default:
         return <Dashboard isDarkMode={isDarkMode} />
