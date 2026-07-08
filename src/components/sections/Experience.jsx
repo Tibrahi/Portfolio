@@ -46,7 +46,7 @@ const careerProjects = [
     description: 'A decentralized application built for the Cardano Africa Hackathon 2026, featuring blockchain integration, smart contracts, and Web3 wallet connectivity.',
     url: 'https://unichain-dun.vercel.app/',
     previewImage: 'https://api.microlink.io/?url=https://unichain-dun.vercel.app/&screenshot=true&meta=false&embed=screenshot.url',
-    company: 'CARDANO AFRICA HACKATHON 2026',
+    company: 'CARDANO AFRICA HACKATHON ',
     date: 'JAN 2026',
     technologies: ['CARDANO', 'FIRESTORE', 'Tailwind CSS', 'JAVASCRIPT', 'HASKELL', 'AIKEN', 'MESH SDK', 'BLOCKFROST', 'ANGULAR', 'HTML'],
     link: 'https://unichain-dun.vercel.app/',
