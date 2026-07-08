@@ -11,8 +11,47 @@ import {
   FaCheckCircle,
   FaIdBadge,
   FaLayerGroup,
-  FaArrowUp
+  FaArrowUp,
+  FaExternalLinkAlt,
+  FaProjectDiagram
 } from 'react-icons/fa';
+
+// --- DATA: CAREER PROJECTS (Vercel-style cards) ---
+const careerProjects = [
+  {
+    id: 'p1',
+    title: 'SOLFIX WEBSITE ',
+    description: 'A modern, responsive corporate website for ¡GITREE featuring dynamic content, contact forms, and service showcases with a custom admin dashboard.',
+    url: 'https://solfix-1.onrender.com/',
+    previewImage: 'https://api.microlink.io/?url=https://solfix-1.onrender.com/&screenshot=true&meta=false&embed=screenshot.url',
+    company: 'SOLFIX COMPANY',
+    date: 'MARCH 2026',
+    technologies: ['React', 'Node.js', 'MONGODB', 'Tailwind CSS'],
+    link: 'https://solfix-1.onrender.com/',
+  },
+ {
+    id: 'p2',
+    title: 'UMURAVA HR MANAGEMENT SYSTEM',
+    description: 'An AI-powered HR management platform for talent screening, candidate tracking, and streamlined recruitment workflows with real-time analytics.',
+    url: 'https://umurava-talentscreen-ai.vercel.app/dashboard',
+    previewImage: 'https://api.microlink.io/?url=https://umurava-talentscreen-ai.vercel.app/dashboard&screenshot=true&meta=false&embed=screenshot.url',
+    company: 'UMURAVA',
+    date: 'FEBRUARY 2026',
+    technologies: ['NEXT.JS', 'MONGODB', 'Tailwind CSS'],
+    link: 'https://umurava-talentscreen-ai.vercel.app/dashboard',
+  },
+  {
+    id: 'p3',
+    title: 'UNICHAIN DAPP',
+    description: 'A decentralized application built for the Cardano Africa Hackathon 2026, featuring blockchain integration, smart contracts, and Web3 wallet connectivity.',
+    url: 'https://unichain-dun.vercel.app/',
+    previewImage: 'https://api.microlink.io/?url=https://unichain-dun.vercel.app/&screenshot=true&meta=false&embed=screenshot.url',
+    company: 'CARDANO AFRICA HACKATHON 2026',
+    date: 'JAN 2026',
+    technologies: ['CARDANO', 'FIRESTORE', 'Tailwind CSS', 'JAVASCRIPT', 'HASKELL', 'AIKEN', 'MESH SDK', 'BLOCKFROST', 'ANGULAR', 'HTML'],
+    link: 'https://unichain-dun.vercel.app/',
+  },
+];
 
 // --- DATA: PROFESSIONAL EXPERIENCE ---
 const professionalWork = [
@@ -31,7 +70,7 @@ const professionalWork = [
       "Optimizing database queries and API response times."
     ],
     stack: ['React', 'Node.js', 'Firebase', 'Rest API','MongoDb', 'Tailwind','Express.js'],
-    icon: FaArrowUp, // Icon indicating growth/promotion
+    icon: FaArrowUp,
   },
   // --- WORK: ¡GITREE (Previous Role) ---
   {
@@ -155,6 +194,109 @@ const itemVar = {
   show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
 };
 
+// --- COMPONENT: PROJECT CARD (Vercel-style) ---
+const ProjectCard = ({ data, isDarkMode }) => {
+  const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgError, setImgError] = useState(false);
+
+  return (
+  <motion.a
+    href={data.link}
+    target="_blank"
+    rel="noopener noreferrer"
+    variants={itemVar}
+    initial="hidden"
+    animate="show"
+    className={`block rounded-2xl border overflow-hidden transition-all duration-300 group
+      ${isDarkMode 
+        ? 'bg-gray-800/60 border-gray-700 hover:border-gray-500 hover:shadow-lg hover:shadow-blue-500/5' 
+        : 'bg-white border-gray-200 hover:border-gray-400 hover:shadow-xl'}`}
+  >
+    {/* Preview Image */}
+    <div className={`relative w-full h-48 sm:h-52 overflow-hidden
+      ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      {/* Loading shimmer */}
+      {!imgLoaded && !imgError && (
+        <div className={`absolute inset-0 animate-pulse ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
+          <div className={`absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent`} />
+        </div>
+      )}
+      <img
+        src={data.previewImage}
+        alt={`${data.title} preview`}
+        loading="lazy"
+        className={`w-full h-full object-cover object-top transition-all duration-500 group-hover:scale-105 ${imgLoaded ? 'opacity-100' : 'opacity-0'}`}
+        onLoad={() => setImgLoaded(true)}
+        onError={() => setImgError(true)}
+      />
+      {/* Fallback when image fails to load */}
+      {imgError && (
+        <div className={`w-full h-full absolute inset-0 flex items-center justify-center
+          ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+          <div className="text-center px-4">
+            <FaProjectDiagram className={`mx-auto mb-3 ${isDarkMode ? 'text-gray-600' : 'text-gray-400'}`} size={36} />
+            <p className={`text-sm font-medium ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+              {data.title}
+            </p>
+          </div>
+        </div>
+      )}
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+        <div className="flex items-center gap-2 text-white text-sm font-medium">
+          <FaExternalLinkAlt size={12} />
+          <span>View Live →</span>
+        </div>
+      </div>
+    </div>
+
+      {/* Card Content */}
+      <div className="p-5">
+        <div className="flex items-start justify-between mb-2">
+          <h3 className={`text-base font-bold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            {data.title}
+          </h3>
+          <FaExternalLinkAlt 
+            className={`shrink-0 ml-2 mt-0.5 transition-colors ${isDarkMode ? 'text-gray-500 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'}`} 
+            size={13} 
+          />
+        </div>
+
+        <p className={`text-[13px] leading-relaxed mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          {data.description}
+        </p>
+
+        {/* Meta: Company + Date */}
+        <div className="flex items-center gap-2 mb-3">
+          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full
+            ${isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+            {data.company}
+          </span>
+          <span className={`text-[11px] ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+            {data.date}
+          </span>
+        </div>
+
+        {/* Technology Tags */}
+        <div className="flex flex-wrap gap-1">
+          {data.technologies.slice(0, 5).map((tech, i) => (
+            <span key={i} className={`text-[10px] font-medium px-1.5 py-0.5 rounded
+              ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+              {tech}
+            </span>
+          ))}
+          {data.technologies.length > 5 && (
+            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded
+              ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
+              +{data.technologies.length - 5}
+            </span>
+          )}
+        </div>
+      </div>
+    </motion.a>
+  );
+};
+
 // --- COMPONENT: JOB CARD ---
 const JobCard = ({ data, isDarkMode }) => (
   <motion.div 
@@ -269,13 +411,14 @@ const CertCard = ({ data, isDarkMode }) => (
 
 // --- MAIN COMPONENT ---
 const Experience = ({ isDarkMode }) => {
-  const [activeTab, setActiveTab] = useState('work'); // 'work', 'internship', 'certificates'
+  const [activeTab, setActiveTab] = useState('work');
 
   // Filter Data Logic
   const workData = professionalWork.filter(job => !job.type.toLowerCase().includes('internship'));
   const internData = professionalWork.filter(job => job.type.toLowerCase().includes('internship'));
 
   const tabItems = [
+    { id: 'projects', label: 'Career Projects', icon: FaProjectDiagram },
     { id: 'work', label: 'Work Experience', icon: FaBriefcase },
     { id: 'internship', label: 'Internships', icon: FaIdBadge },
     { id: 'certificates', label: 'Certificates', icon: FaCertificate },
@@ -306,7 +449,7 @@ const Experience = ({ isDarkMode }) => {
 
         {/* --- INLINE NAVIGATION (TABS) --- */}
         <div className="flex justify-center mb-12">
-          <div className={`inline-flex p-1 rounded-xl border 
+          <div className={`inline-flex p-1 rounded-xl border flex-wrap gap-1
             ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
             
             {tabItems.map((tab) => {
@@ -332,6 +475,29 @@ const Experience = ({ isDarkMode }) => {
 
         {/* --- CONTENT AREA --- */}
         <div className="min-h-[400px]">
+            
+            {/* Career Projects Tab */}
+            {activeTab === 'projects' && (
+              <motion.div 
+                key="projects" 
+                initial={{ opacity: 0, x: -20 }} 
+                animate={{ opacity: 1, x: 0 }} 
+                transition={{ duration: 0.3 }}
+              >
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {careerProjects.map((project, index) => (
+                    <ProjectCard 
+                      key={project.id} 
+                      data={project} 
+                      isDarkMode={isDarkMode}
+                      style={{ animationDelay: `${index * 0.1}s` }}
+                    />
+                  ))}
+                </div>
+              </motion.div>
+            )}
+
+            {/* Work Experience Tab */}
             {activeTab === 'work' && (
               <motion.div 
                 key="work" 
@@ -345,6 +511,7 @@ const Experience = ({ isDarkMode }) => {
               </motion.div>
             )}
 
+            {/* Internships Tab */}
             {activeTab === 'internship' && (
               <motion.div 
                 key="internship" 
@@ -358,6 +525,7 @@ const Experience = ({ isDarkMode }) => {
               </motion.div>
             )}
 
+            {/* Certificates Tab */}
             {activeTab === 'certificates' && (
               <motion.div 
                 key="certs" 
