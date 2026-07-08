@@ -21,7 +21,7 @@ const careerProjects = [
   {
     id: 'p1',
     title: 'SOLFIX WEBSITE ',
-    description: 'A modern, responsive corporate website for ¡GITREE featuring dynamic content, contact forms, and service showcases with a custom admin dashboard.',
+    description: 'SOLFIX Tech is a professional board-level repair training platform providing practical laptop and motherboard diagnostics education, hands-on repair training, firmware recovery, soldering skills, and real-world troubleshooting guidance for aspiring technicians.',
     url: 'https://solfix-1.onrender.com/',
     previewImage: 'https://api.microlink.io/?url=https://solfix-1.onrender.com/&screenshot=true&meta=false&embed=screenshot.url',
     company: 'SOLFIX COMPANY',
