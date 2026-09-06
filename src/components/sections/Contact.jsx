@@ -53,7 +53,7 @@ const Modal = ({ isOpen, onClose, title, children, isDarkMode }) => {
 const Contact = ({ isDarkMode }) => {
   // --- CONFIGURATION ---
   const MY_EMAIL = 'ibrahimtuyizere2@gmail.com'
-  const PHONE_NUMBERS = ['+250 798893468', '+250 725931245']
+  const PHONE_NUMBERS = ['+250 798893468', '+250 732330889']
   const LOCATION = {
     title: 'Kigali, Rwanda',
     subtitle: 'Kicukiro, Gatenga, KK595st',
