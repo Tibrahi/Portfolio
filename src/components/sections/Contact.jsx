@@ -56,7 +56,7 @@ const Contact = ({ isDarkMode }) => {
   const PHONE_NUMBERS = ['+250 798893468', '+250 732330889']
   const LOCATION = {
     title: 'Kigali, Rwanda',
-    subtitle: 'Kicukiro, Gatenga, KK595st',
+    subtitle: 'Kicukiro, Gatenga, KK 595 ST',
     mapLink: 'https://www.google.com/maps/search/?api=1&query=Kicukiro+Gatenga+KK595st+Kigali+Rwanda'
   }
 
