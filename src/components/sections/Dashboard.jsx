@@ -16,7 +16,7 @@ const Dashboard = ({ isDarkMode }) => {
 
   // Personal Info - Centralized for easy editing
   const personalInfo = {
-    name: "Tuyizere Ibrahim",
+    name: "TUYIZERE Ibrahim",
     role: "Full Stack Developer",
     status: "Open to Work",
     bio: "I build scalable, user-centric applications. Specializing in the MERN stack and modern web technologies to solve real-world business problems.",
