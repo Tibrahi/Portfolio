@@ -9,7 +9,8 @@ import {
 } from 'react-icons/fa';
 import { 
   SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiFirebase, 
-  SiVercel, SiNextdotjs, SiTypescript, SiPostgresql
+  SiVercel, SiNextdotjs, SiTypescript, SiPostgresql,
+  SiJest, SiMocha, SiVitest, SiCypress, SiPytest
 } from 'react-icons/si';
 
 // ============================================================================
@@ -31,6 +32,13 @@ const techStack = {
     { name: 'Express.js', Icon: SiExpress, color: 'text-gray-600 dark:text-gray-300' },
     { name: 'Next.js', Icon: SiNextdotjs, color: 'text-black dark:text-white' },
     { name: 'TypeScript', Icon: SiTypescript, color: 'text-blue-600' },
+  ],
+  testing: [
+    { name: 'Jest', Icon: SiJest, color: 'text-red-500' },
+    { name: 'Mocha', Icon: SiMocha, color: 'text-amber-700' },
+    { name: 'Vitest', Icon: SiVitest, color: 'text-yellow-400' },
+    { name: 'Cypress', Icon: SiCypress, color: 'text-emerald-500' },
+    { name: 'PyTest', Icon: SiPytest, color: 'text-blue-500' },
   ],
   databases: [
     { name: 'MongoDB', Icon: SiMongodb, color: 'text-green-600' },
@@ -89,7 +97,6 @@ const roadmap = {
 
 // ============================================================================
 // 2. STATIC CSS CLASS EXTRACTION - MOBILE ACCELERATED
-// Offloads heavy filters on mobile devices to prevent compositing jank.
 // ============================================================================
 const PILL_BASE_CLASS = "flex items-center gap-2 px-4 py-2.5 rounded-full border md:transition-transform md:duration-200 lg:hover:-translate-y-0.5 cursor-default md:backdrop-blur-sm select-none touch-manipulation";
 const PILL_DARK_CLASS = "bg-neutral-900/90 border-white/10 md:bg-white/5 text-gray-200 shadow-sm";
@@ -144,7 +151,7 @@ const Skills = ({ isDarkMode }) => {
   return (
     <section className="relative min-h-screen pt-10 pb-20 lg:pt-12 px-4 sm:px-6 lg:px-8 w-full overflow-x-hidden prender-polyfill" aria-labelledby="skills-heading">
       
-      {/* Background Decorative Orbs - Optimized using performant lightweight hardware opacity constraints */}
+      {/* Background Decorative Orbs */}
       <div className="absolute top-[-2%] left-[-5%] w-[40%] h-[35%] rounded-full bg-blue-500/[0.03] md:blur-[40px] pointer-events-none -z-10" aria-hidden="true" />
       <div className="absolute bottom-[10%] right-[-5%] w-[35%] h-[30%] rounded-full bg-emerald-500/[0.03] md:blur-[40px] pointer-events-none -z-10" aria-hidden="true" />
       <div className="absolute top-[30%] right-[15%] w-[30%] h-[25%] rounded-full bg-purple-500/[0.03] md:blur-[40px] pointer-events-none -z-10" aria-hidden="true" />
@@ -157,7 +164,7 @@ const Skills = ({ isDarkMode }) => {
             Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">Skills</span>
           </h2>
           <p className={`max-w-2xl mx-auto text-base sm:text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Technologies I use to build robust, scalable applications, alongside the tools that streamline my workflow.
+            Technologies and testing frameworks I use to build robust, scalable applications, alongside the tools that streamline my workflow.
           </p>
         </header>
 
@@ -172,6 +179,11 @@ const Skills = ({ isDarkMode }) => {
           <BentoCard 
             title="Backend Systems" 
             items={techStack.backend}
+            isDarkMode={isDarkMode} 
+          />
+          <BentoCard 
+            title="Testing & Quality Assurance" 
+            items={techStack.testing}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
