@@ -4,8 +4,8 @@ import {
   FaJs, FaHtml5, FaCss3Alt, FaReact, FaBootstrap, FaNodeJs, 
   FaChrome, FaGitAlt, FaRust, FaJava, FaGamepad, FaMobileAlt, 
   FaNetworkWired, FaUsers, FaChartLine, FaComments, FaPython, 
-  FaWindows, FaGitlab, FaDatabase, FaProjectDiagram, FaPalette, 
-  FaPaintBrush, FaLinux, FaCode, FaCloud
+  FaWindows, FaGitlab, FaDatabase, FaPalette, 
+  FaPaintBrush, FaLinux, FaCode, FaCloud, FaRProject
 } from 'react-icons/fa';
 import { 
   SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiFirebase, 
@@ -52,10 +52,11 @@ const techStack = {
   languages: [
     { name: 'JavaScript', Icon: FaJs, color: 'text-yellow-500' },
     { name: 'TypeScript', Icon: SiTypescript, color: 'text-blue-600' },
-    { name: 'C', Icon: FaCode, color: 'text-blue-600' },
     { name: 'Python', Icon: FaPython, color: 'text-yellow-400' },
+    { name: 'R', Icon: FaRProject, color: 'text-blue-500' },
     { name: 'Rust', Icon: FaRust, color: 'text-orange-700' },
     { name: 'Java', Icon: FaJava, color: 'text-red-500' },
+    { name: 'C', Icon: FaCode, color: 'text-blue-600' },
   ],
   tools: [
     { name: 'VS Code', Icon: VscVscode, color: 'text-blue-500' },
@@ -80,6 +81,7 @@ const techStack = {
 
 const roadmap = {
   inProgress: [
+    { name: 'R', Icon: FaRProject, color: 'text-blue-500' },
     { name: 'Rust', Icon: FaRust, color: 'text-orange-700' },
     { name: 'Java', Icon: FaJava, color: 'text-red-500' },
     { name: 'C', Icon: FaCode, color: 'text-blue-600' },
@@ -125,14 +127,19 @@ const SkillPill = memo(({ skill, isDarkMode }) => {
 
 SkillPill.displayName = 'SkillPill';
 
-const BentoCard = memo(({ title, items, className = "", isDarkMode }) => {
+const BentoCard = memo(({ title, items, description, className = "", isDarkMode }) => {
   if (!items || !Array.isArray(items)) return null;
 
   return (
     <article className={`${CARD_BASE_CLASS} ${isDarkMode ? CARD_DARK_CLASS : CARD_LIGHT_CLASS} ${className}`}>
-      <h3 className={`text-xl font-bold mb-6 tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
+      <h3 className={`text-xl font-bold tracking-tight ${description ? 'mb-2' : 'mb-6'} ${isDarkMode ? 'text-white' : 'text-gray-800'}`}>
         {title}
       </h3>
+      {description && (
+        <p className={`text-xs sm:text-sm mb-5 font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+          {description}
+        </p>
+      )}
       <ul className="flex flex-wrap gap-2.5 sm:gap-3 m-0 p-0 list-none">
         {items.map((skill) => (
           <SkillPill key={skill.name} skill={skill} isDarkMode={isDarkMode} />
@@ -164,7 +171,7 @@ const Skills = ({ isDarkMode }) => {
             Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">Skills</span>
           </h2>
           <p className={`max-w-2xl mx-auto text-base sm:text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Technologies, testing frameworks, and specialized databases I use to build robust, scalable applications.
+            Technologies, testing frameworks, and specialized systems classified by application and usage domain.
           </p>
         </header>
 
@@ -172,42 +179,50 @@ const Skills = ({ isDarkMode }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-12">
           <BentoCard 
             title="Frontend Development" 
+            description="Used for user interface composition, styling, and client-side rendering."
             items={techStack.frontend} 
             className="md:col-span-2 lg:col-span-2"
             isDarkMode={isDarkMode}
           />
           <BentoCard 
             title="Backend Systems" 
+            description="Used for server architecture, API routing, and runtime logic."
             items={techStack.backend}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
             title="Testing Frameworks" 
+            description="Used for unit, integration, and end-to-end quality validation."
             items={techStack.testing}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
             title="Programming Languages" 
+            description="Core general-purpose and domain-specific syntaxes utilized."
             items={techStack.languages}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
-            title="Databases" 
+            title="Databases & Storage" 
+            description="Used for data persistence, relational mapping, and graph modeling."
             items={techStack.databases}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
             title="Tools & Platforms" 
+            description="Used for version control, deployment, and digital asset editing."
             items={techStack.tools}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
             title="Operating Systems" 
+            description="Environments utilized for deployment, administration, and security."
             items={techStack.os}
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
             title="Professional Skills" 
+            description="Methodologies used for teamwork, project analysis, and oversight."
             items={techStack.softSkills}
             className="md:col-span-2 lg:col-span-2"
             isDarkMode={isDarkMode} 
