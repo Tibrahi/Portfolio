@@ -10,7 +10,7 @@ import {
 import { 
   SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiFirebase, 
   SiVercel, SiNextdotjs, SiTypescript, SiPostgresql,
-  SiJest, SiMocha, SiVitest, SiCypress, SiPytest
+  SiJest, SiMocha, SiVitest, SiCypress, SiPytest, SiCockroachdb, SiNeo4j
 } from 'react-icons/si';
 
 // ============================================================================
@@ -44,8 +44,8 @@ const techStack = {
     { name: 'MongoDB', Icon: SiMongodb, color: 'text-green-600' },
     { name: 'MySQL', Icon: SiMysql, color: 'text-blue-700' },
     { name: 'PostgreSQL', Icon: SiPostgresql, color: 'text-blue-400' },
-    { name: 'CockroachDB', Icon: FaDatabase, color: 'text-purple-600' },
-    { name: 'Neo4j', Icon: FaProjectDiagram, color: 'text-blue-500' },
+    { name: 'CockroachDB', Icon: SiCockroachdb, color: 'text-zinc-400' },
+    { name: 'Neo4j', Icon: SiNeo4j, color: 'text-blue-600' },
     { name: 'Firebase', Icon: SiFirebase, color: 'text-orange-500' },
     { name: 'Browser DB', Icon: FaChrome, color: 'text-green-500' },
   ],
@@ -85,8 +85,8 @@ const roadmap = {
     { name: 'C', Icon: FaCode, color: 'text-blue-600' },
     { name: 'Python', Icon: FaPython, color: 'text-yellow-400' },
     { name: 'PostgreSQL', Icon: SiPostgresql, color: 'text-blue-400' },
-    { name: 'Neo4j', Icon: FaProjectDiagram, color: 'text-blue-500' },
-    { name: 'CockroachDB', Icon: FaDatabase, color: 'text-purple-600' },
+    { name: 'Neo4j', Icon: SiNeo4j, color: 'text-blue-600' },
+    { name: 'CockroachDB', Icon: SiCockroachdb, color: 'text-zinc-400' },
   ],
   future: [
     { name: 'Game Development', Icon: FaGamepad, color: 'text-purple-500' },
@@ -164,7 +164,7 @@ const Skills = ({ isDarkMode }) => {
             Technical <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-emerald-500">Skills</span>
           </h2>
           <p className={`max-w-2xl mx-auto text-base sm:text-lg leading-relaxed ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-            Technologies and testing frameworks I use to build robust, scalable applications, alongside the tools that streamline my workflow.
+            Technologies, testing frameworks, and specialized databases I use to build robust, scalable applications.
           </p>
         </header>
 
@@ -182,7 +182,7 @@ const Skills = ({ isDarkMode }) => {
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
-            title="Testing Framework" 
+            title="Testing Frameworks" 
             items={techStack.testing}
             isDarkMode={isDarkMode} 
           />
