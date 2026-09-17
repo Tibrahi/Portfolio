@@ -10,9 +10,8 @@ const Dashboard = ({ isDarkMode }) => {
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading & Intro Sequence State (~60 seconds total duration to reach 100%)
-  // 60,000ms / 100 steps = 600ms per 1% increment
-  const [loadingProgress, setLoadingProgress] = useState(1);
+  // Loading state starting explicitly at 3 instead of 1, pacing out safely to 100
+  const [loadingProgress, setLoadingProgress] = useState(3);
   const [showDashboard, setShowDashboard] = useState(false);
 
   // Pagination State
@@ -59,7 +58,7 @@ const Dashboard = ({ isDarkMode }) => {
     fetchData();
   }, []);
 
-  // 60-second timer to reach 100% smoothly without getting stuck
+  // Timer mapping execution to scale from 3% to 100% cleanly
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingProgress(prev => {
@@ -69,12 +68,12 @@ const Dashboard = ({ isDarkMode }) => {
         }
         return prev + 1;
       });
-    }, 600); 
+    }, 500); // Adjust interval speed as needed (500ms * ~97 steps ≈ 48 seconds total duration)
 
     return () => clearInterval(timer);
   }, []);
 
-  // Reveal dashboard as soon as loading counter hits 100%
+  // Reveal dashboard smoothly when counter hits 100%
   useEffect(() => {
     if (loadingProgress === 100) {
       const timeout = setTimeout(() => setShowDashboard(true), 400);
@@ -147,7 +146,7 @@ const Dashboard = ({ isDarkMode }) => {
               })}
             </div>
 
-            {/* Countdown Counter (1 to 100) */}
+            {/* Countdown Counter (3 to 100) */}
             <div className="font-mono text-2xl md:text-3xl font-bold text-blue-500 dark:text-blue-400">
               {loadingProgress}%
             </div>
