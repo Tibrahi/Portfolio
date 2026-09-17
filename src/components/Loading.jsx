@@ -4,16 +4,15 @@ import {
   FaGithub, FaLinkedin, FaStar, 
   FaExternalLinkAlt, FaCircle, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
-import Logo from './Logo'; // Imported directly as requested without re-generating
 
 const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading & Intro Sequence State (Faster progression: ~3 seconds to reach 100%)
+  // Loading & Intro Sequence State (~60 seconds total duration to reach 100%)
+  // 60,000ms / 100 steps = 600ms per 1% increment
   const [loadingProgress, setLoadingProgress] = useState(1);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
 
   // Pagination State
@@ -32,7 +31,7 @@ const Dashboard = ({ isDarkMode }) => {
     linkedin: "tuyizere-ibrahim-89ba8b275",
   };
 
-  // Background Data Fetching while Intro renders
+  // Background Data Fetching
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -54,15 +53,13 @@ const Dashboard = ({ isDarkMode }) => {
         setGithubData(cleanData);
       } catch (err) {
         setError(err.message);
-      } finally {
-        setIsDataLoaded(true);
       }
     };
 
     fetchData();
   }, []);
 
-  // Quick timer set to ~3 seconds total duration (30ms per 1% increment = 3 seconds from 1 to 100)
+  // 60-second timer to reach 100% smoothly without getting stuck
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingProgress(prev => {
@@ -72,18 +69,18 @@ const Dashboard = ({ isDarkMode }) => {
         }
         return prev + 1;
       });
-    }, 30); 
+    }, 600); 
 
     return () => clearInterval(timer);
   }, []);
 
-  // Complete loading when both counter hits 100 and data is fetched
+  // Reveal dashboard as soon as loading counter hits 100%
   useEffect(() => {
-    if (loadingProgress === 100 && isDataLoaded) {
+    if (loadingProgress === 100) {
       const timeout = setTimeout(() => setShowDashboard(true), 400);
       return () => clearTimeout(timeout);
     }
-  }, [loadingProgress, isDataLoaded]);
+  }, [loadingProgress]);
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -104,22 +101,21 @@ const Dashboard = ({ isDarkMode }) => {
               isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-900'
             }`}
           >
-            {/* Exact Imported Logo Component in Middle */}
-            <div className="relative mb-6 p-4 rounded-2xl bg-slate-900/50 border border-slate-800 shadow-2xl scale-125">
-              <Logo isDarkMode={isDarkMode} />
-            </div>
-
-            {/* Name Under Logo */}
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            {/* Name */}
+            <motion.h1 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 text-center"
+            >
               {personalInfo.name}
-            </h1>
+            </motion.h1>
 
             {/* Tooltip Intro Under Name */}
             <motion.div 
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className={`max-w-md text-center px-5 py-3 rounded-xl mb-8 text-sm md:text-base font-medium shadow-lg ${
+              className={`max-w-md text-center px-6 py-4 rounded-xl mb-8 text-sm md:text-base font-medium shadow-lg ${
                 isDarkMode ? 'bg-slate-900 border border-slate-800 text-slate-300' : 'bg-gray-100 border border-gray-200 text-slate-700'
               }`}
             >
@@ -152,7 +148,7 @@ const Dashboard = ({ isDarkMode }) => {
             </div>
 
             {/* Countdown Counter (1 to 100) */}
-            <div className="font-mono text-xl md:text-2xl font-bold text-blue-500 dark:text-blue-400">
+            <div className="font-mono text-2xl md:text-3xl font-bold text-blue-500 dark:text-blue-400">
               {loadingProgress}%
             </div>
           </motion.div>
@@ -181,9 +177,6 @@ const Dashboard = ({ isDarkMode }) => {
 
             <div className="flex-1 text-center md:text-left space-y-6">
               <div>
-                <div className="mb-2 inline-block">
-                  <Logo isDarkMode={isDarkMode} />
-                </div>
                 <h2 className="text-blue-500 dark:text-blue-400 font-semibold tracking-wide uppercase text-sm mt-1">
                   {personalInfo.status} • Full Stack Developer
                 </h2>
