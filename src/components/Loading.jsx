@@ -4,24 +4,14 @@ import {
   FaGithub, FaLinkedin, FaStar, 
   FaExternalLinkAlt, FaCircle, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
-
-// Your exact Logo component imported and used as-is
-const Logo = ({ isDarkMode }) => {
-  return (
-    <div className="flex items-center">
-      <code className={`text-xl font-mono ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
-        &lt;TI /&gt;
-      </code>
-    </div>
-  )
-}
+import Logo from './Logo'; // Imported directly as requested without re-generating
 
 const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading & Intro Sequence State (Slower timer interval for full reading of tooltip)
+  // Loading & Intro Sequence State (Adjusted for ~45 seconds loading sequence)
   const [loadingProgress, setLoadingProgress] = useState(1);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
@@ -72,7 +62,7 @@ const Dashboard = ({ isDarkMode }) => {
     fetchData();
   }, []);
 
-  // Slower countdown timer from 1 to 100 so user has plenty of time to read the tooltip
+  // Countdown timer set to exactly ~45 seconds total duration (450ms per 1% increment = 45 seconds from 1 to 100)
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingProgress(prev => {
@@ -82,7 +72,7 @@ const Dashboard = ({ isDarkMode }) => {
         }
         return prev + 1;
       });
-    }, 60); // Slower interval (~6 seconds total duration)
+    }, 450); // 450ms * 100 steps = 45 seconds total reading time
 
     return () => clearInterval(timer);
   }, []);
@@ -114,8 +104,8 @@ const Dashboard = ({ isDarkMode }) => {
               isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-900'
             }`}
           >
-            {/* Exact Portfolio Logo in Middle */}
-            <div className="relative mb-6 p-4 rounded-2xl bg-slate-900/50 border border-slate-800 shadow-2xl">
+            {/* Exact Imported Logo Component in Middle */}
+            <div className="relative mb-6 p-4 rounded-2xl bg-slate-900/50 border border-slate-800 shadow-2xl scale-125">
               <Logo isDarkMode={isDarkMode} />
             </div>
 
