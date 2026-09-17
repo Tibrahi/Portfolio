@@ -10,7 +10,7 @@ import {
 import { 
   SiTailwindcss, SiExpress, SiMongodb, SiMysql, SiFirebase, 
   SiVercel, SiNextdotjs, SiTypescript, SiPostgresql,
-  SiJest, SiMocha, SiVitest, SiCypress, SiPytest, SiCockroachdb, SiNeo4j
+  SiJest, SiMocha, SiVitest, SiCypress, SiPytest, SiNeo4j
 } from 'react-icons/si';
 
 // ============================================================================
@@ -44,7 +44,7 @@ const techStack = {
     { name: 'MongoDB', Icon: SiMongodb, color: 'text-green-600' },
     { name: 'MySQL', Icon: SiMysql, color: 'text-blue-700' },
     { name: 'PostgreSQL', Icon: SiPostgresql, color: 'text-blue-400' },
-    { name: 'CockroachDB', Icon: SiCockroachdb, color: 'text-zinc-400' },
+    { name: 'CockroachDB', Icon: FaDatabase, color: 'text-zinc-400' },
     { name: 'Neo4j', Icon: SiNeo4j, color: 'text-blue-600' },
     { name: 'Firebase', Icon: SiFirebase, color: 'text-orange-500' },
     { name: 'Browser DB', Icon: FaChrome, color: 'text-green-500' },
@@ -88,7 +88,7 @@ const roadmap = {
     { name: 'Python', Icon: FaPython, color: 'text-yellow-400' },
     { name: 'PostgreSQL', Icon: SiPostgresql, color: 'text-blue-400' },
     { name: 'Neo4j', Icon: SiNeo4j, color: 'text-blue-600' },
-    { name: 'CockroachDB', Icon: SiCockroachdb, color: 'text-zinc-400' },
+    { name: 'CockroachDB', Icon: FaDatabase, color: 'text-zinc-400' },
   ],
   future: [
     { name: 'Game Development', Icon: FaGamepad, color: 'text-purple-500' },
