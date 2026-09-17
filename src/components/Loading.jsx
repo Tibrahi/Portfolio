@@ -11,7 +11,7 @@ const Dashboard = ({ isDarkMode }) => {
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading & Intro Sequence State (Adjusted for ~45 seconds loading sequence)
+  // Loading & Intro Sequence State (Faster progression: ~3 seconds to reach 100%)
   const [loadingProgress, setLoadingProgress] = useState(1);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
@@ -62,7 +62,7 @@ const Dashboard = ({ isDarkMode }) => {
     fetchData();
   }, []);
 
-  // Countdown timer set to exactly ~45 seconds total duration (450ms per 1% increment = 45 seconds from 1 to 100)
+  // Quick timer set to ~3 seconds total duration (30ms per 1% increment = 3 seconds from 1 to 100)
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingProgress(prev => {
@@ -72,7 +72,7 @@ const Dashboard = ({ isDarkMode }) => {
         }
         return prev + 1;
       });
-    }, 450); // 450ms * 100 steps = 45 seconds total reading time
+    }, 30); 
 
     return () => clearInterval(timer);
   }, []);
@@ -80,7 +80,7 @@ const Dashboard = ({ isDarkMode }) => {
   // Complete loading when both counter hits 100 and data is fetched
   useEffect(() => {
     if (loadingProgress === 100 && isDataLoaded) {
-      const timeout = setTimeout(() => setShowDashboard(true), 600);
+      const timeout = setTimeout(() => setShowDashboard(true), 400);
       return () => clearTimeout(timeout);
     }
   }, [loadingProgress, isDataLoaded]);
@@ -155,9 +155,6 @@ const Dashboard = ({ isDarkMode }) => {
             <div className="font-mono text-xl md:text-2xl font-bold text-blue-500 dark:text-blue-400">
               {loadingProgress}%
             </div>
-            <p className={`text-xs mt-1 uppercase tracking-widest ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-              Initializing System & Fetching Data...
-            </p>
           </motion.div>
         )}
       </AnimatePresence>
