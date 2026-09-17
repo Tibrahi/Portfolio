@@ -10,8 +10,7 @@ const Dashboard = ({ isDarkMode }) => {
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading state starting explicitly at 3 instead of 1, pacing out safely to 100
-  const [loadingProgress, setLoadingProgress] = useState(3);
+  // Dashboard reveal flag bound strictly to data and intro sequence readiness
   const [showDashboard, setShowDashboard] = useState(false);
 
   // Pagination State
@@ -30,7 +29,7 @@ const Dashboard = ({ isDarkMode }) => {
     linkedin: "tuyizere-ibrahim-89ba8b275",
   };
 
-  // Background Data Fetching
+  // Background Data Fetching & smooth intro timing handler
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -56,30 +55,14 @@ const Dashboard = ({ isDarkMode }) => {
     };
 
     fetchData();
+
+    // Ensures the sleek Intro screen (Name, Tooltip, Cube animation) displays cleanly for 3.5 seconds before transitioning
+    const introTimer = setTimeout(() => {
+      setShowDashboard(true);
+    }, 3500);
+
+    return () => clearTimeout(introTimer);
   }, []);
-
-  // Timer mapping execution to scale from 3% to 100% cleanly
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setLoadingProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(timer);
-          return 100;
-        }
-        return prev + 1;
-      });
-    }, 500); // Adjust interval speed as needed (500ms * ~97 steps ≈ 48 seconds total duration)
-
-    return () => clearInterval(timer);
-  }, []);
-
-  // Reveal dashboard smoothly when counter hits 100%
-  useEffect(() => {
-    if (loadingProgress === 100) {
-      const timeout = setTimeout(() => setShowDashboard(true), 400);
-      return () => clearTimeout(timeout);
-    }
-  }, [loadingProgress]);
 
   // Pagination Logic
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -90,7 +73,7 @@ const Dashboard = ({ isDarkMode }) => {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-slate-900 text-slate-100' : 'bg-gray-50 text-gray-900'}`}>
       
-      {/* Intro Loading Screen */}
+      {/* Intro Loading Screen: Contains ONLY Name, Tooltip, and Cubes */}
       <AnimatePresence>
         {!showDashboard && (
           <motion.div
@@ -144,11 +127,6 @@ const Dashboard = ({ isDarkMode }) => {
                   />
                 );
               })}
-            </div>
-
-            {/* Countdown Counter (3 to 100) */}
-            <div className="font-mono text-2xl md:text-3xl font-bold text-blue-500 dark:text-blue-400">
-              {loadingProgress}%
             </div>
           </motion.div>
         )}
