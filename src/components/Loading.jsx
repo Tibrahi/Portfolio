@@ -5,12 +5,21 @@ import {
   FaExternalLinkAlt, FaCircle, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
 
+// Logo Component
+export default function Logo() {
+  return (
+    <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white font-black text-3xl shadow-2xl tracking-wider">
+      TI
+    </div>
+  );
+}
+
 const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading & Intro Sequence State
+  // Loading & Intro Sequence State (Slower timer for readability)
   const [loadingProgress, setLoadingProgress] = useState(1);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
@@ -61,7 +70,7 @@ const Dashboard = ({ isDarkMode }) => {
     fetchData();
   }, []);
 
-  // Countdown from 1 to 100 timer
+  // Slower countdown timer (from 1 to 100) to allow comfortable reading of tooltip & intro
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingProgress(prev => {
@@ -71,15 +80,15 @@ const Dashboard = ({ isDarkMode }) => {
         }
         return prev + 1;
       });
-    }, 25); // Adjust speed of counter here
+    }, 55); // Adjusted interval for an optimal reading pace (~5.5 seconds total)
 
     return () => clearInterval(timer);
   }, []);
 
-  // Complete loading when both counter hits 100 and data is fetched
+  // Complete loading when counter hits 100 and data is fetched
   useEffect(() => {
     if (loadingProgress === 100 && isDataLoaded) {
-      const timeout = setTimeout(() => setShowDashboard(true), 500);
+      const timeout = setTimeout(() => setShowDashboard(true), 600);
       return () => clearTimeout(timeout);
     }
   }, [loadingProgress, isDataLoaded]);
@@ -103,57 +112,46 @@ const Dashboard = ({ isDarkMode }) => {
               isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-900'
             }`}
           >
-            {/* Stationary Logo / Avatar in Middle */}
-            <div className="relative mb-6">
-              <div className={`absolute -inset-1 rounded-full blur opacity-75 ${
-                isDarkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-blue-400 to-purple-400'
-              }`}></div>
-              <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
-                <img
-                  src={profileData?.avatar_url || `https://github.com/${personalInfo.github}.png`}
-                  alt={personalInfo.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+            {/* Stationary Logo in Middle */}
+            <div className="mb-6">
+              <Logo />
             </div>
 
             {/* Name Under Logo */}
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               {personalInfo.name}
             </h1>
 
             {/* Tooltip Intro Under Name */}
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className={`max-w-md text-center px-4 py-2 rounded-xl mb-8 text-sm md:text-base font-medium shadow-lg ${
+              transition={{ delay: 0.3, duration: 0.5 }}
+              className={`max-w-md text-center px-6 py-3 rounded-2xl mb-8 text-sm md:text-base font-medium shadow-xl ${
                 isDarkMode ? 'bg-slate-900 border border-slate-800 text-slate-300' : 'bg-gray-100 border border-gray-200 text-slate-700'
               }`}
             >
               hello i'm T.ibrahim welcome to my portfolio and i'm happy to see you foshua .
             </motion.div>
 
-            {/* 10 Cube Boxes Animation (5 from left, 5 from right meeting in the middle) */}
-            <div className="flex items-center justify-center gap-1 mb-6 w-full max-w-xs overflow-hidden py-2">
+            {/* 10 Cube Boxes Animation (5 from left [black], 5 from right [blue] meeting in the middle) */}
+            <div className="flex items-center justify-center gap-1.5 mb-6 w-full max-w-xs overflow-hidden py-3">
               {[...Array(10)].map((_, i) => {
                 const isFromLeft = i < 5;
+                const cubeBg = isFromLeft ? 'bg-black border border-slate-700' : 'bg-blue-600';
                 return (
                   <motion.div
                     key={i}
-                    initial={{ x: isFromLeft ? -300 : 300, opacity: 0 }}
+                    initial={{ x: isFromLeft ? -350 : 350, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ 
-                      duration: 0.8, 
-                      delay: i * 0.05, 
+                      duration: 1.0, 
+                      delay: i * 0.08, 
                       type: "spring", 
-                      stiffness: 120 
+                      stiffness: 100,
+                      damping: 12
                     }}
-                    className={`w-5 h-5 rounded-md ${
-                      i % 2 === 0 
-                        ? 'bg-blue-600 dark:bg-blue-500' 
-                        : 'bg-purple-600 dark:bg-purple-500'
-                    } shadow-md`}
+                    className={`w-5 h-5 rounded-md ${cubeBg} shadow-md`}
                   />
                 );
               })}
@@ -164,7 +162,7 @@ const Dashboard = ({ isDarkMode }) => {
               {loadingProgress}%
             </div>
             <p className={`text-xs mt-1 uppercase tracking-widest ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-              Initializing System & Fetching Data...
+              Preparing Experience...
             </p>
           </motion.div>
         )}
@@ -343,5 +341,3 @@ const Dashboard = ({ isDarkMode }) => {
     </div>
   );
 };
-
-export default Dashboard;
