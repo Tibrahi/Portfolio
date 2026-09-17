@@ -182,7 +182,7 @@ const Skills = ({ isDarkMode }) => {
             isDarkMode={isDarkMode} 
           />
           <BentoCard 
-            title="Testing & Quality Assurance" 
+            title="Testing Framework" 
             items={techStack.testing}
             isDarkMode={isDarkMode} 
           />
