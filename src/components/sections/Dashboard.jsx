@@ -7,6 +7,7 @@ import {
 
 const Dashboard = ({ isDarkMode }) => {
   const [githubData, setGithubData] = useState([]);
+  const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -48,15 +49,20 @@ const Dashboard = ({ isDarkMode }) => {
   const fetchGithubData = async () => {
     try {
       setLoading(true);
-      // Fetching all repos sorted by updated to filter client-side
-      const response = await fetch(
-        `https://api.github.com/users/${personalInfo.github}/repos?per_page=100&sort=updated`
-      );
       
-      if (!response.ok) throw new Error("Failed to fetch data");
+      // Fetch user profile and repositories concurrently
+      const [userRes, reposRes] = await Promise.all([
+        fetch(`https://api.github.com/users/${personalInfo.github}`),
+        fetch(`https://api.github.com/users/${personalInfo.github}/repos?per_page=100&sort=updated`)
+      ]);
+      
+      if (!userRes.ok || !reposRes.ok) throw new Error("Failed to fetch data");
 
-      const data = await response.json();
+      const userData = await userRes.json();
+      const data = await reposRes.json();
       
+      setProfileData(userData);
+
       // Smart Filtering: Recruiters don't want to see forks or archived projects usually
       const cleanData = data
         .filter(repo => !repo.fork && !repo.archived)
@@ -103,8 +109,8 @@ const Dashboard = ({ isDarkMode }) => {
             <div className={`absolute -inset-1 rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 ${isDarkMode ? 'bg-gradient-to-r from-blue-600 to-purple-600' : 'bg-gradient-to-r from-blue-400 to-purple-400'}`}></div>
             <div className="relative w-40 h-40 md:w-56 md:h-56 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
               <img
-                src={`https://github.com/${personalInfo.github}.png`}
-                alt={personalInfo.name}
+                src={profileData?.avatar_url || `https://github.com/${personalInfo.github}.png`}
+                alt={profileData?.name || personalInfo.name}
                 className="w-full h-full object-cover"
               />
             </div>
@@ -113,21 +119,23 @@ const Dashboard = ({ isDarkMode }) => {
           {/* Intro Text */}
           <div className="flex-1 text-center md:text-left space-y-6">
             <div>
-              <h2 className="text-blue-500 dark:text-blue-400 font-semibold tracking-wide uppercase text-sm">Full Stack Developer</h2>
+              <h2 className="text-blue-500 dark:text-blue-400 font-semibold tracking-wide uppercase text-sm">
+                {profileData?.company ? `${profileData.company} • ` : ''}Full Stack Developer
+              </h2>
               <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">
-                Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{personalInfo.name}</span>
+                Hi, I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">{profileData?.name || personalInfo.name}</span>
               </h1>
             </div>
             
             <p className={`text-lg md:text-xl max-w-2xl leading-relaxed ${isDarkMode ? 'text-slate-400' : 'text-slate-600'}`}>
-              {personalInfo.bio}
+              {profileData?.bio || personalInfo.bio}
             </p>
 
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
 
               <div className="flex gap-4 items-center">
                 {[
-                  { icon: <FaGithub />, href: `https://github.com/${personalInfo.github}` },
+                  { icon: <FaGithub />, href: profileData?.html_url || `https://github.com/${personalInfo.github}` },
                   { icon: <FaLinkedin />, href: `https://linkedin.com/in/${personalInfo.linkedin}` }
                 ].map((social, idx) => (
                   <a 
@@ -156,7 +164,7 @@ const Dashboard = ({ isDarkMode }) => {
             </p>
           </div>
           <a 
-            href={`https://github.com/${personalInfo.github}`}
+            href={profileData?.html_url || `https://github.com/${personalInfo.github}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden sm:flex items-center gap-2 text-blue-500 hover:text-blue-400 transition-colors"
@@ -197,6 +205,7 @@ const Dashboard = ({ isDarkMode }) => {
                   <div className="p-6">
                     <div className="flex justify-between items-start mb-4">
                       <div className="flex items-center gap-2">
+                        {/* GitHub icon rendering without color override */}
                         <FaGithub className={`text-2xl ${isDarkMode ? 'text-slate-200' : 'text-slate-800'}`} />
                         <h3 className="font-bold text-lg truncate pr-2">{repo.name}</h3>
                       </div>
