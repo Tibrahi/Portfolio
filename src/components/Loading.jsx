@@ -5,13 +5,15 @@ import {
   FaExternalLinkAlt, FaCircle, FaChevronLeft, FaChevronRight 
 } from 'react-icons/fa';
 
-// Logo Component
-export default function Logo() {
+// Your exact Logo component imported and used as-is
+const Logo = ({ isDarkMode }) => {
   return (
-    <div className="flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white font-black text-3xl shadow-2xl tracking-wider">
-      TI
+    <div className="flex items-center">
+      <code className={`text-xl font-mono ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+        &lt;TI /&gt;
+      </code>
     </div>
-  );
+  )
 }
 
 const Dashboard = ({ isDarkMode }) => {
@@ -19,7 +21,7 @@ const Dashboard = ({ isDarkMode }) => {
   const [profileData, setProfileData] = useState(null);
   const [error, setError] = useState(null);
   
-  // Loading & Intro Sequence State (Slower timer for readability)
+  // Loading & Intro Sequence State (Slower timer interval for full reading of tooltip)
   const [loadingProgress, setLoadingProgress] = useState(1);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [showDashboard, setShowDashboard] = useState(false);
@@ -70,7 +72,7 @@ const Dashboard = ({ isDarkMode }) => {
     fetchData();
   }, []);
 
-  // Slower countdown timer (from 1 to 100) to allow comfortable reading of tooltip & intro
+  // Slower countdown timer from 1 to 100 so user has plenty of time to read the tooltip
   useEffect(() => {
     const timer = setInterval(() => {
       setLoadingProgress(prev => {
@@ -80,12 +82,12 @@ const Dashboard = ({ isDarkMode }) => {
         }
         return prev + 1;
       });
-    }, 55); // Adjusted interval for an optimal reading pace (~5.5 seconds total)
+    }, 60); // Slower interval (~6 seconds total duration)
 
     return () => clearInterval(timer);
   }, []);
 
-  // Complete loading when counter hits 100 and data is fetched
+  // Complete loading when both counter hits 100 and data is fetched
   useEffect(() => {
     if (loadingProgress === 100 && isDataLoaded) {
       const timeout = setTimeout(() => setShowDashboard(true), 600);
@@ -112,46 +114,48 @@ const Dashboard = ({ isDarkMode }) => {
               isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-white text-slate-900'
             }`}
           >
-            {/* Stationary Logo in Middle */}
-            <div className="mb-6">
-              <Logo />
+            {/* Exact Portfolio Logo in Middle */}
+            <div className="relative mb-6 p-4 rounded-2xl bg-slate-900/50 border border-slate-800 shadow-2xl">
+              <Logo isDarkMode={isDarkMode} />
             </div>
 
             {/* Name Under Logo */}
-            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-3 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+            <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
               {personalInfo.name}
             </h1>
 
             {/* Tooltip Intro Under Name */}
             <motion.div 
-              initial={{ opacity: 0, y: 15 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-              className={`max-w-md text-center px-6 py-3 rounded-2xl mb-8 text-sm md:text-base font-medium shadow-xl ${
+              transition={{ delay: 0.3 }}
+              className={`max-w-md text-center px-5 py-3 rounded-xl mb-8 text-sm md:text-base font-medium shadow-lg ${
                 isDarkMode ? 'bg-slate-900 border border-slate-800 text-slate-300' : 'bg-gray-100 border border-gray-200 text-slate-700'
               }`}
             >
               hello i'm T.ibrahim welcome to my portfolio and i'm happy to see you foshua .
             </motion.div>
 
-            {/* 10 Cube Boxes Animation (5 from left [black], 5 from right [blue] meeting in the middle) */}
-            <div className="flex items-center justify-center gap-1.5 mb-6 w-full max-w-xs overflow-hidden py-3">
+            {/* 10 Cube Boxes Animation: Left 5 are solid black, Right 5 are solid blue */}
+            <div className="flex items-center justify-center gap-1.5 mb-6 w-full max-w-xs overflow-hidden py-2">
               {[...Array(10)].map((_, i) => {
                 const isFromLeft = i < 5;
-                const cubeBg = isFromLeft ? 'bg-black border border-slate-700' : 'bg-blue-600';
+                const cubeColorClass = isFromLeft 
+                  ? 'bg-black border border-slate-700' 
+                  : 'bg-blue-600 dark:bg-blue-500';
+
                 return (
                   <motion.div
                     key={i}
-                    initial={{ x: isFromLeft ? -350 : 350, opacity: 0 }}
+                    initial={{ x: isFromLeft ? -300 : 300, opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ 
-                      duration: 1.0, 
-                      delay: i * 0.08, 
+                      duration: 0.8, 
+                      delay: i * 0.05, 
                       type: "spring", 
-                      stiffness: 100,
-                      damping: 12
+                      stiffness: 120 
                     }}
-                    className={`w-5 h-5 rounded-md ${cubeBg} shadow-md`}
+                    className={`w-5 h-5 rounded-md ${cubeColorClass} shadow-md`}
                   />
                 );
               })}
@@ -162,7 +166,7 @@ const Dashboard = ({ isDarkMode }) => {
               {loadingProgress}%
             </div>
             <p className={`text-xs mt-1 uppercase tracking-widest ${isDarkMode ? 'text-slate-500' : 'text-slate-400'}`}>
-              Preparing Experience...
+              Initializing System & Fetching Data...
             </p>
           </motion.div>
         )}
@@ -190,7 +194,10 @@ const Dashboard = ({ isDarkMode }) => {
 
             <div className="flex-1 text-center md:text-left space-y-6">
               <div>
-                <h2 className="text-blue-500 dark:text-blue-400 font-semibold tracking-wide uppercase text-sm">
+                <div className="mb-2 inline-block">
+                  <Logo isDarkMode={isDarkMode} />
+                </div>
+                <h2 className="text-blue-500 dark:text-blue-400 font-semibold tracking-wide uppercase text-sm mt-1">
                   {personalInfo.status} • Full Stack Developer
                 </h2>
                 <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight mt-2">
@@ -341,3 +348,5 @@ const Dashboard = ({ isDarkMode }) => {
     </div>
   );
 };
+
+export default Dashboard;
