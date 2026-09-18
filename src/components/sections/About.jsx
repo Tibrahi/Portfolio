@@ -165,7 +165,7 @@ const About = ({ isDarkMode }) => {
                 <div className={`w-56 h-56 rounded-3xl overflow-hidden border-4 ${isDarkMode ? 'border-gray-800 shadow-blue-900/20' : 'border-white shadow-xl'} shadow-2xl transition-all duration-300`}>
                     <img 
                         src={ProfileImage} 
-                        alt="Tuyizere Ibrahim - Profile" 
+                        alt="TUYIZERE Ibrahim - Profile" 
                         className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
                     />
@@ -180,7 +180,7 @@ const About = ({ isDarkMode }) => {
             {/* Name & Title */}
             <motion.div variants={ANIMATIONS.item} className="text-center lg:text-left space-y-2 w-full">
                 <h1 className={`text-4xl sm:text-5xl font-extrabold tracking-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    Tuyizere Ibrahim
+                    TUYIZERE Ibrahim
                 </h1>
                 <p className={`text-xl font-semibold tracking-wide ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
                     Software Engineer
