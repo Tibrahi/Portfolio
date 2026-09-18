@@ -195,6 +195,54 @@ const professionalWork = [
 const certifications = [
   {
     id: 7,
+    title: 'DevOps Professional Certification',
+    issuer: 'LinkedIn & PagerDuty',
+    date: '2026',
+    note: "Professional training on incident management, automation, CI/CD pipelines, and reliable operational workflows.",
+    icon: FaCogs
+  },
+  {
+    id: 8,
+    title: 'Docker Essentials & Containerization',
+    issuer: 'LinkedIn',
+    date: '2026',
+    note: "Proficiency in container management, image deployment, and multi-service orchestration.",
+    icon: FaServer
+  },
+  {
+    id: 9,
+    title: 'Microsoft Azure Cloud Fundamentals',
+    issuer: 'LinkedIn',
+    date: '2026',
+    note: "Cloud architecture principles, core Azure services, security, and scalability infrastructure.",
+    icon: FaAws
+  },
+  {
+    id: 10,
+    title: 'Business Strategy & Optimization',
+    issuer: 'LinkedIn (CPE, QAS, PMIS)',
+    date: '2026',
+    note: "Accredited framework for project management methodologies, operational quality standards, and enterprise business strategy.",
+    icon: FaTasks
+  },
+  {
+    id: 11,
+    title: 'SEO for Business Growth',
+    issuer: 'Moz & LinkedIn',
+    date: '2026',
+    note: "Search engine optimization strategies, keyword metrics, and digital visibility optimization for commercial platforms.",
+    icon: FaGlobe
+  },
+  {
+    id: 12,
+    title: 'American Staff Recruitment & Talent Sourcing',
+    issuer: 'LinkedIn',
+    date: '2026',
+    note: "Specialized framework for recruitment pipelines, candidate vetting, and staffing operations within the U.S. market.",
+    icon: FaUserTie
+  },
+  {
+    id: 13,
     title: 'AWS Professional',
     issuer: 'Amazon Web Services (AWS)',
     date: '2026',
@@ -202,49 +250,33 @@ const certifications = [
     icon: FaAws
   },
   {
-    id: 8,
-    title: 'Project Management (PM)',
-    issuer: 'Professional Accreditation',
-    date: '2026',
-    note: "Licensed methodology for managing project lifecycles, risk management, resource allocation, and timelines.",
-    icon: FaTasks
-  },
-  {
-    id: 9,
-    title: 'Recruitment & Talent Sourcing',
-    issuer: 'Human Resources Certification Body',
-    date: '2026',
-    note: "Licensed framework for modern technical screening, candidate evaluation, and streamlined hiring workflows.",
-    icon: FaUserTie
-  },
-  {
-    id: 10,
+    id: 14,
     title: 'Business Writing',
     issuer: 'Professional Communication Institute',
     date: '2026',
-    note: "Licensed proficiency in corporate correspondence, executive reporting, and documentation.",
+    note: "Proficiency in corporate correspondence, executive reporting, and documentation.",
     icon: FaPenNib
   },
   {
-    id: 11,
+    id: 1,
     title: 'What the Internet Needs to Exist',
-    issuer: 'Internet Society',
+    issuer: 'Internet Society (License)',
     date: '2025',
     note: "Comprehensive study covering physical infrastructure, routing, standards, and core network availability.",
     icon: FaGlobe
   },
   {
-    id: 12,
+    id: 2,
     title: 'Internet Governance',
-    issuer: 'Internet Society',
+    issuer: 'Internet Society (License)',
     date: '2025',
     note: "Analysis of multi-stakeholder models, policy frameworks, cyber security policies, and global internet regulation.",
     icon: FaGlobe
   },
   {
-    id: 13,
+    id: 3,
     title: 'What the Internet Needs to Thrive',
-    issuer: 'Internet Society',
+    issuer: 'Internet Society (License)',
     date: '2025',
     note: "Focus on open standards, security best practices, interoperability, and continuous network expansion.",
     icon: FaGlobe
@@ -617,7 +649,7 @@ const Experience = ({ isDarkMode }) => {
               {totalCertPages > 1 && (
                 <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700/20">
                   <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Showing {indexOfFirstCert + 1} to {Math.min(indexOfLastCert, certifications.length)} of {certifications.length} licenses
+                    Showing {indexOfFirstCert + 1} to {Math.min(indexOfLastCert, certifications.length)} of {certifications.length} credentials
                   </span>
                   
                   <div className="flex items-center gap-1.5">
