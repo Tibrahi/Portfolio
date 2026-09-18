@@ -199,8 +199,7 @@ const certifications = [
     issuer: 'Amazon Web Services (AWS)',
     date: '2026',
     note: "Licensed professional cloud architecture, deployment, and infrastructure scaling expertise.",
-    icon: FaAws,
-    link: '#'
+    icon: FaAws
   },
   {
     id: 8,
@@ -208,8 +207,7 @@ const certifications = [
     issuer: 'Professional Accreditation',
     date: '2026',
     note: "Licensed methodology for managing project lifecycles, risk management, resource allocation, and timelines.",
-    icon: FaTasks,
-    link: '#'
+    icon: FaTasks
   },
   {
     id: 9,
@@ -217,8 +215,7 @@ const certifications = [
     issuer: 'Human Resources Certification Body',
     date: '2026',
     note: "Licensed framework for modern technical screening, candidate evaluation, and streamlined hiring workflows.",
-    icon: FaUserTie,
-    link: '#'
+    icon: FaUserTie
   },
   {
     id: 10,
@@ -226,8 +223,7 @@ const certifications = [
     issuer: 'Professional Communication Institute',
     date: '2026',
     note: "Licensed proficiency in corporate correspondence, executive reporting, and documentation.",
-    icon: FaPenNib,
-    link: '#'
+    icon: FaPenNib
   },
   {
     id: 11,
@@ -235,8 +231,7 @@ const certifications = [
     issuer: 'Internet Society',
     date: '2025',
     note: "Comprehensive study covering physical infrastructure, routing, standards, and core network availability.",
-    icon: FaGlobe,
-    link: '#'
+    icon: FaGlobe
   },
   {
     id: 12,
@@ -244,8 +239,7 @@ const certifications = [
     issuer: 'Internet Society',
     date: '2025',
     note: "Analysis of multi-stakeholder models, policy frameworks, cyber security policies, and global internet regulation.",
-    icon: FaGlobe,
-    link: '#'
+    icon: FaGlobe
   },
   {
     id: 13,
@@ -253,8 +247,7 @@ const certifications = [
     issuer: 'Internet Society',
     date: '2025',
     note: "Focus on open standards, security best practices, interoperability, and continuous network expansion.",
-    icon: FaGlobe,
-    link: '#'
+    icon: FaGlobe
   },
   {
     id: 4,
@@ -262,8 +255,7 @@ const certifications = [
     issuer: 'Technology Channel (Training)',
     date: 'July 2024 - Sept 2024',
     note: "Advanced hardware & software diagnostics training.",
-    icon: FaTools,
-    link: '#'
+    icon: FaTools
   },
   {
     id: 5,
@@ -271,8 +263,7 @@ const certifications = [
     issuer: 'Boeing (ThinkYoung)',
     date: 'Apr 2023',
     note: "Programming autonomous systems, drones, and sensor logic.",
-    icon: FaRobot,
-    link: '#'
+    icon: FaRobot
   },
   {
     id: 6,
@@ -280,8 +271,7 @@ const certifications = [
     issuer: 'ThinkYoung',
     date: 'Apr 2023',
     note: "Intensive Python & Arduino prototyping course.",
-    icon: FaGraduationCap,
-    link: '#'
+    icon: FaGraduationCap
   }
 ];
 
@@ -309,7 +299,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
         ? 'bg-gray-800/60 border-gray-700 hover:border-gray-500 hover:shadow-lg hover:shadow-blue-500/5' 
         : 'bg-white border-gray-200 hover:border-gray-400 hover:shadow-xl'}`}
   >
-    {/* Preview Image */}
     <div className={`relative w-full h-48 sm:h-52 overflow-hidden
       ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       {!imgLoaded && !imgError && (
@@ -344,47 +333,47 @@ const ProjectCard = ({ data, isDarkMode }) => {
       </div>
     </div>
 
-      <div className="p-5">
-        <div className="flex items-start justify-between mb-2">
-          <h3 className={`text-base font-bold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            {data.title}
-          </h3>
-          <FaExternalLinkAlt 
-            className={`shrink-0 ml-2 mt-0.5 transition-colors ${isDarkMode ? 'text-gray-500 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'}`} 
-            size={13} 
-          />
-        </div>
-
-        <p className={`text-[13px] leading-relaxed mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-          {data.description}
-        </p>
-
-        <div className="flex items-center gap-2 mb-3">
-          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full
-            ${isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
-            {data.company}
-          </span>
-          <span className={`text-[11px] ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-            {data.date}
-          </span>
-        </div>
-
-        <div className="flex flex-wrap gap-1">
-          {data.technologies.slice(0, 5).map((tech, i) => (
-            <span key={i} className={`text-[10px] font-medium px-1.5 py-0.5 rounded
-              ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
-              {tech}
-            </span>
-          ))}
-          {data.technologies.length > 5 && (
-            <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded
-              ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
-              +{data.technologies.length - 5}
-            </span>
-          )}
-        </div>
+    <div className="p-5">
+      <div className="flex items-start justify-between mb-2">
+        <h3 className={`text-base font-bold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          {data.title}
+        </h3>
+        <FaExternalLinkAlt 
+          className={`shrink-0 ml-2 mt-0.5 transition-colors ${isDarkMode ? 'text-gray-500 group-hover:text-blue-400' : 'text-gray-400 group-hover:text-blue-600'}`} 
+          size={13} 
+        />
       </div>
-    </motion.a>
+
+      <p className={`text-[13px] leading-relaxed mb-3 line-clamp-2 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        {data.description}
+      </p>
+
+      <div className="flex items-center gap-2 mb-3">
+        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full
+          ${isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
+          {data.company}
+        </span>
+        <span className={`text-[11px] ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+          {data.date}
+        </span>
+      </div>
+
+      <div className="flex flex-wrap gap-1">
+        {data.technologies.slice(0, 5).map((tech, i) => (
+          <span key={i} className={`text-[10px] font-medium px-1.5 py-0.5 rounded
+            ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-600'}`}>
+            {tech}
+          </span>
+        ))}
+        {data.technologies.length > 5 && (
+          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded
+            ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
+            +{data.technologies.length - 5}
+          </span>
+        )}
+      </div>
+    </div>
+  </motion.a>
   );
 };
 
@@ -403,7 +392,7 @@ const JobCard = ({ data, isDarkMode }) => (
 
     <div className={`p-6 rounded-xl border shadow-sm transition-all hover:shadow-md group
       ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-blue-200'}`}>
-      
+       
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-4 gap-2">
         <div>
           <h3 className={`text-xl font-bold flex items-center gap-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -450,7 +439,7 @@ const JobCard = ({ data, isDarkMode }) => (
   </motion.div>
 );
 
-// --- COMPONENT: CERTIFICATE CARD ---
+// --- COMPONENT: CERTIFICATE CARD (Static Display) ---
 const CertCard = ({ data, isDarkMode }) => (
   <motion.div 
     variants={itemVar}
@@ -463,12 +452,9 @@ const CertCard = ({ data, isDarkMode }) => (
       ${isDarkMode ? 'bg-gray-900 border-purple-500' : 'bg-white border-purple-600'}`}>
     </div>
 
-    <a 
-      href={data.link}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`flex flex-col sm:flex-row gap-4 p-5 rounded-xl border transition-all group block
-        ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800 hover:border-purple-500/50' : 'bg-white border-gray-100 hover:border-purple-300 hover:shadow-md'}`}
+    <div 
+      className={`flex flex-col sm:flex-row gap-4 p-5 rounded-xl border transition-all
+        ${isDarkMode ? 'bg-gray-800/40 border-gray-700' : 'bg-white border-gray-100 shadow-sm'}`}
     >
       <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0
         ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>
@@ -477,25 +463,24 @@ const CertCard = ({ data, isDarkMode }) => (
 
       <div className="flex-1">
         <div className="flex justify-between items-start">
-          <h4 className={`font-bold text-lg flex items-center gap-2 group-hover:text-purple-500 transition-colors ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+          <h4 className={`font-bold text-lg ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
             {data.title}
-            <FaExternalLinkAlt size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
           </h4>
           <span className={`text-xs font-mono px-2 py-0.5 rounded
              ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
             {data.date}
           </span>
         </div>
-        
+         
         <p className={`text-sm font-semibold mt-1 ${isDarkMode ? 'text-purple-400' : 'text-purple-600'}`}>
           {data.issuer}
         </p>
-        
+         
         <p className={`text-sm mt-2 leading-relaxed ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
           {data.note}
         </p>
       </div>
-    </a>
+    </div>
   </motion.div>
 );
 
@@ -526,7 +511,7 @@ const Experience = ({ isDarkMode }) => {
   return (
     <section className="py-20 px-4 sm:px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
-        
+         
         <div className="text-center mb-12">
           <motion.h2 
             initial={{ opacity: 0, y: -20 }}
@@ -567,7 +552,7 @@ const Experience = ({ isDarkMode }) => {
               </button>
               );
             })}
-        </div>
+          </div>
         </div>
 
         <div className="min-h-[400px]">
@@ -585,9 +570,9 @@ const Experience = ({ isDarkMode }) => {
                     data={project} 
                     isDarkMode={isDarkMode}
                     style={{ animationDelay: `${index * 0.1}s` }}
-                />
-              ))}
-            </div>
+                  />
+                ))}
+              </div>
           </motion.div>
         )}
 
@@ -600,7 +585,7 @@ const Experience = ({ isDarkMode }) => {
             >
               {workData.map(job => (
                 <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
-            ))}
+              ))}
           </motion.div>
         )}
 
@@ -613,7 +598,7 @@ const Experience = ({ isDarkMode }) => {
             >
               {internData.map(job => (
                 <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
-            ))}
+              ))}
           </motion.div>
         )}
 
