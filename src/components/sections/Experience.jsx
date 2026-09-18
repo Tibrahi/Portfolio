@@ -13,7 +13,8 @@ import {
   FaLayerGroup,
   FaArrowUp,
   FaExternalLinkAlt,
-  FaProjectDiagram
+  FaProjectDiagram,
+  FaCogs
 } from 'react-icons/fa';
 
 // --- DATA: CAREER PROJECTS (Vercel-style cards) ---
@@ -55,55 +56,55 @@ const careerProjects = [
 
 // --- DATA: PROFESSIONAL EXPERIENCE ---
 const professionalWork = [
-  // --- WORK: TIXLOGIC (Current Role) ---
+  // --- WORK: TIXLOGIC / CODE4IMPACT (Current Role) ---
   {
     id: 0,
-    title: 'Web Developer',
-    company: 'TIXLOGIC',
-    type: 'Full-time',
-    duration: 'Jan 2026 - Present',
+    title: 'System Operations & Architecture',
+    company: 'TIXLOGIC (Formerly Code4Impact)',
+    type: 'Full-time / Founder Operation',
+    duration: 'Jun 2024 - Present',
     location: 'Kigali, Rwanda',
-    description: "Developing core web applications, optimizing user flows, and implementing modern UI/UX standards.",
+    description: "Originally started in June 2024 as Code4Impact solving student issues, then rebranded to TIXLOGIC in March 2026 to focus on developing high-impact, professional enterprise systems and robust system operations.",
     achievements: [
-      "Architecting scalable frontend features and reusable components.",
-      "Collaborating with cross-functional teams to deliver client solutions.",
-      "Enhancing application performance and responsiveness."
+      "Engineered core scalable system architectures and end-to-end operational platforms.",
+      "Transitioned from solving localized student issues (Code4Impact) to building robust professional systems (TIXLOGIC).",
+      "Optimized system workflows, database reliability, and deployment processes."
     ],
-    stack: ['React', 'Next.js', 'Tailwind CSS', 'TypeScript', 'Node.js'],
-    icon: FaLaptopCode,
+    stack: ['System Architecture', 'Node.js', 'React/Next.js', 'MongoDB', 'Backend Systems'],
+    icon: FaCogs,
   },
   // --- WORK: ¡GITREE (Closed Role) ---
   {
     id: 1,
-    title: 'Web Developer (Fullstack)',
+    title: 'Fullstack Systems Developer',
     company: '¡GITREE',
     type: 'Hybrid (Promoted)',
     duration: 'Oct 2025 - Jan 2026',
     location: 'Kigali, Rwanda',
-    description: "Promoted from Web Designer to lead Fullstack development. Expanded scope to handle end-to-end architecture.",
+    description: "Promoted from Web Designer to lead Fullstack development. Expanded scope to handle end-to-end system architecture and API integrations.",
     achievements: [
-      "Transitioned from design-only to full lifecycle development.",
-      "Spearheading backend integration with frontend architectures.",
-      "Optimizing database queries and API response times."
+      "Transitioned from design-only to full lifecycle system development.",
+      "Spearheaded backend integration with complex frontend architectures.",
+      "Optimized database queries and API response times."
     ],
-    stack: ['React', 'Node.js', 'Firebase', 'Rest API','MongoDb', 'Tailwind','Express.js'],
+    stack: ['React', 'Node.js', 'Firebase', 'Rest API', 'MongoDB', 'Tailwind', 'Express.js'],
     icon: FaArrowUp,
   },
   // --- WORK: ¡GITREE (Previous Role) ---
   {
     id: 2,
-    title: 'Web Designer',
+    title: 'UI/UX & Visual Designer',
     company: '¡GITREE',
     type: 'Hybrid',
     duration: 'July 2024 - Oct 2025',
     location: 'Kigali, Rwanda',
     description: "Laid the visual foundation for the company's digital products, focusing on UI/UX and visual consistency.",
     achievements: [
-      "Created high-fidelity mockups in Figma and converted them to HTML/CSS.",
+      "Created high-fidelity mockups in Figma and converted them to structural layouts.",
       "Established the company's design system and brand guidelines.",
       "Ensured WCAG accessibility compliance across all layouts."
     ],
-    stack: ['Figma', 'UI/UX'],
+    stack: ['Figma', 'UI/UX', 'Design Systems'],
     icon: FaLaptopCode,
   },
   // --- WORK: Elco ---
@@ -133,7 +134,7 @@ const professionalWork = [
     location: 'Kigali, Rwanda',
     description: "Final phase of intensive internship. Focusing on complex system integrations, emerging tech, and deployment pipelines.",
     achievements: [
-      "Mastering React.js for complex state management.",
+      "Mastered state management for complex system architectures.",
       "Introduction to Python for Web3 and Machine Learning integrations.",
       "Implementing CI/CD pipelines and DevOps best practices.",
       "Mobile intro with Dart/Flutter."
@@ -166,13 +167,13 @@ const professionalWork = [
     type: 'Internship (Year 1)',
     duration: 'Mar 2023 - Mar 2024',
     location: 'Kigali, Rwanda',
-    description: "Initial intensive training focused on the visual layer and user requirements.",
+    description: "Initial intensive training focused on the structural layout and user requirements.",
     achievements: [
-      "Mastered the core web trio: HTML, CSS, and JavaScript.",
-      "Analyzed client project requirements to create technical specs.",
+      "Mastered core interface scripting and DOM manipulation.",
+      "Analyzed client project requirements to create technical system specs.",
       "Developed responsive layouts from scratch."
     ],
-    stack: ['HTML', 'CSS', 'JavaScript', 'Graphic Design ', 'Requirements','Web Design'],
+    stack: ['HTML', 'CSS', 'JavaScript', 'Graphic Design', 'System Requirements'],
     icon: FaLayerGroup,
   }
 ];
@@ -232,7 +233,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
     {/* Preview Image */}
     <div className={`relative w-full h-48 sm:h-52 overflow-hidden
       ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-      {/* Loading shimmer */}
       {!imgLoaded && !imgError && (
         <div className={`absolute inset-0 animate-pulse ${isDarkMode ? 'bg-gray-800' : 'bg-gray-200'}`}>
           <div className={`absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent`} />
@@ -246,7 +246,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
         onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
       />
-      {/* Fallback when image fails to load */}
       {imgError && (
         <div className={`w-full h-full absolute inset-0 flex items-center justify-center
           ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -258,7 +257,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
           </div>
         </div>
       )}
-      {/* Hover overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
         <div className="flex items-center gap-2 text-white text-sm font-medium">
           <FaExternalLinkAlt size={12} />
@@ -267,7 +265,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
       </div>
     </div>
 
-      {/* Card Content */}
       <div className="p-5">
         <div className="flex items-start justify-between mb-2">
           <h3 className={`text-base font-bold leading-tight ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -283,7 +280,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
           {data.description}
         </p>
 
-        {/* Meta: Company + Date */}
         <div className="flex items-center gap-2 mb-3">
           <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full
             ${isDarkMode ? 'bg-blue-900/30 text-blue-300' : 'bg-blue-50 text-blue-700'}`}>
@@ -294,7 +290,6 @@ const ProjectCard = ({ data, isDarkMode }) => {
           </span>
         </div>
 
-        {/* Technology Tags */}
         <div className="flex flex-wrap gap-1">
           {data.technologies.slice(0, 5).map((tech, i) => (
             <span key={i} className={`text-[10px] font-medium px-1.5 py-0.5 rounded
@@ -323,12 +318,10 @@ const JobCard = ({ data, isDarkMode }) => (
     className={`relative pl-8 pb-12 border-l-2 last:border-0 last:pb-0 
     ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
   >
-    {/* Timeline Dot */}
     <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
       ${isDarkMode ? 'bg-gray-900 border-blue-500' : 'bg-white border-blue-600'}`}>
     </div>
 
-    {/* Card Body */}
     <div className={`p-6 rounded-xl border shadow-sm transition-all hover:shadow-md group
       ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-blue-200'}`}>
       
@@ -355,7 +348,6 @@ const JobCard = ({ data, isDarkMode }) => (
         {data.description}
       </p>
 
-      {/* Achievements */}
       <div className="mb-5">
         <ul className="space-y-2">
           {data.achievements.map((item, idx) => (
@@ -367,7 +359,6 @@ const JobCard = ({ data, isDarkMode }) => (
         </ul>
       </div>
 
-      {/* Tech Stack */}
       <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-700/20">
         {data.stack.map((tech, i) => (
           <span key={i} className={`text-xs font-medium px-2 py-1 rounded 
@@ -389,7 +380,6 @@ const CertCard = ({ data, isDarkMode }) => (
     className={`relative pl-8 pb-12 border-l-2 last:border-0 last:pb-0 
     ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
   >
-     {/* Timeline Dot */}
      <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
       ${isDarkMode ? 'bg-gray-900 border-purple-500' : 'bg-white border-purple-600'}`}>
     </div>
@@ -397,7 +387,6 @@ const CertCard = ({ data, isDarkMode }) => (
     <div className={`flex flex-col sm:flex-row gap-4 p-5 rounded-xl border transition-colors
       ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-purple-200'}`}>
       
-      {/* Icon Box */}
       <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0
         ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>
         <data.icon size={22} />
@@ -422,7 +411,7 @@ const CertCard = ({ data, isDarkMode }) => (
           {data.note}
         </p>
       </div>
-    </div>
+  </div>
   </motion.div>
 );
 
@@ -430,7 +419,6 @@ const CertCard = ({ data, isDarkMode }) => (
 const Experience = ({ isDarkMode }) => {
   const [activeTab, setActiveTab] = useState('work');
 
-  // Filter Data Logic
   const workData = professionalWork.filter(job => !job.type.toLowerCase().includes('internship'));
   const internData = professionalWork.filter(job => job.type.toLowerCase().includes('internship'));
 
@@ -445,7 +433,6 @@ const Experience = ({ isDarkMode }) => {
     <section className="py-20 px-4 sm:px-6 relative overflow-hidden">
       <div className="max-w-4xl mx-auto">
         
-        {/* Header */}
         <div className="text-center mb-12">
           <motion.h2 
             initial={{ opacity: 0, y: -20 }}
@@ -460,15 +447,14 @@ const Experience = ({ isDarkMode }) => {
             transition={{ delay: 0.2 }}
             className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}
           >
-            My professional journey, practical internships, and technical qualifications.
+            My professional journey, system operations, practical internships, and technical qualifications.
           </motion.p>
         </div>
 
-        {/* --- INLINE NAVIGATION (TABS) --- */}
         <div className="flex justify-center mb-12">
           <div className={`inline-flex p-1 rounded-xl border flex-wrap gap-1
             ${isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-            
+             
             {tabItems.map((tab) => {
               const isActive = activeTab === tab.id;
               return (
@@ -479,86 +465,80 @@ const Experience = ({ isDarkMode }) => {
                     ${isActive 
                       ? (isDarkMode ? 'bg-gray-700 text-white shadow-md' : 'bg-gray-100 text-blue-600 shadow-sm') 
                       : (isDarkMode ? 'text-gray-400 hover:text-gray-200' : 'text-gray-500 hover:text-gray-800')
-                    }`}
-                >
-                  <tab.icon className={isActive ? 'text-blue-500' : ''} />
-                  <span className="hidden sm:inline">{tab.label}</span>
-                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-                </button>
+                  }`}
+              >
+                <tab.icon className={isActive ? 'text-blue-500' : ''} />
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
+              </button>
               );
             })}
-          </div>
+        </div>
         </div>
 
-        {/* --- CONTENT AREA --- */}
         <div className="min-h-[400px]">
-            
-            {/* Career Projects Tab */}
             {activeTab === 'projects' && (
-              <motion.div 
-                key="projects" 
-                initial={{ opacity: 0, x: -20 }} 
-                animate={{ opacity: 1, x: 0 }} 
-                transition={{ duration: 0.3 }}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {careerProjects.map((project, index) => (
-                    <ProjectCard 
-                      key={project.id} 
-                      data={project} 
-                      isDarkMode={isDarkMode}
-                      style={{ animationDelay: `${index * 0.1}s` }}
-                    />
-                  ))}
-                </div>
-              </motion.div>
-            )}
+            <motion.div 
+              key="projects" 
+              initial={{ opacity: 0, x: -20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.3 }}
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {careerProjects.map((project, index) => (
+                  <ProjectCard 
+                    key={project.id} 
+                    data={project} 
+                    isDarkMode={isDarkMode}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                />
+              ))}
+            </div>
+          </motion.div>
+        )}
 
-            {/* Work Experience Tab */}
-            {activeTab === 'work' && (
-              <motion.div 
-                key="work" 
-                initial={{ opacity: 0, x: -20 }} 
-                animate={{ opacity: 1, x: 0 }} 
-                transition={{ duration: 0.3 }}
-              >
-                {workData.map(job => (
-                  <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
-                ))}
-              </motion.div>
-            )}
+          {activeTab === 'work' && (
+            <motion.div 
+              key="work" 
+              initial={{ opacity: 0, x: -20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.3 }}
+            >
+              {workData.map(job => (
+                <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
+            ))}
+          </motion.div>
+        )}
 
-            {/* Internships Tab */}
-            {activeTab === 'internship' && (
-              <motion.div 
-                key="internship" 
-                initial={{ opacity: 0, x: 20 }} 
-                animate={{ opacity: 1, x: 0 }} 
-                transition={{ duration: 0.3 }}
-              >
-                {internData.map(job => (
-                  <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
-                ))}
-              </motion.div>
-            )}
+          {activeTab === 'internship' && (
+            <motion.div 
+              key="internship" 
+              initial={{ opacity: 0, x: 20 }} 
+              animate={{ opacity: 1, x: 0 }} 
+              transition={{ duration: 0.3 }}
+            >
+              {internData.map(job => (
+                <JobCard key={job.id} data={job} isDarkMode={isDarkMode} />
+            ))}
+          </motion.div>
+        )}
 
-            {/* Certificates Tab */}
-            {activeTab === 'certificates' && (
-              <motion.div 
-                key="certs" 
-                initial={{ opacity: 0, y: 20 }} 
-                animate={{ opacity: 1, y: 0 }} 
-                transition={{ duration: 0.3 }}
-              >
-                {certifications.map(cert => (
-                  <CertCard key={cert.id} data={cert} isDarkMode={isDarkMode} />
-                ))}
-              </motion.div>
-            )}
-        </div>
-
+          {activeTab === 'certificates' && (
+            <motion.div 
+              key="certs" 
+              initial={{ opacity: 0, y: 20 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ duration: 0.3 }}
+            >
+              {certifications.map(cert => (
+                <CertCard key={cert.id} data={cert} isDarkMode={isDarkMode} />
+            ))}
+          </motion.div>
+        )}
       </div>
-    </section>
+
+  </div>
+  </section>
   );
 };
 
