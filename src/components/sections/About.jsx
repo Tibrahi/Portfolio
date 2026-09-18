@@ -154,10 +154,10 @@ const About = ({ isDarkMode }) => {
         variants={ANIMATIONS.container}
         initial="hidden"
         animate="show"
-        className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16"
+        className="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start"
       >
         
-        {/* ================= LEFT COLUMN: Personal Identity (col-span-4) ================= */}
+        {/* ================= LEFT COLUMN: Personal Identity & Metrics (col-span-4) ================= */}
         <div className="lg:col-span-4 flex flex-col items-center lg:items-start space-y-8">
             
             {/* Profile Image */}
@@ -210,15 +210,36 @@ const About = ({ isDarkMode }) => {
                         <span key={lang} className={`px-2 py-0.5 text-xs rounded-md ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'}`}>
                           {lang}
                         </span>
-                      ))}
+                        ))}
                     </div>
                   </div>
                 </div>
             </motion.div>
 
+            {/* Relocated Highlights Grid (Stacked for Sidebar Integration) */}
+            <motion.div variants={ANIMATIONS.item} className="w-full space-y-3 pt-2">
+                <span className="block text-[11px] uppercase tracking-widest opacity-60 mb-2">Key Highlights</span>
+                {HIGHLIGHTS.map((item, idx) => (
+                    <motion.div 
+                        key={idx} 
+                        whileHover="hover"
+                        variants={ANIMATIONS.hover}
+                        className={`p-4 rounded-2xl border ${isDarkMode ? 'bg-gray-800/60 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'} transition-colors relative overflow-hidden flex items-center justify-between`}
+                    >
+                        <div className={`absolute top-0 left-0 bottom-0 w-1.5 ${item.bgColor}`} />
+                        <div className="pl-2">
+                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">{item.label}</p>
+                          <p className={`text-lg font-black ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{item.value}</p>
+                          <p className="text-xs font-medium opacity-80">{item.desc}</p>
+                        </div>
+                        <div className={`p-3 rounded-xl ${item.bgColor}`}>{item.icon}</div>
+                    </motion.div>
+                ))}
+            </motion.div>
+
             {/* Download Button */}
-            <motion.div variants={ANIMATIONS.item} className="w-full pt-4">
-                 <button 
+            <motion.div variants={ANIMATIONS.item} className="w-full pt-2">
+                <button 
                     onClick={handleDownload}
                     disabled={downloadState === 'loading'}
                     aria-label="Download Professional CV"
@@ -229,12 +250,12 @@ const About = ({ isDarkMode }) => {
                           ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-blue-900/50' 
                           : 'bg-gray-900 hover:bg-gray-800 text-white shadow-gray-900/20'} 
                       focus:outline-none focus:ring-4 focus:ring-blue-500/50`}
-                  >
+                >
                     <AnimatePresence mode="wait">
-                      {DownloadButtonContent}
+                        {DownloadButtonContent}
                     </AnimatePresence>
-                  </button>
-                  <a href={IBRAResume} download="Tuyizere_Ibrahim_CV.pdf" ref={downloadLinkRef} className="hidden" aria-hidden="true" />
+                </button>
+                <a href={IBRAResume} download="Tuyizere_Ibrahim_CV.pdf" ref={downloadLinkRef} className="hidden" aria-hidden="true" />
             </motion.div>
         </div>
 
@@ -246,7 +267,7 @@ const About = ({ isDarkMode }) => {
                 <div className="flex items-center gap-3 mb-6">
                   <FaBriefcase className={`text-xl ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`} />
                   <h2 className={`text-sm font-bold uppercase tracking-widest ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                     Executive Profile
+                      Executive Profile
                   </h2>
                 </div>
                 <div className={`p-6 sm:p-8 rounded-3xl border ${isDarkMode ? 'bg-gray-800/40 border-gray-700/50' : 'bg-white border-gray-100 shadow-sm'} space-y-5 text-base sm:text-lg leading-relaxed`}>
@@ -283,36 +304,14 @@ const About = ({ isDarkMode }) => {
                </div>
             </motion.div>
 
-            {/* Highlights Grid */}
-            <motion.div variants={ANIMATIONS.item} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {HIGHLIGHTS.map((item, idx) => (
-                    <motion.div 
-                        key={idx} 
-                        whileHover="hover"
-                        variants={ANIMATIONS.hover}
-                        className={`p-6 rounded-2xl border ${isDarkMode ? 'bg-gray-800/60 border-gray-700 hover:border-gray-600' : 'bg-white border-gray-100 hover:border-gray-200 shadow-sm'} transition-colors relative overflow-hidden`}
-                    >
-                        {/* Top color bar */}
-                        <div className={`absolute top-0 left-0 right-0 h-1.5 ${item.bgColor}`} />
-                        
-                        <div className="flex justify-between items-start mb-4">
-                          <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">{item.label}</p>
-                          <div className={`p-2 rounded-lg ${item.bgColor}`}>{item.icon}</div>
-                        </div>
-                        <p className={`text-2xl font-black mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>{item.value}</p>
-                        <p className="text-sm font-medium opacity-80">{item.desc}</p>
-                    </motion.div>
-                ))}
-            </motion.div>
-
             {/* Education History */}
-            <motion.div variants={ANIMATIONS.item} className="pt-4">
+            <motion.div variants={ANIMATIONS.item} className="pt-2">
                 <h3 className={`text-sm font-bold uppercase tracking-widest mb-6 ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Academic Foundation
+                    Academic Foundation
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {EDUCATION_DETAILS.map((item, idx) => (
-                       <div key={idx} className={`flex items-start gap-4 p-5 rounded-2xl border ${isDarkMode ? 'bg-gray-800/30 border-gray-700/50' : 'bg-gray-50 border-gray-100'}`}>
+                        <div key={idx} className={`flex items-start gap-4 p-5 rounded-2xl border ${isDarkMode ? 'bg-gray-800/30 border-gray-700/50' : 'bg-gray-50 border-gray-100'}`}>
                           <div className={`p-3 rounded-xl mt-1 ${isDarkMode ? 'bg-gray-800 text-blue-400' : 'bg-white shadow-sm text-blue-600'}`}>
                             {item.icon}
                           </div>
@@ -320,10 +319,10 @@ const About = ({ isDarkMode }) => {
                               <span className={`block font-bold text-base mb-1 ${isDarkMode ? 'text-gray-200' : 'text-gray-900'}`}>{item.title}</span>
                               <span className="block text-sm opacity-70 mb-2">{item.place}</span>
                               <span className={`inline-block px-2 py-1 text-[10px] uppercase font-bold rounded ${isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-200 text-gray-700'}`}>
-                                {item.type}
+                                  {item.type}
                               </span>
                           </div>
-                       </div>
+                        </div>
                   ))}
                 </div>
             </motion.div>
@@ -334,5 +333,4 @@ const About = ({ isDarkMode }) => {
   );
 };
 
-// Memoize to prevent unnecessary re-renders if parent state changes (e.g., layout shifts outside of dark mode toggle)
 export default memo(About);
