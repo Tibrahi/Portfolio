@@ -502,9 +502,19 @@ const CertCard = ({ data, isDarkMode }) => (
 // --- MAIN COMPONENT ---
 const Experience = ({ isDarkMode }) => {
   const [activeTab, setActiveTab] = useState('work');
+  
+  // Pagination State for Certificates & Licenses
+  const [certPage, setCertPage] = useState(1);
+  const certsPerPage = 4; // Adjust how many certificates show per page
 
   const workData = professionalWork.filter(job => !job.type.toLowerCase().includes('internship'));
   const internData = professionalWork.filter(job => job.type.toLowerCase().includes('internship'));
+
+  // Calculate paginated certificate slice
+  const indexOfLastCert = certPage * certsPerPage;
+  const indexOfFirstCert = indexOfLastCert - certsPerPage;
+  const currentCertifications = certifications.slice(indexOfFirstCert, indexOfLastCert);
+  const totalCertPages = Math.ceil(certifications.length / certsPerPage);
 
   const tabItems = [
     { id: 'projects', label: 'Career Projects', icon: FaProjectDiagram },
@@ -614,10 +624,56 @@ const Experience = ({ isDarkMode }) => {
               animate={{ opacity: 1, y: 0 }} 
               transition={{ duration: 0.3 }}
             >
-              {certifications.map(cert => (
+              {currentCertifications.map(cert => (
                 <CertCard key={cert.id} data={cert} isDarkMode={isDarkMode} />
-            ))}
-          </motion.div>
+              ))}
+
+              {/* Pagination Controls */}
+              {totalCertPages > 1 && (
+                <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700/20">
+                  <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Showing {indexOfFirstCert + 1} to {Math.min(indexOfLastCert, certifications.length)} of {certifications.length} licenses
+                  </span>
+                  
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => setCertPage(prev => Math.max(prev - 1, 1))}
+                      disabled={certPage === 1}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
+                        ${certPage === 1 
+                          ? 'opacity-40 cursor-not-allowed' 
+                          : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Prev
+                    </button>
+
+                    {Array.from({ length: totalCertPages }, (_, i) => i + 1).map((page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCertPage(page)}
+                        className={`w-8 h-8 rounded-lg text-xs font-bold transition-all
+                          ${certPage === page
+                            ? 'bg-purple-600 text-white shadow-md shadow-purple-500/20'
+                            : isDarkMode ? 'bg-gray-800 text-gray-400 hover:text-white' : 'bg-gray-100 text-gray-600 hover:text-gray-900'}`}
+                      >
+                        {page}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() => setCertPage(prev => Math.min(prev + 1, totalCertPages))}
+                      disabled={certPage === totalCertPages}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all
+                        ${certPage === totalCertPages 
+                          ? 'opacity-40 cursor-not-allowed' 
+                          : isDarkMode ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              )}
+            </motion.div>
         )}
       </div>
 
