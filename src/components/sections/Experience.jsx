@@ -14,7 +14,12 @@ import {
   FaArrowUp,
   FaExternalLinkAlt,
   FaProjectDiagram,
-  FaCogs
+  FaCogs,
+  FaGlobe,
+  FaAws,
+  FaTasks,
+  FaUserTie,
+  FaPenNib
 } from 'react-icons/fa';
 
 // --- DATA: CAREER PROJECTS (Vercel-style cards) ---
@@ -186,15 +191,79 @@ const professionalWork = [
   }
 ];
 
-// --- DATA: CERTIFICATIONS ---
+// --- DATA: CERTIFICATIONS & LICENSES ---
 const certifications = [
+  {
+    id: 7,
+    title: 'AWS Professional',
+    issuer: 'Amazon Web Services (AWS)',
+    date: '2026',
+    note: "Licensed professional cloud architecture, deployment, and infrastructure scaling expertise.",
+    icon: FaAws,
+    link: '#'
+  },
+  {
+    id: 8,
+    title: 'Project Management (PM)',
+    issuer: 'Professional Accreditation',
+    date: '2026',
+    note: "Licensed methodology for managing project lifecycles, risk management, resource allocation, and timelines.",
+    icon: FaTasks,
+    link: '#'
+  },
+  {
+    id: 9,
+    title: 'Recruitment & Talent Sourcing',
+    issuer: 'Human Resources Certification Body',
+    date: '2026',
+    note: "Licensed framework for modern technical screening, candidate evaluation, and streamlined hiring workflows.",
+    icon: FaUserTie,
+    link: '#'
+  },
+  {
+    id: 10,
+    title: 'Business Writing',
+    issuer: 'Professional Communication Institute',
+    date: '2026',
+    note: "Licensed proficiency in corporate correspondence, executive reporting, and documentation.",
+    icon: FaPenNib,
+    link: '#'
+  },
+  {
+    id: 11,
+    title: 'What the Internet Needs to Exist',
+    issuer: 'Internet Society',
+    date: '2025',
+    note: "Comprehensive study covering physical infrastructure, routing, standards, and core network availability.",
+    icon: FaGlobe,
+    link: '#'
+  },
+  {
+    id: 12,
+    title: 'Internet Governance',
+    issuer: 'Internet Society',
+    date: '2025',
+    note: "Analysis of multi-stakeholder models, policy frameworks, cyber security policies, and global internet regulation.",
+    icon: FaGlobe,
+    link: '#'
+  },
+  {
+    id: 13,
+    title: 'What the Internet Needs to Thrive',
+    issuer: 'Internet Society',
+    date: '2025',
+    note: "Focus on open standards, security best practices, interoperability, and continuous network expansion.",
+    icon: FaGlobe,
+    link: '#'
+  },
   {
     id: 4,
     title: 'Computer Systems Technician',
     issuer: 'Technology Channel (Training)',
     date: 'July 2024 - Sept 2024',
     note: "Advanced hardware & software diagnostics training.",
-    icon: FaTools
+    icon: FaTools,
+    link: '#'
   },
   {
     id: 5,
@@ -202,7 +271,8 @@ const certifications = [
     issuer: 'Boeing (ThinkYoung)',
     date: 'Apr 2023',
     note: "Programming autonomous systems, drones, and sensor logic.",
-    icon: FaRobot
+    icon: FaRobot,
+    link: '#'
   },
   {
     id: 6,
@@ -210,7 +280,8 @@ const certifications = [
     issuer: 'ThinkYoung',
     date: 'Apr 2023',
     note: "Intensive Python & Arduino prototyping course.",
-    icon: FaGraduationCap
+    icon: FaGraduationCap,
+    link: '#'
   }
 ];
 
@@ -388,13 +459,17 @@ const CertCard = ({ data, isDarkMode }) => (
     className={`relative pl-8 pb-12 border-l-2 last:border-0 last:pb-0 
     ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}
   >
-     <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
+    <div className={`absolute -left-[9px] top-0 w-4 h-4 rounded-full border-4 box-content transition-colors
       ${isDarkMode ? 'bg-gray-900 border-purple-500' : 'bg-white border-purple-600'}`}>
     </div>
 
-    <div className={`flex flex-col sm:flex-row gap-4 p-5 rounded-xl border transition-colors
-      ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800' : 'bg-white border-gray-100 hover:border-purple-200'}`}>
-      
+    <a 
+      href={data.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`flex flex-col sm:flex-row gap-4 p-5 rounded-xl border transition-all group block
+        ${isDarkMode ? 'bg-gray-800/40 border-gray-700 hover:bg-gray-800 hover:border-purple-500/50' : 'bg-white border-gray-100 hover:border-purple-300 hover:shadow-md'}`}
+    >
       <div className={`w-12 h-12 rounded-lg flex items-center justify-center shrink-0
         ${isDarkMode ? 'bg-purple-500/20 text-purple-400' : 'bg-purple-50 text-purple-600'}`}>
         <data.icon size={22} />
@@ -402,8 +477,9 @@ const CertCard = ({ data, isDarkMode }) => (
 
       <div className="flex-1">
         <div className="flex justify-between items-start">
-          <h4 className={`font-bold text-lg ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
+          <h4 className={`font-bold text-lg flex items-center gap-2 group-hover:text-purple-500 transition-colors ${isDarkMode ? 'text-gray-100' : 'text-gray-900'}`}>
             {data.title}
+            <FaExternalLinkAlt size={12} className="opacity-0 group-hover:opacity-100 transition-opacity" />
           </h4>
           <span className={`text-xs font-mono px-2 py-0.5 rounded
              ${isDarkMode ? 'bg-gray-700 text-gray-400' : 'bg-gray-100 text-gray-500'}`}>
@@ -419,7 +495,7 @@ const CertCard = ({ data, isDarkMode }) => (
           {data.note}
         </p>
       </div>
-  </div>
+    </a>
   </motion.div>
 );
 
@@ -434,7 +510,7 @@ const Experience = ({ isDarkMode }) => {
     { id: 'projects', label: 'Career Projects', icon: FaProjectDiagram },
     { id: 'work', label: 'Work Experience', icon: FaBriefcase },
     { id: 'internship', label: 'Internships', icon: FaIdBadge },
-    { id: 'certificates', label: 'Certificates', icon: FaCertificate },
+    { id: 'certificates', label: 'Certificates & Licenses', icon: FaCertificate },
   ];
 
   return (
