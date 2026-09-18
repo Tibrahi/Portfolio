@@ -657,7 +657,7 @@ const Experience = ({ isDarkMode }) => {
               {totalCertPages > 1 && (
                 <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-700/20">
                   <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    Showing {indexOfFirstCert + 1} to {Math.min(indexOfLastCert, certifications.length)} of {certifications.length} Certificate
+                    Showing {indexOfFirstCert + 1} to {Math.min(indexOfLastCert, certifications.length)} of {certifications.length} Certificate & License 
                   </span>
                   
                   <div className="flex items-center gap-1.5">
