@@ -55,13 +55,30 @@ const careerProjects = [
 
 // --- DATA: PROFESSIONAL EXPERIENCE ---
 const professionalWork = [
-  // --- WORK: ¡GITREE (Current Role - Promoted) ---
+  // --- WORK: TIXLOGIC (Current Role) ---
+  {
+    id: 0,
+    title: 'Web Developer',
+    company: 'TIXLOGIC',
+    type: 'Full-time',
+    duration: 'Jan 2026 - Present',
+    location: 'Kigali, Rwanda',
+    description: "Developing core web applications, optimizing user flows, and implementing modern UI/UX standards.",
+    achievements: [
+      "Architecting scalable frontend features and reusable components.",
+      "Collaborating with cross-functional teams to deliver client solutions.",
+      "Enhancing application performance and responsiveness."
+    ],
+    stack: ['React', 'Next.js', 'Tailwind CSS', 'TypeScript', 'Node.js'],
+    icon: FaLaptopCode,
+  },
+  // --- WORK: ¡GITREE (Closed Role) ---
   {
     id: 1,
     title: 'Web Developer (Fullstack)',
     company: '¡GITREE',
     type: 'Hybrid (Promoted)',
-    duration: 'Oct 2025 - Present',
+    duration: 'Oct 2025 - Jan 2026',
     location: 'Kigali, Rwanda',
     description: "Promoted from Web Designer to lead Fullstack development. Expanded scope to handle end-to-end architecture.",
     achievements: [
