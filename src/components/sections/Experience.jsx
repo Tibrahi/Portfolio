@@ -203,18 +203,18 @@ const certifications = [
   },
   {
     id: 8,
-    title: 'Docker Essentials & Containerization',
-    issuer: 'LinkedIn',
+    title: 'Docker Professional & Containerization',
+    issuer: 'Docker Official',
     date: '2026',
-    note: "Proficiency in container management, image deployment, and multi-service orchestration.",
+    note: "Proficiency in container management, image deployment, and multi-service orchestration, accredited by Docker official.",
     icon: FaServer
   },
   {
     id: 9,
     title: 'Microsoft Azure Cloud Fundamentals',
-    issuer: 'LinkedIn',
+    issuer: 'Microsoft',
     date: '2026',
-    note: "Cloud architecture principles, core Azure services, security, and scalability infrastructure.",
+    note: "Cloud architecture principles, core Azure services, security, and scalability infrastructure accredited by Microsoft.",
     icon: FaAws
   },
   {
@@ -235,10 +235,10 @@ const certifications = [
   },
   {
     id: 12,
-    title: 'American Staff Recruitment & Talent Sourcing',
-    issuer: 'LinkedIn',
+    title: 'Recruitment Professional & Talent Sourcing',
+    issuer: 'American Staff Recruitment & LinkedIn',
     date: '2026',
-    note: "Specialized framework for recruitment pipelines, candidate vetting, and staffing operations within the U.S. market.",
+    note: "Specialized recruitment professional framework for pipelines, candidate vetting, and staffing operations, given by American Staff Recruitment & LinkedIn.",
     icon: FaUserTie
   },
   {
@@ -252,10 +252,18 @@ const certifications = [
   {
     id: 14,
     title: 'Business Writing',
-    issuer: 'Professional Communication Institute',
+    issuer: 'LinkedIn',
     date: '2026',
-    note: "Proficiency in corporate correspondence, executive reporting, and documentation.",
+    note: "Proficiency in corporate correspondence, executive reporting, and documentation, given by LinkedIn.",
     icon: FaPenNib
+  },
+  {
+    id: 15,
+    title: 'Microsoft AWS Cloud & Enterprise Professional',
+    issuer: 'Microsoft & AWS',
+    date: '2026',
+    note: "Dual-accredited cloud framework incorporating Microsoft ecosystem tools and AWS professional infrastructure solutions.",
+    icon: FaAws
   },
   {
     id: 1,
