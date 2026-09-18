@@ -218,7 +218,7 @@ const About = ({ isDarkMode }) => {
 
             {/* Relocated Highlights Grid (Stacked for Sidebar Integration) */}
             <motion.div variants={ANIMATIONS.item} className="w-full space-y-3 pt-2">
-                <span className="block text-[11px] uppercase tracking-widest opacity-60 mb-2">Key Highlights</span>
+                <span className="block text-[11px] uppercase tracking-widest opacity-60 mb-2">Info</span>
                 {HIGHLIGHTS.map((item, idx) => (
                     <motion.div 
                         key={idx} 
