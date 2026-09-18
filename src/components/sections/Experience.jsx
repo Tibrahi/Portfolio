@@ -64,13 +64,21 @@ const professionalWork = [
     type: 'Full-time / Founder Operation',
     duration: 'Jun 2024 - Present',
     location: 'Kigali, Rwanda',
-    description: "Originally started in June 2024 as Code4Impact solving student issues, then rebranded to TIXLOGIC in March 2026 to focus on developing high-impact, professional enterprise systems and robust system operations.",
+    description: "Originally initiated in June 2024 as Code4Impact focusing on local student problem-solving, successfully rebranded to TIXLOGIC in March 2026 to deliver robust enterprise solutions, advanced system orchestration, and lifecycle management.",
     achievements: [
-      "Engineered core scalable system architectures and end-to-end operational platforms.",
-      "Transitioned from solving localized student issues (Code4Impact) to building robust professional systems (TIXLOGIC).",
-      "Optimized system workflows, database reliability, and deployment processes."
+      "Directed full end-to-end system planning, architectural blueprints, and scalable solution development.",
+      "Managed robust system testing, streamlined deployment pipelines, and continuous system improvement protocols.",
+      "Ensured high availability, performance tuning, and ongoing maintenance across core corporate production platforms."
     ],
-    stack: ['System Architecture', 'Node.js', 'React/Next.js', 'MongoDB', 'Backend Systems'],
+    stack: [
+      'System Architecture', 
+      'System Development', 
+      'System Testing', 
+      'System Planning', 
+      'System Deployment', 
+      'System Improvement', 
+      'System Maintaining'
+    ],
     icon: FaCogs,
   },
   // --- WORK: ¡GITREE (Closed Role) ---
